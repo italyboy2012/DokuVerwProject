@@ -5,6 +5,8 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.LOGIC.Login;
+
 /**
  *
  * @author Giuseppe
@@ -53,6 +55,11 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel4.setText("Passwort");
 
         jButton1.setText("Einloggen");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -145,6 +152,21 @@ public class LoginFrame extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+        
+        Login l = new Login (username, password);
+        
+        if(l.login()) {
+            this.setVisible(false);
+            return;
+        }
+        
+        jPasswordField1.setText("");
+        System.out.println("Fehler beim Login.");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     
 
