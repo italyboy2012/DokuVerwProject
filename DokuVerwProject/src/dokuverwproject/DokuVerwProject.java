@@ -36,6 +36,7 @@ public class DokuVerwProject {
         /* Create and display LoginForm */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                System.out.println("Hi");
                 new LoginFrame().setVisible(true);
             }
         });
