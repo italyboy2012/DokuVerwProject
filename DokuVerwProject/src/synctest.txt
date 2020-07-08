@@ -1,2 +1,1 @@
 Test for intelli-J Integration
-k
