@@ -50,9 +50,9 @@ public class Common {
      */
     public static void initInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, String iconPaht) {
         //zentralisieren
-        Dimension desktopSize = dp.getSize();
-        Dimension jInternalFrameSize = frame.getSize();
-        frame.setLocation((desktopSize.width - jInternalFrameSize.width)/2, (desktopSize.height- jInternalFrameSize.height)/2);
+        //Dimension desktopSize = dp.getSize();
+        //Dimension jInternalFrameSize = frame.getSize();
+        //frame.setLocation((desktopSize.width - jInternalFrameSize.width)/2, (desktopSize.height- jInternalFrameSize.height)/2);
         
         //icon setzen
         frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht))));

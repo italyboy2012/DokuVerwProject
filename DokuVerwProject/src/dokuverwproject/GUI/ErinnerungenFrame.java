@@ -45,7 +45,8 @@ public class ErinnerungenFrame extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Erinnerungen");
         setMaximumSize(null);
-        setMinimumSize(new java.awt.Dimension(600, 350));
+        setMinimumSize(new java.awt.Dimension(400, 350));
+        setPreferredSize(new java.awt.Dimension(495, 576));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -101,17 +102,18 @@ public class ErinnerungenFrame extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Nr.", "Titel", "Bearbeiter", "Anlagedatum", "Erfasst von"
+                "Nr.", "Titel", "Fälligkeit"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setMaximumSize(null);
         jTable1.setRowHeight(27);
         jTable1.setRowMargin(0);
         jTable1.getTableHeader().setReorderingAllowed(false);
@@ -145,7 +147,7 @@ public class ErinnerungenFrame extends javax.swing.JInternalFrame {
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -163,7 +165,7 @@ public class ErinnerungenFrame extends javax.swing.JInternalFrame {
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

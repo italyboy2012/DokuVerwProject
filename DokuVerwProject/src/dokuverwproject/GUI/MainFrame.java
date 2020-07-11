@@ -12,13 +12,13 @@ import static dokuverwproject.commons.Common.*;
  *
  * @author Giuseppe
  */
-public class MainMenu extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame {
     private User user;
 
     /**
      * Creates new form MainMenu
      */
-    public MainMenu(User u) {
+    public MainFrame(User u) {
         this.user = u;
         initComponents();
         initExternalFrame(this, "../img/edit-folder.png");
@@ -41,12 +41,12 @@ public class MainMenu extends javax.swing.JFrame {
     
     private void themengruppenFrameOeffnen() {
         ThemengruppenFrame tf = new ThemengruppenFrame();
-        initInternalFrame(tf, jDesktopPane1, "");
+        initInternalFrame(tf, jDesktopPane1, "../img/folder.png");
     }
     
     private void erinnerungenFrameOeffnen() {
         ErinnerungenFrame ef = new ErinnerungenFrame();
-        initInternalFrame(ef, jDesktopPane1, "");
+        initInternalFrame(ef, jDesktopPane1, "../img/hourglass.png");
     }
 
     /**
@@ -188,7 +188,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu3.setText("Fenster");
+        jMenu3.setText("Öffnen");
 
         jMenuItem3.setText("Themengruppen");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
