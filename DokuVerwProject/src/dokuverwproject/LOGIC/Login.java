@@ -7,7 +7,6 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.User;
 import dokuverwproject.GUI.MainMenu;
-import static dokuverwproject.commons.Common.*;
 
 /**
  *
