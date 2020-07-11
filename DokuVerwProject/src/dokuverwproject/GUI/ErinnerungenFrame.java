@@ -45,7 +45,7 @@ public class ErinnerungenFrame extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Erinnerungen");
         setMaximumSize(null);
-        setMinimumSize(new java.awt.Dimension(400, 350));
+        setMinimumSize(new java.awt.Dimension(495, 350));
         setPreferredSize(new java.awt.Dimension(495, 576));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
