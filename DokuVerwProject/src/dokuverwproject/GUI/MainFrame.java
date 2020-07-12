@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DATA.User;
+import dokuverwproject.DATA.Benutzer;
 import static dokuverwproject.commons.Common.*;
 
 /**
@@ -13,12 +13,12 @@ import static dokuverwproject.commons.Common.*;
  * @author Giuseppe
  */
 public class MainFrame extends javax.swing.JFrame {
-    private User user;
+    private Benutzer user;
 
     /**
      * Creates new form MainMenu
      */
-    public MainFrame(User u) {
+    public MainFrame(Benutzer u) {
         this.user = u;
         initComponents();
         initExternalFrame(this, "../img/edit-folder.png");

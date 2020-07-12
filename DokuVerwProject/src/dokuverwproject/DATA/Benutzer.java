@@ -9,11 +9,11 @@ package dokuverwproject.DATA;
  *
  * @author Giuseppe
  */
-public class User {
+public class Benutzer {
     private String name = "";
     private String prename = "";
     
-    public User (String n, String pn) {
+    public Benutzer (String n, String pn) {
         this.name = n;
         this.prename = pn;
     }

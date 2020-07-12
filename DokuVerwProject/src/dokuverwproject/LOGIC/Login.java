@@ -5,7 +5,7 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DATA.User;
+import dokuverwproject.DATA.Benutzer;
 import dokuverwproject.GUI.MainFrame;
 
 /**
@@ -25,7 +25,7 @@ public class Login {
         if(!username.equals("") && !username.equals(null) && !password.equals("") && !password.equals(null)) {
             if(username.equals("test") && password.equals("1234")) {
                 // Hier würde man in der DB schauen, ob der Nutzer existiert und wenn ja, würde man seine Daten laden
-                MainFrame mm = new MainFrame(new User("Nachname", "Vorname"));
+                MainFrame mm = new MainFrame(new Benutzer("Nachname", "Vorname"));
                 return true;
             }
             return false;
