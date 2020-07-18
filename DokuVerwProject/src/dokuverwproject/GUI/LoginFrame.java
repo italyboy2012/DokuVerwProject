@@ -185,7 +185,6 @@ public class LoginFrame extends javax.swing.JFrame {
         }
         
         jPasswordField1.setText("");
-        NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Login.");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
