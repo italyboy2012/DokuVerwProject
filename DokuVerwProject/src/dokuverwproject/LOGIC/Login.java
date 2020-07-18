@@ -7,7 +7,7 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.Benutzer;
 import dokuverwproject.DATA.DBConn;
-import dokuverwproject.GUI.MainFrame;
+import dokuverwproject.GUI.HauptFrame;
 import dokuverwproject.GUI.NotifyFrame;
 import java.sql.*;
 
@@ -28,7 +28,7 @@ public class Login {
 //        if(!username.equals("") && !username.equals(null) && !passwort.equals("") && !passwort.equals(null)) {
 //            if(username.equals("test") && passwort.equals("1234")) {
 //                // Hier würde man in der DB schauen, ob der Nutzer existiert und wenn ja, würde man seine Daten laden
-//                MainFrame mm = new MainFrame(new Benutzer("Nachname", "Vorname"));
+//                HauptFrame mm = new HauptFrame(new Benutzer(0, "Nachname", "Vorname"));
 //                return true;
 //            }
 //            return false;
@@ -50,7 +50,7 @@ public class Login {
                     ResultSet rs = ps.executeQuery();
                     if(rs.next()) {
                         if(rs.getString("username").equals(username) && rs.getString("passwort").equals(passwort)) {
-                            MainFrame mm = new MainFrame(new Benutzer(rs.getString(4), rs.getString(5)));
+                            HauptFrame mm = new HauptFrame(new Benutzer(rs.getLong(1), rs.getString(4), rs.getString(5)));
                             return true;
                         }
                     } else {

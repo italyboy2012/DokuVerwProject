@@ -10,26 +10,32 @@ package dokuverwproject.DATA;
  * @author Giuseppe
  */
 public class Benutzer {
+    private long id = 0;
     private String name = "";
-    private String prename = "";
+    private String vorname = "";
     
-    public Benutzer (String n, String pn) {
+    public Benutzer (long id, String n, String pn) {
+        this.id = id;
         this.name = n;
-        this.prename = pn;
+        this.vorname = pn;
     }
     
     @Override
     public String toString() {
-        return name + ", " + prename;
+        return "[" + id + "] " + name + ", " + vorname;
     }
 
     // Getter
+    public long getId() {
+        return id;
+    }
+    
     public String getName() {
         return name;
     }
 
-    public String getPrename() {
-        return prename;
+    public String getVorname() {
+        return vorname;
     }
     
 }

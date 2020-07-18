@@ -9,12 +9,12 @@ package dokuverwproject.GUI;
  *
  * @author Giuseppe
  */
-public class ErinnerungenFrame extends javax.swing.JInternalFrame {
+public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form ThemengruppenFrame
      */
-    public ErinnerungenFrame() {
+    public ErinnerungsübersichtFrame() {
         initComponents();
     }
 

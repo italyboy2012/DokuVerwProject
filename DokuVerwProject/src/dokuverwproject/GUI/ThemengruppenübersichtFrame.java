@@ -9,12 +9,12 @@ package dokuverwproject.GUI;
  *
  * @author Giuseppe
  */
-public class ThemengruppenFrame extends javax.swing.JInternalFrame {
+public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form ThemengruppenFrame
      */
-    public ThemengruppenFrame() {
+    public ThemengruppenübersichtFrame() {
         initComponents();
     }
 
