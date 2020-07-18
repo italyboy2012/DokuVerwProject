@@ -70,6 +70,7 @@ public class ThemengruppenListe {
 
                 };
                 stmt.close();
+                this.setGröße(themengruppen.size());
             } catch(Exception e){
                 System.out.println(e.toString());
             }
@@ -83,11 +84,11 @@ public class ThemengruppenListe {
         
     }
     
-    public void themaBearbeiten() {
+    public void themaBearbeiten(long id) {
         
     }
     
-    public void themaLöschen() {
+    public void themaLöschen(long id) {
         
     }
     
