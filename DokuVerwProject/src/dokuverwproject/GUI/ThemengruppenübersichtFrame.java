@@ -5,17 +5,27 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.LOGIC.ThemengruppenListe;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Giuseppe
  */
 public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
+    private ThemengruppenListe tgl = null; // Logik dieser Klasse
 
     /**
      * Creates new form ThemengruppenFrame
      */
     public ThemengruppenübersichtFrame() {
         initComponents();
+        tgl = new ThemengruppenListe((DefaultTableModel)jTable1.getModel());
+        themengruppenAusDBLaden();
+    }
+    
+    public void themengruppenAusDBLaden() {
+        tgl.themenAusDBLaden();
     }
 
     /**
@@ -101,11 +111,11 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Nr.", "Titel", "Bearbeiter", "Anlagedatum", "Erfasst von"
+                "Nr.", "Titel", "Pfad", "Anlagedatum"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -191,6 +201,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
+        themengruppenAusDBLaden();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
