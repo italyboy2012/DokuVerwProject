@@ -7,10 +7,8 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
-import java.net.InetAddress;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.TimeZone;
 import javax.swing.table.DefaultTableModel;
 

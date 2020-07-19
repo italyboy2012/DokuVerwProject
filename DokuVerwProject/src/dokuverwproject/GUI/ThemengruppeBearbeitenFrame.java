@@ -5,7 +5,6 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Themengruppe;
 import dokuverwproject.LOGIC.ThemengruppenListe;
 import static dokuverwproject.commons.Common.initExternalFrame;
 
