@@ -25,7 +25,21 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     }
     
     public void themengruppenAusDBLaden() {
-        tgl.themenAusDBLaden();
+        textField1.setText("Laden...");
+        if(tgl.themenAusDBLaden()) {
+            textField1.setText(tgl.getGröße() + " Themengruppen geladen");
+        } else {
+            textField1.setText("Fehler");
+        }
+    }
+    
+    public void openSelectedRow() {
+        if(jTable1.getSelectedRow() != -1) {
+            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            ThemengruppeFrame tgf = new ThemengruppeFrame(selectedRowId);
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
     }
 
     /**
@@ -48,7 +62,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
+        textField1 = new java.awt.TextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -132,9 +146,20 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(250);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(200);
+            jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(200);
+        }
 
-        jTextField1.setEditable(false);
-        jTextField1.setText("Anzahl Themengruppen: ");
+        textField1.setEditable(false);
+        textField1.setText("textField1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -161,7 +186,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jTextField1)
+            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,9 +203,9 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -220,12 +245,13 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        openSelectedRow();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         if (evt.getClickCount() == 2) {
-
+            openSelectedRow();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -242,6 +268,6 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private java.awt.TextField textField1;
     // End of variables declaration//GEN-END:variables
 }

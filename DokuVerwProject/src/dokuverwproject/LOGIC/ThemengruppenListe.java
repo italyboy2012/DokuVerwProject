@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ThemengruppenListe {
     private long größe = 0;
-    private ArrayList<Themengruppe> themengruppen = new ArrayList<>();
+    //private ArrayList<Themengruppe> themengruppen = null;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ThemengruppenübersichtFrame
     
     public ThemengruppenListe(DefaultTableModel model) {
@@ -30,11 +30,13 @@ public class ThemengruppenListe {
         // METHODE ÜBERFLÜSSIG -------------------------------------------------
     }
     
-    public void themenAusDBLaden() {
+    public boolean themenAusDBLaden() {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         
         if(con != null) {
+            this.setGröße(0);
+            //this.themengruppen = new ArrayList<>();
             model.setRowCount(0);
 
             Object[] row = new Object[4];
@@ -66,18 +68,21 @@ public class ThemengruppenListe {
 
                     model.addRow(row);
                     
-                    themengruppen.add(new Themengruppe(id, titel, pfad));
+                    this.setGröße(this.getGröße()+1);
+                    
+                    //themengruppen.add(new Themengruppe(id, titel, pfad, tmstp, null));
 
                 };
                 stmt.close();
-                this.setGröße(themengruppen.size());
+                return true;
             } catch(Exception e){
                 System.out.println(e.toString());
+                e.printStackTrace();
             }
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
-        
+        return false;
     }
     
     public void themaErstellen(long id, String titel, String pfad) {
@@ -92,7 +97,11 @@ public class ThemengruppenListe {
         
     }
     
-    public void setGröße(int größe) {
+    public long getGröße() {
+        return this.größe;
+    }
+    
+    public void setGröße(long größe) {
         this.größe = größe;
     }
     
