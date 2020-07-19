@@ -7,6 +7,7 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
+import java.net.InetAddress;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,16 +86,73 @@ public class ThemengruppenListe {
         return false;
     }
     
-    public void themaErstellen(long id, String titel, String pfad) {
-        
+    public boolean themaErstellen(String titel, String pfad) {
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            if(con != null) {
+                PreparedStatement ps = null;
+                String query = "INSERT INTO `themengruppen` (`id`, `titel`, `pfad`, `created_TMSTMP`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP);";
+                ps = con.prepareStatement(query);
+                ps.setString(1, titel);
+                ps.setString(2, pfad);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+        }
+        return false;
     }
     
-    public void themaBearbeiten(long id) {
-        
+    public boolean themaBearbeiten(long id, String titel, String pfad) {
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            if(con != null) {
+                PreparedStatement ps = null;
+                String query = "UPDATE `themengruppen` SET `titel` = ?, `pfad` = ?, `created_TMSTMP` = CURRENT_TIMESTAMP WHERE `themengruppen`.`id` = ?;";
+                ps = con.prepareStatement(query);
+                ps.setString(1, titel);
+                ps.setString(2, pfad);
+                ps.setLong(3, id);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+        }
+        return false;
     }
     
-    public void themaLöschen(long id) {
-        
+    public boolean themaLöschen(long id) {
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            if(con != null) {
+                PreparedStatement ps = null;
+                String query = "DELETE FROM `themengruppen` WHERE `themengruppen`.`id` = ?";
+                ps = con.prepareStatement(query);
+                ps.setLong(1, id);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+        }
+        return false;
     }
     
     public long getGröße() {

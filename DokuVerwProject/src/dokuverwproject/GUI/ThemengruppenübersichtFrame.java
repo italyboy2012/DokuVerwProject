@@ -16,7 +16,11 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     private ThemengruppenListe tgl = null; // Logik dieser Klasse
 
     /**
-     * Creates new form ThemengruppenFrame
+     * Konstruktor übergibt der Logikklasse das TableModel,
+     * damit diese die Daten in die Tabelle laden und anzeigen kann.
+     * 
+     * Außerdem wird eine Methode aufgerufen, welche die Logikklasse zum
+     * Laden der Themengruppen aufruft.
      */
     public ThemengruppenübersichtFrame() {
         initComponents();
@@ -24,15 +28,33 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         themengruppenAusDBLaden();
     }
     
+    /**
+     * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
+     * @param status 
+     */
+    public void setStaturs(String status) {
+        textField1.setText(status);
+    }
+    
+    /**
+     * Methode ruft eine Methode der Logikklasse auf,
+     * welche die Themengruppen aus der DB lädt und anzeigt.
+     */
     public void themengruppenAusDBLaden() {
-        textField1.setText("Laden...");
+        setStaturs("Laden...");
         if(tgl.themenAusDBLaden()) {
-            textField1.setText(tgl.getGröße() + " Themengruppen geladen");
+            setStaturs(tgl.getGröße() + " Themengruppen geladen");
         } else {
-            textField1.setText("Fehler");
+            setStaturs("Fehler");
         }
     }
     
+    /**
+     * Methode öffnet den ausgewählten Datensatz aus der Tabelle.
+     * Für den Datensatz wird eine neue Instanz der Klasse ThemengruppeFrame erstellt.
+     * Ihr wird die ID der Themengruppe übergeben. Die restlichen Daten
+     * der Themengruppe werden in Echtzeit aus der Datenbank gezogen.
+     */
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
@@ -40,6 +62,49 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
+    }
+    
+    /**
+     * Methode löscht den ausgewählten Datensatz aus der Tabelle.
+     * Die ID der ausgewählten Themengruppe wird der Logikklasse übergeben,
+     * welche den Datensatz dann löscht.
+     */
+    public void deleteSelectedRow() {
+        if(jTable1.getSelectedRow() != -1) {
+            setStaturs("Löschen...");
+            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            if(!tgl.themaLöschen(selectedRowId)) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Themengruppe aufgetreten.");
+                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                return;
+            }
+            themengruppenAusDBLaden();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+    }
+    
+    /**
+     * Methode bearbeitet den ausgewählten Datensatz aus der Tabelle.
+     * Es wird ein neues Fenster geöffnet und diesem wird die Logikklasse und diese Klasse übergeben.
+     * Über die Referenz zur Logikklasse kann dieser Datensatz gelöscht werden.
+     * Über die Referenz zu dieser Klasse kann die tabellarische Ansicht gelöscht werden.
+     */
+    public void editSelectedRow() {
+        if(jTable1.getSelectedRow() != -1) {
+            setStaturs("Warten auf Eingabe...");
+            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            String titel = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
+            String pfad = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
+            ThemengruppeBearbeitenFrame tgb = new ThemengruppeBearbeitenFrame(selectedRowId, titel, pfad, tgl, this);
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+    }
+    
+    public void themengruppeErstellen() {
+        setStaturs("Warten auf Eingabe...");
+        ThemengruppeErstellenFrame tgef = new ThemengruppeErstellenFrame(tgl, this);
     }
 
     /**
@@ -228,6 +293,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        editSelectedRow();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -237,10 +303,12 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        deleteSelectedRow();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        themengruppeErstellen();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

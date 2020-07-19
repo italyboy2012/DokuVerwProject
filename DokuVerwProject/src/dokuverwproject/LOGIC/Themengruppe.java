@@ -73,7 +73,7 @@ public class Themengruppe {
     }
     
     public void ansichtAktualisieren() {
-        
+        // METHODE ÜBERFLÜSSIG ------------------------------------
     }
     
     public boolean dateienIndexieren() {
