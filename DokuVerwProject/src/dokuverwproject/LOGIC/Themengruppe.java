@@ -9,8 +9,10 @@ import dokuverwproject.DATA.Benutzer;
 import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.HauptFrame;
 import dokuverwproject.GUI.NotifyFrame;
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,11 +26,11 @@ public class Themengruppe {
     private Timestamp erstellungsdatum = null;
     private long größe = 0;
     private ArrayList<Datei> dateien = new ArrayList<>();
-    private DefaultTableModel model = null; // Zugriff auf Tabelle in ThemengruppeFrame
+    private javax.swing.JTable table = null; // Zugriff auf Tabelle in ThemengruppeFrame
     
-    public Themengruppe(long id, DefaultTableModel model) {
+    public Themengruppe(long id, javax.swing.JTable table) {
         this.id = id;
-        this.model = model;
+        this.table = table;
     }
     
     @Override
@@ -75,6 +77,30 @@ public class Themengruppe {
     }
     
     public boolean dateienIndexieren() {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        model.setRowCount(0);
+        table.scrollRectToVisible(table.getCellRect(0,0, true)); 
+
+        
+        Object[] row = new Object[5];
+        
+        //jTextField2.setText(pfadNav);
+        final File[] x = new File(pfad).listFiles();
+        for (final File file : x) {
+            
+            ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon( file );
+            row[0] = img;
+            row[1] = file.getName();
+            row[2] = "";
+            row[3] = file.getTotalSpace();
+            row[4] = file.getPath();
+                
+            model.addRow(row);
+            
+        }
+        
+        
+        
         return false;
     }
     

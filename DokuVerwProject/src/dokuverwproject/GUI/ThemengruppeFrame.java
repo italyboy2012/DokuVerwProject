@@ -25,7 +25,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/open.png");
         
-        tg = new Themengruppe(this.selectedRowId, (DefaultTableModel)jTable1.getModel());
+        tg = new Themengruppe(this.selectedRowId, jTable1);
         this.setVisible(true);
         ansichtAktualisieren();
     }
