@@ -7,6 +7,7 @@ package dokuverwproject.GUI;
 
 import dokuverwproject.DATA.Benutzer;
 import static dokuverwproject.commons.Common.*;
+import javax.swing.JFrame;
 
 /**
  *
@@ -22,6 +23,7 @@ public class HauptFrame extends javax.swing.JFrame {
         this.user = u;
         initComponents();
         initExternalFrame(this, "../img/edit-folder.png");
+        this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         jLabel5.setText(user.toString());
         jLabel6.setText(getInternalIP());
         setVisible(true);
