@@ -31,5 +31,52 @@ public class Erinnerung {
     public void dateiAnzeigen() {
         
     }
-    
+
+    public String getTitel() {
+        return titel;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
+    public String getInhalt() {
+        return inhalt;
+    }
+
+    public void setInhalt(String inhalt) {
+        this.inhalt = inhalt;
+    }
+
+    public Timestamp getFällig() {
+        return fällig;
+    }
+
+    public void setFällig(Timestamp fällig) {
+        this.fällig = fällig;
+    }
+
+    public boolean getErledigt() {
+        return erledigt;
+    }
+
+    public void setErledigt(boolean erledigt) {
+        this.erledigt = erledigt;
+    }
+
+    public Datei getDatei() {
+        return datei;
+    }
+
+    public void setDatei(Datei datei) {
+        this.datei = datei;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
