@@ -21,5 +21,36 @@ public class Notiz {
         this.inhalt = inhalt;
         this.datei = datei;
     }
-    
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitel() {
+        return titel;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
+    public String getInhalt() {
+        return inhalt;
+    }
+
+    public void setInhalt(String inhalt) {
+        this.inhalt = inhalt;
+    }
+
+    public Datei getDatei() {
+        return datei;
+    }
+
+    public void setDatei(Datei datei) {
+        this.datei = datei;
+    }
 }
