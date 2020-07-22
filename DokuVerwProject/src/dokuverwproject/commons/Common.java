@@ -5,10 +5,12 @@
  */
 package dokuverwproject.commons;
 
+import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.net.InetAddress;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javax.swing.DesktopManager;
 import javax.swing.ImageIcon;
@@ -21,6 +23,15 @@ import javax.swing.JInternalFrame;
  */
 public class Common {
     private static ArrayList<JFrame> externalFrames = new ArrayList<JFrame>(); // Liste aller offener externen Fenster
+    
+    // DB Connection am Anfang und dauerhaft aufbauen
+    public static Connection con = null; //DB Connection für Programm
+    public static void establishSQLConnection() throws Exception {
+        DBConn dbc = new DBConn();
+        con = dbc.getConnection();
+    }
+    
+    
     
     /**
      * Zentralisiert das ihr übergebene externe Frame und setzt das Frame-Icon auf den übergebenen Pfad.
