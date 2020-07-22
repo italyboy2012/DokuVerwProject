@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
  */
 public class Erinnerung {
     private long id = 0;

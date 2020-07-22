@@ -7,7 +7,7 @@ package dokuverwproject.LOGIC;
 
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
  */
 public class Notiz {
     private long id = 0;
