@@ -276,7 +276,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/dokuverwproject/IMG/root-directory.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Datei hinzuf&#xfc;gen"/>
+            <Property name="toolTipText" type="java.lang.String" value="Datei erstellen"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
@@ -387,7 +387,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/dokuverwproject/IMG/add.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Verzeichnis hinzuf&#xfc;gen"/>
+            <Property name="toolTipText" type="java.lang.String" value="Verzeichnis erstellen"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>

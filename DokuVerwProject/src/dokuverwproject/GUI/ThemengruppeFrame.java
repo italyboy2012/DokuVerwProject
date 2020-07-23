@@ -194,7 +194,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/root-directory.png"))); // NOI18N
-        jButton4.setToolTipText("Datei hinzufügen");
+        jButton4.setToolTipText("Datei erstellen");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -284,7 +284,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         });
 
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/add.png"))); // NOI18N
-        jButton10.setToolTipText("Verzeichnis hinzufügen");
+        jButton10.setToolTipText("Verzeichnis erstellen");
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton10ActionPerformed(evt);
@@ -450,7 +450,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        DateiHinzufuegenFrame dhf = new DateiHinzufuegenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        DateiErstellenFrame dhf = new DateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -474,7 +474,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
-        VerzeichnisHinzufuegenFrame dhf = new VerzeichnisHinzufuegenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        VerzeichnisErstellenFrame dhf = new VerzeichnisErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton10ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

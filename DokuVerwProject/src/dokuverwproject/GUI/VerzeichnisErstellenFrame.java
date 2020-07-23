@@ -13,7 +13,7 @@ import java.io.File;
  *
  * @author Giuseppe
  */
-public class DateiHinzufuegenFrame extends javax.swing.JFrame {
+public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
     private String cuttentNavPath = "";
     private ThemengruppeFrame tgf = null;
     private Themengruppe tg = null;
@@ -22,7 +22,7 @@ public class DateiHinzufuegenFrame extends javax.swing.JFrame {
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiHinzufuegenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tg) {
+    public VerzeichnisErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tg) {
         this.cuttentNavPath = cuttentNavPath;
         this.tgf = tgf;
         this.tg = tg;
@@ -31,7 +31,7 @@ public class DateiHinzufuegenFrame extends javax.swing.JFrame {
         if(!f.exists()) return;
         
         initComponents();
-        initExternalFrame(this, "../img/root-directory.png");
+        initExternalFrame(this, "../img/add.png");
         
         jLabel2.setText(f.getPath());
         this.setVisible(true);
@@ -54,19 +54,19 @@ public class DateiHinzufuegenFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Datei hinzufügen");
+        setTitle("Verzeichnis erstellen");
         setAlwaysOnTop(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/root-directory.png"))); // NOI18N
-        jLabel1.setText("Datei hinzufügen");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/add.png"))); // NOI18N
+        jLabel1.setText("Verzeichnis erstellen");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Pfad");
         jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel3.setText("Dateiname:");
+        jLabel3.setText("Verzeichnisname:");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/save.png"))); // NOI18N
         jButton1.setText("speichern");
@@ -147,8 +147,8 @@ public class DateiHinzufuegenFrame extends javax.swing.JFrame {
         String name = jTextField1.getText();
         
         if(!name.equals("") && !name.equals(null)) {
-            if(!tg.dateiHinzufuegen(name, cuttentNavPath)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            if(!tg.verzeichnisHinzufuegen(name, cuttentNavPath)) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgf.ansichtAktualisieren();
             }
