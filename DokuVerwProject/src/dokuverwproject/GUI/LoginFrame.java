@@ -6,11 +6,19 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.Login;
+
+import javax.swing.*;
+
 import static dokuverwproject.commons.Common.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Scanner;
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
+ * 23.07. : Auslagerung der Loginroutine in Methode login();
+ *          Actionlistener für login mit EnterTaste aus Passwortfeld
  */
 public class LoginFrame extends javax.swing.JFrame {
 
@@ -21,6 +29,8 @@ public class LoginFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/id.png");
         this.setVisible(true);
+
+
     }
 
     /**
@@ -61,6 +71,15 @@ public class LoginFrame extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+
+
+        jPasswordField1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
             }
         });
 
@@ -174,20 +193,24 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        login();
+        jPasswordField1.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void login()
+    {
         String username = jTextField1.getText();
         String password = jPasswordField1.getText();
-        
+
         Login l = new Login (username, password);
-        
+
         if(l.login()) {
             this.dispose();
             return;
         }
-        
-        jPasswordField1.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }
 
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
