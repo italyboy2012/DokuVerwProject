@@ -9,6 +9,7 @@ import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -61,7 +62,13 @@ public class Themengruppe {
                         if(rs.getLong(1) == id) {
                             this.titel = rs.getString(2);
                             this.pfad = rs.getString(3);
-                            this.pfadNav = new String(this.pfad); // Pfad für Navigation
+                            if(pfadsNavIndex == 0) {
+                                this.pfadNav = new String(this.pfad); // Pfad für Navigation
+                                //Der Pfad wird nur dann auf das Hauptverzeichnis der Themengruppe gesetzt,
+                                //wenn keine Unterordner geöffnet sind.
+                                //Sind unterordner geöffnet, wird deren aktueller Pfad
+                                //so nicht überschrieben.
+                            }
                             this.erstellungsdatum = rs.getTimestamp(4);
                             return true;
                         }
@@ -156,6 +163,11 @@ public class Themengruppe {
                 Desktop desktop = Desktop.getDesktop();
                 File file = new File(filePath);
                 
+                if(!file.exists()) {
+                    NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+                    return;
+                }
+                
                 if(file.isDirectory()) {
                     this.pfadsNav.add(pfadNav);
                     pfadsNavIndex++;
@@ -174,21 +186,68 @@ public class Themengruppe {
         
     }
     
-    public void neueDateiHinzufügen(String pfad) {
-        
+    public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
+        try {
+            File f = new File(cuttentNavPath);
+            if(!f.exists()) return false;
+
+            File f2 = new File(cuttentNavPath + File.separator + name);
+            if(f2.exists()) return false;
+
+            if(f2.createNewFile()) return true;
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+        return false;
     }
     
-    public void dateiLöschen(long dateiId) {
-        
+    public boolean verzeichnisHinzufuegen(String name, String cuttentNavPath) {
+        try {
+            File f = new File(cuttentNavPath);
+            if(!f.exists()) return false;
+
+            File f2 = new File(cuttentNavPath + File.separator + name);
+            if(f2.exists()) return false;
+
+            if(f2.mkdirs()) return true;
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+        return false;
     }
     
-    public void dateiUmbenennen(long dateiId) {
-        
+    public void dateiLöschen(String dateiPfad) {
+        File f = new File(dateiPfad);
+        if(!f.exists()) {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+            return;
+        }
+        f.delete(); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
+
     }
     
-    public void dateiÖffnen(long dateiId) {
+    public boolean dateiUmbenennen(String neuerName, String dateiPfad) {
+        // File (or directory) with old name
+        File f = new File(dateiPfad);
+        if(!f.exists()) return false;
         
+        //Pathname des Vorverzeichnises (Pfad ohne Dateiname)
+        String parentPath = f.getParent(); 
+
+        // File (or directory) with new name
+        File f2 = new File(parentPath + File.separator + neuerName);
+        if(f2.exists()) return false;
+        
+        if(f.renameTo(f2)) return true;
+        
+        return false;
     }
+    
+//    public void dateiÖffnen(long dateiId) {
+//        
+//    }
     
 //    public void setGröße(int größe) {
 //        this.größe = größe;
