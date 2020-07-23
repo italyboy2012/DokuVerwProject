@@ -31,7 +31,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/open.png");
         
-        tg = new Themengruppe(this.selectedRowId, jTable1);
+        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2);
         this.setVisible(true);
         ansichtAktualisieren();
     }
@@ -49,7 +49,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
             
             if(tg.dateienIndexieren()) {
-                textField1.setText("geladen");
+                textField1.setText("Dateien indexiert und geladen.");
             } else {
                 textField1.setText("Fehler beim Indexieren der Dateien auf dem OS");
             }
@@ -130,7 +130,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Symbol", "Titel", "Pfad", "Änderungsdatum", "Typ", "Größe"
+                "Symbol", "Titel", "Pfad", "Änderungsdatum", "Größe"
             }
         ) {
 
@@ -143,7 +143,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             }
 
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -387,10 +387,19 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
+        tg.goBackNAV();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            if(jTable1.getSelectedRow() != -1) {
+                tg.openSelectedFile();
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            }
+        }
+        
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -417,6 +426,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        if(jTable1.getSelectedRow() != -1) {
+            tg.openSelectedFile();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

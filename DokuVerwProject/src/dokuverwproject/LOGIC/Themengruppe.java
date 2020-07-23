@@ -7,8 +7,11 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
+import java.awt.Desktop;
 import java.io.File;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -22,13 +25,20 @@ public class Themengruppe {
     private String titel = "";
     private String pfad = "";
     private Timestamp erstellungsdatum = null;
-    private long größe = 0;
-    private ArrayList<Datei> dateien = new ArrayList<>();
+    //private long größe = 0; NICHT MEHT BENÖTIGT -------------------------------------------------------------
+    //private ArrayList<Datei> dateien = new ArrayList<>(); NICHT MEHT BENÖTIGT -------------------------------------------------------------
     private javax.swing.JTable table = null; // Zugriff auf Tabelle in ThemengruppeFrame
     
-    public Themengruppe(long id, javax.swing.JTable table) {
+    //FÜR DIE NAVIGATION
+    private javax.swing.JTextField pfadAnzeige = null; //Pfadanzeige auf Frame für Themengruppe
+    private String pfadNav = "";
+    private ArrayList<String> pfadsNav = new ArrayList<String>();
+    private int pfadsNavIndex = 0;
+    
+    public Themengruppe(long id, javax.swing.JTable table, javax.swing.JTextField pfadAnzeige) {
         this.id = id;
         this.table = table;
+        this.pfadAnzeige = pfadAnzeige;
     }
     
     @Override
@@ -51,6 +61,7 @@ public class Themengruppe {
                         if(rs.getLong(1) == id) {
                             this.titel = rs.getString(2);
                             this.pfad = rs.getString(3);
+                            this.pfadNav = new String(this.pfad); // Pfad für Navigation
                             this.erstellungsdatum = rs.getTimestamp(4);
                             return true;
                         }
@@ -75,31 +86,92 @@ public class Themengruppe {
     }
     
     public boolean dateienIndexieren() {
-        DefaultTableModel model = (DefaultTableModel)table.getModel();
-        model.setRowCount(0);
-        table.scrollRectToVisible(table.getCellRect(0,0, true)); 
+        try {
+            DefaultTableModel model = (DefaultTableModel)table.getModel();
+            model.setRowCount(0);
+            table.scrollRectToVisible(table.getCellRect(0,0, true)); 
 
-        
-        Object[] row = new Object[5];
-        
-        //jTextField2.setText(pfadNav);
-        final File[] x = new File(pfad).listFiles();
-        for (final File file : x) {
-            
-            ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon( file );
-            row[0] = img;
-            row[1] = file.getName();
-            row[2] = "";
-            row[3] = file.getTotalSpace();
-            row[4] = file.getPath();
+            Object[] row = null;
+
+            pfadAnzeige.setText(pfadNav);
+            File f = new File(pfadNav);
+            if(!f.exists()) return false;
+            final File[] x = f.listFiles();
+            for (final File file : x) {
+                row = new Object[5];
+                ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon( file );
+                row[0] = img;
+                row[1] = file.getName();
+                row[2] = file.getPath();
+                row[3] = readableDate(file.lastModified());
+                row[4] = readableFileSize(file, file.length()); //größe
+
+                model.addRow(row);
+            }
+            return true;
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public String readableDate(long lastModified) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+	return(sdf.format(lastModified));
+    }
+    
+    public String readableFileSize(File file, long size) {
+        if(file.exists() && file.isFile()) {
+            if(size <= 0) return "0 B";
+            final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+            int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+            return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        } else {
+            return "";
+        }
+    }
+    
+    public void goBackNAV() {
+        if(this.pfadsNavIndex >= 1) {
+            this.pfadsNavIndex--;
+            this.pfadNav = pfadsNav.get(this.pfadsNavIndex);
+            pfadsNav.remove(this.pfadsNavIndex);
+            dateienIndexieren();
+        } else {
+            try {
+                //Clip clip = AudioSystem.getClip();
+                //clip.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("sounds/WindowsError.wav")));
+                //clip.start();
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+    
+    public void openSelectedFile() {
+        if(table.getSelectedRow() != -1) {
+            try {
+                String filePath = (String) table.getValueAt(table.getSelectedRow(), 2);
+                Desktop desktop = Desktop.getDesktop();
+                File file = new File(filePath);
                 
-            model.addRow(row);
-            
+                if(file.isDirectory()) {
+                    this.pfadsNav.add(pfadNav);
+                    pfadsNavIndex++;
+                    
+                    this.pfadNav = file.getPath();
+                    dateienIndexieren();
+                } else if(file.isFile()) {
+                    if(file.exists()) desktop.open(file);
+                }
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
         
-        
-        
-        return false;
     }
     
     public void neueDateiHinzufügen(String pfad) {
@@ -118,7 +190,7 @@ public class Themengruppe {
         
     }
     
-    public void setGröße(int größe) {
-        this.größe = größe;
-    }
+//    public void setGröße(int größe) {
+//        this.größe = größe;
+//    }
 }

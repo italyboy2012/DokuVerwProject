@@ -7,13 +7,10 @@ package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.Login;
 
-import javax.swing.*;
-
 import static dokuverwproject.commons.Common.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Scanner;
 /**
  *
  * @author Giuseppe & Falk
@@ -29,8 +26,6 @@ public class LoginFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/id.png");
         this.setVisible(true);
-
-
     }
 
     /**
@@ -194,13 +189,14 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         login();
-        jPasswordField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void login()
     {
         String username = jTextField1.getText();
         String password = jPasswordField1.getText();
+        
+        jPasswordField1.setText("");
 
         Login l = new Login (username, password);
 
@@ -209,8 +205,6 @@ public class LoginFrame extends javax.swing.JFrame {
             return;
         }
     }
-
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
