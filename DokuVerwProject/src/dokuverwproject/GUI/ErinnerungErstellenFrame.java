@@ -5,6 +5,11 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.LOGIC.Datei;
+import dokuverwproject.LOGIC.Erinnerung;
+
+import java.sql.Timestamp;
+
 import static dokuverwproject.commons.Common.*;
 
 /**
@@ -140,7 +145,7 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     
     public void speichern() {
-        
+        Erinnerung.erinnerungErstellen(String titel, String inhalt, Timestamp faellig, Datei datei);
     }
     
     // Datum vom DateChooser bekommen
