@@ -6,7 +6,6 @@
 package dokuverwproject;
 
 import dokuverwproject.GUI.LoginFrame;
-import static dokuverwproject.commons.Common.*;
 
 /**
  *
