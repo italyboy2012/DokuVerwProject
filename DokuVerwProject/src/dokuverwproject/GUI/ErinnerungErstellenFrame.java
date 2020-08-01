@@ -18,13 +18,15 @@ import static dokuverwproject.commons.Common.*;
  */
 public class ErinnerungErstellenFrame extends javax.swing.JFrame {
 
+private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
     /**
      * Creates new form ErinnerungErstellenFrame
      */
-    public ErinnerungErstellenFrame() {
+    public ErinnerungErstellenFrame(String datei) {
         initExternalFrame(this, "../img/hourglass.png");
         initComponents();
         this.setVisible(true);
+        file = datei;
     }
 
     /**
@@ -147,10 +149,10 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     
     public void speichern() {
-        String titel = "test titel";
-        String inhalt = "testinhalt";
+        String titel = jTextField1.getText();
+        String inhalt = jTextArea1.getText();
         String faellig = "CURRENT_TIMESTAMP";
-        String datei = "C:\\test.txt";
+        String datei = file;
         Erinnerung.erinnerungErstellen( titel,  inhalt,  faellig,  datei);
     }
     

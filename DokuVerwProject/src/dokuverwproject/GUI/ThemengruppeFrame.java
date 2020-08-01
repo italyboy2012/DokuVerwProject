@@ -61,7 +61,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void erinnerungErstellen() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame();
+            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(selectedRowPath);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
