@@ -5,10 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Datei;
 import dokuverwproject.LOGIC.Erinnerung;
-
-import java.sql.Timestamp;
 
 import static dokuverwproject.commons.Common.*;
 
@@ -144,8 +141,6 @@ private String file =""; // puffer für Übergabe des Pfades der in Themengruppe
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         speichern();
-
-
     }//GEN-LAST:event_jButton1ActionPerformed
     
     public void speichern() {
