@@ -142,10 +142,16 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         speichern();
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
     
     public void speichern() {
-        Erinnerung.erinnerungErstellen(String titel, String inhalt, Timestamp faellig, Datei datei);
+        String titel = "test titel";
+        String inhalt = "testinhalt";
+        String faellig = "CURRENT_TIMESTAMP";
+        String datei = "C:\\test.txt";
+        Erinnerung.erinnerungErstellen( titel,  inhalt,  faellig,  datei);
     }
     
     // Datum vom DateChooser bekommen

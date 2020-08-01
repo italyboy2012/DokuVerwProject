@@ -90,6 +90,7 @@ public class ThemengruppenListe {
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;
+                //nach begreifen löschen... ? und ps.setstring gegen sql injection
                 String query = "INSERT INTO `themengruppen` (`id`, `titel`, `pfad`, `created_TMSTMP`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP);";
                 ps = con.prepareStatement(query);
                 ps.setString(1, titel);

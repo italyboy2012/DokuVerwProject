@@ -7,10 +7,7 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DATA.DBConn;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  *
@@ -24,6 +21,7 @@ public class Erinnerung {
     private Timestamp fällig = null;
     private boolean erledigt = false;
     private Datei datei = null;
+
 /*
     kann wohl weg
     public Erinnerung(long id, String titel, String inhalt, Timestamp fällig, boolean erledigt, Datei datei) {
@@ -39,9 +37,9 @@ public class Erinnerung {
 
     };
 
-    public void erinnerungErstellen(String titel, String inhalt, Timestamp faellig, Datei datei){
+    public static void erinnerungErstellen(String titel, String inhalt, String faellig, String datei){
     // Erinnerungen werden in der DB gespeichert
-        DBConn dbc = new DBConn();
+       DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         if ( con != null){
             Statement stmt = null;
@@ -52,8 +50,17 @@ public class Erinnerung {
                 while(rs.next()){
                     long id = rs.getLong(1);
                 }
-            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES ("+id+","+ titel +","+inhalt+","+faellig+","+false+","+datei+",CURRENT_TIMESTAMP)";
+            //id setzt db selbst, deshalb NULL
+                PreparedStatement ps = null;
+            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES (NULL,? ,?,CURRENT_TIMESTAMP,"+false+",?,CURRENT_TIMESTAMP)";
 
+                ps = con.prepareStatement(addquery);
+                ps.setString(1, titel);
+                ps.setString(2, inhalt);
+                //ps.setString(3, faellig);
+                ps.setString(3, datei);
+                ps.executeUpdate();
+                ps.close();
             } catch (Exception e) {
                 System.out.println(e.toString());
                 e.printStackTrace();

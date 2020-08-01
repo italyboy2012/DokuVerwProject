@@ -5,19 +5,31 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.LOGIC.ErinnerungenListe;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
  */
 public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
-
+    private ErinnerungenListe el = null;
     /**
      * Creates new form ThemengruppenFrame
      */
     public ErinnerungsübersichtFrame() {
         initComponents();
+        el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
+        erinnerungenAusDBLaden();
     }
+    public void erinnerungenAusDBLaden(){
+        if(!el.erinnerungenLaden()){
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Erinnerungsliste");
+        }
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
