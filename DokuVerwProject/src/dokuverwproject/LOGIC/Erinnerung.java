@@ -5,7 +5,7 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DATA.DBConn;
+import dokuverwproject.DB.DBConn;
 
 import java.sql.*;
 

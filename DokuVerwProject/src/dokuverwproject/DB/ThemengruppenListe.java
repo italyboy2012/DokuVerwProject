@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dokuverwproject.LOGIC;
+package dokuverwproject.DB;
 
-import dokuverwproject.DATA.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Giuseppe
  */
 public class ThemengruppenListe {
-    private long größe = 0;
+    private long groesse = 0;
     //private ArrayList<Themengruppe> themengruppen = null;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ThemengruppenübersichtFrame
     
@@ -34,7 +33,7 @@ public class ThemengruppenListe {
         Connection con = dbc.getConnection();
         
         if(con != null) {
-            this.setGröße(0);
+            this.setGroesse(0);
             //this.themengruppen = new ArrayList<>();
             model.setRowCount(0);
 
@@ -67,7 +66,7 @@ public class ThemengruppenListe {
 
                     model.addRow(row);
                     
-                    this.setGröße(this.getGröße()+1);
+                    this.setGroesse(this.getGroesse()+1);
                     
                     //themengruppen.add(new Themengruppe(id, titel, pfad, tmstp, null));
 
@@ -75,6 +74,7 @@ public class ThemengruppenListe {
                 stmt.close();
                 return true;
             } catch(Exception e){
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Themengruppenliste.");
                 System.out.println(e.toString());
                 e.printStackTrace();
             }
@@ -132,7 +132,7 @@ public class ThemengruppenListe {
         return false;
     }
     
-    public boolean themaLöschen(long id) {
+    public boolean themaLoeschen(long id) {
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
@@ -154,12 +154,12 @@ public class ThemengruppenListe {
         return false;
     }
     
-    public long getGröße() {
-        return this.größe;
+    public long getGroesse() {
+        return this.groesse;
     }
     
-    public void setGröße(long größe) {
-        this.größe = größe;
+    public void setGroesse(long groesse) {
+        this.groesse = groesse;
     }
     
 }

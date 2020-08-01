@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.ThemengruppenListe;
+import dokuverwproject.DB.ThemengruppenListe;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import javax.swing.JFileChooser;
 

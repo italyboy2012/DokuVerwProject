@@ -5,9 +5,8 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.ErinnerungenListe;
+import dokuverwproject.DB.ErinnerungenListe;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,11 +23,26 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
         erinnerungenAusDBLaden();
     }
+    
+    /**
+     * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
+     * @param status 
+     */
+    public void setStaturs(String status) {
+        textField1.setText(status);
+    }
+    
     public void erinnerungenAusDBLaden(){
-        if(!el.erinnerungenLaden()){
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Erinnerungsliste");
+//        if(!el.erinnerungenLaden()){
+//            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Erinnerungsliste"); 
+//        } // --------------------------------------------- Änderung: Fehlermeldung geschieht in der Logik-Klasse und es muss der
+//                                                              aktuelle Status auf der Fußleiste des Fensters angezeigt werden.
+        setStaturs("Laden...");
+        if(el.erinnerungenLaden()) {
+            setStaturs(el.getGroesse() + " Erinnerungen geladen");
+        } else {
+            setStaturs("Fehler");
         }
-
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,6 +64,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        textField1 = new java.awt.TextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -159,7 +174,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -177,23 +192,26 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        textField1.setEditable(false);
+        textField1.setText("textField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addGap(0, 0, 0)
+                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -245,5 +263,6 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTable jTable1;
+    private java.awt.TextField textField1;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,8 +5,7 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DATA.Benutzer;
-import dokuverwproject.DATA.DBConn;
+import dokuverwproject.DB.DBConn;
 import dokuverwproject.GUI.HauptFrame;
 import dokuverwproject.GUI.NotifyFrame;
 import java.sql.*;

@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dokuverwproject.LOGIC;
-import dokuverwproject.DATA.DBConn;
+package dokuverwproject.DB;
 import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.LOGIC.Erinnerung;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
@@ -23,15 +21,15 @@ import javax.swing.table.DefaultTableModel;
  * @author Giuseppe & Falk
  */
 public class ErinnerungenListe {
-    
-    public void ansichtAktualisieren() {
-
-    }
-    private long groeße = 0;
+    private long groesse = 0;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
 
     public ErinnerungenListe(DefaultTableModel model) {
         this.model = model;
+    }
+    
+    public void ansichtAktualisieren() {
+        // ----------------------------------------- Wahrscheinlich nicht mehr benötigt
     }
 
     public Boolean erinnerungenLaden() {
@@ -39,10 +37,10 @@ public class ErinnerungenListe {
         Connection con = dbc.getConnection();
         if (con != null) {
 
-            this.setGroeße(0);
+            this.setGroesse(0);
             model.setRowCount(0);
 
-            Object[] row = new Object[7];
+            Object[] row = new Object[3];
 
             Statement stmt = null;
             String query = "SELECT * FROM `erinnerungen`";
@@ -52,41 +50,38 @@ public class ErinnerungenListe {
                 ResultSet rs = stmt.executeQuery(query);
 
                 while (rs.next()) {
-
+                    // --------------------------------- Änderung: wir brauchen nur nr, titel, fälligkeit
                     long id = rs.getLong(1);
                     String titel = rs.getString(2);
-                    String inhalt = rs.getString(3);
-                    Timestamp faellig = rs.getTimestamp(4);
-                    Integer erledigt = rs.getInt(5);
-                    String pfad = rs.getString(6);
-                    Timestamp stamp = rs.getTimestamp(7);
+//                    String inhalt = rs.getString(3);
+                    Date faellig = rs.getDate(4);  // --------------------------------- Änderung: Datum, nicht Timestamp
+//                    Boolean erledigt = rs.getBoolean(5);  // --------------------------------- Änderung: Boolean (wird in der DB als tinyint gespeichert)
+//                    String pfad = rs.getString(6);
+                    //Timestamp stamp = rs.getTimestamp(7);  // --------------------------------- Änderung: Hier tritt eine Exception auf
 
                     SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
                     sdfDate.setTimeZone(TimeZone.getTimeZone("MEZ"));
-
-                    SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
-                    sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
-
-                    String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
+//
+//                    SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
+//                    sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
+//
+//                    String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
+                    String s_stamp = sdfDate.format(faellig);
 
                     row[0] = id;
                     row[1] = titel;
-                    row[2] = inhalt;
-                    row[3] = faellig;
-                    row[4] = erledigt;
-                    row[5] = pfad;
-                    row[6] = s_stamp;
+                    row[2] = s_stamp;
 
                     model.addRow(row);
 
-                    this.setGroeße(this.getGroeße() + 1);
+                    this.setGroesse(this.getGroesse() + 1);
                 }
-                ;
 
                 stmt.close();
                 return true;
 
             } catch (Exception e) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Erinnerungenliste.");
                 System.out.println(e.toString());
                 e.printStackTrace();
             }
@@ -114,12 +109,12 @@ public class ErinnerungenListe {
         erinnerung.setErledigt( !erinnerung.getErledigt() );
     }
 
-    public long getGroeße() {
-        return this.groeße;
+    public long getGroesse() {
+        return this.groesse;
     }
 
-    public void setGroeße(long größe) {
-        this.groeße = groeße;
+    public void setGroesse(long groesse) {
+        this.groesse = groesse;
     }
 
 

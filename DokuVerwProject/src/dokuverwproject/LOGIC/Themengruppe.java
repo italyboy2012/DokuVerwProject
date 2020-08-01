@@ -5,11 +5,10 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DATA.DBConn;
+import dokuverwproject.DB.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

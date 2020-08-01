@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.ThemengruppenListe;
+import dokuverwproject.DB.ThemengruppenListe;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -43,7 +43,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     public void themengruppenAusDBLaden() {
         setStaturs("Laden...");
         if(tgl.themenAusDBLaden()) {
-            setStaturs(tgl.getGröße() + " Themengruppen geladen");
+            setStaturs(tgl.getGroesse() + " Themengruppen geladen");
         } else {
             setStaturs("Fehler");
         }
@@ -73,7 +73,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         if(jTable1.getSelectedRow() != -1) {
             setStaturs("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            if(!tgl.themaLöschen(selectedRowId)) {
+            if(!tgl.themaLoeschen(selectedRowId)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Themengruppe aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;

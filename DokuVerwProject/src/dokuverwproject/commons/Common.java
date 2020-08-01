@@ -5,7 +5,7 @@
  */
 package dokuverwproject.commons;
 
-import dokuverwproject.DATA.DBConn;
+import dokuverwproject.DB.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;

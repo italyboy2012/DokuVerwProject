@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DATA.Benutzer;
+import dokuverwproject.LOGIC.Benutzer;
 import static dokuverwproject.commons.Common.*;
 import javax.swing.JFrame;
 
