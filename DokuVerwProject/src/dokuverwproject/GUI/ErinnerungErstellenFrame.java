@@ -5,6 +5,7 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.LOGIC.Erinnerung;
 
 import static dokuverwproject.commons.Common.*;
@@ -146,9 +147,10 @@ private String file =""; // puffer für Übergabe des Pfades der in Themengruppe
     public void speichern() {
         String titel = jTextField1.getText();
         String inhalt = jTextArea1.getText();
-        String faellig = "CURRENT_TIMESTAMP";
+        java.sql.Date sqldate = new java.sql.Date(jDateChooser1.getDate().getTime());
         String datei = file;
-        Erinnerung.erinnerungErstellen( titel,  inhalt,  faellig,  datei);
+        Erinnerung.erinnerungErstellen(titel, inhalt, sqldate, datei);
+        dispose();
     }
     
     // Datum vom DateChooser bekommen

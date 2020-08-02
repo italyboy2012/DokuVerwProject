@@ -100,13 +100,13 @@ public class ErinnerungenListe {
     
     public void erinnerungÄndern(Erinnerung erinnerung,Timestamp zeit, String inhalt) {
         // setze inhalt und zeit auf entsprechende Variablen von erinnerung
-        erinnerung.setInhalt(inhalt);
-        erinnerung.setFällig(zeit);
+       //  erinnerung.setInhalt(inhalt);
+        // erinnerung.setFällig(zeit);
     }
     
     public void aendereErledigt(Erinnerung erinnerung) {
         //
-        erinnerung.setErledigt( !erinnerung.getErledigt() );
+       // erinnerung.setErledigt( !erinnerung.getErledigt() );
     }
 
     public long getGroesse() {

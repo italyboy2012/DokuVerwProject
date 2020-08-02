@@ -15,6 +15,8 @@ import java.sql.*;
  */
 
 public class Erinnerung {
+    /*
+    kann wohl weg
     private long id = 0;
     private String titel = "";
     private String inhalt = "";
@@ -22,8 +24,7 @@ public class Erinnerung {
     private boolean erledigt = false;
     private Datei datei = null;
 
-/*
-    kann wohl weg
+
     public Erinnerung(long id, String titel, String inhalt, Timestamp fällig, boolean erledigt, Datei datei) {
         this.id = id;
         this.titel = titel;
@@ -37,7 +38,7 @@ public class Erinnerung {
 
     };
 
-    public static void erinnerungErstellen(String titel, String inhalt, String faellig, String datei){
+    public static void erinnerungErstellen(String titel, String inhalt,  java.sql.Date sqldate , String datei){
     // Erinnerungen werden in der DB gespeichert
        DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
@@ -52,13 +53,13 @@ public class Erinnerung {
                 }
             //id setzt db selbst, deshalb NULL
                 PreparedStatement ps = null;
-            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES (NULL,? ,?,CURRENT_TIMESTAMP,"+false+",?,CURRENT_TIMESTAMP)";
+            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES (NULL,? ,?,?,"+false+",1,?,CURRENT_TIMESTAMP)";
 
                 ps = con.prepareStatement(addquery);
                 ps.setString(1, titel);
                 ps.setString(2, inhalt);
-                //ps.setString(3, faellig);
-                ps.setString(3, datei);
+                ps.setDate(3, sqldate);
+                ps.setString(4, datei);
                 ps.executeUpdate();
                 ps.close();
             } catch (Exception e) {
@@ -73,7 +74,7 @@ public class Erinnerung {
     public void dateiAnzeigen() {
         
     }
-
+/*
     public String getTitel() {
         return titel;
     }
@@ -121,4 +122,6 @@ public class Erinnerung {
     public void setId(long id) {
         this.id = id;
     }
+    */
+
 }
