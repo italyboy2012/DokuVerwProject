@@ -7,24 +7,31 @@ package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.LOGIC.Erinnerung;
-
 import static dokuverwproject.commons.Common.*;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 
 /**
  *
  * @author Falk
  */
 public class ErinnerungErstellenFrame extends javax.swing.JFrame {
-
-private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
+    private ErinnerungenListe el = null; // DB-Logik der Erinnerungen
+    private long themengruppenID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
+    private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
+    
     /**
      * Creates new form ErinnerungErstellenFrame
      */
-    public ErinnerungErstellenFrame(String datei) {
+    public ErinnerungErstellenFrame(long themengruppenID, String dateiPfad) {
+        this.themengruppenID = themengruppenID;
+        this.file = dateiPfad;
+        el = new ErinnerungenListe();
         initExternalFrame(this, "../img/hourglass.png");
         initComponents();
+        jDateChooser1.setDate(new Timestamp(System.currentTimeMillis())); // Datumsanzeige auf aktuelles Datum setzen
         this.setVisible(true);
-        file = datei;
     }
 
     /**
@@ -147,17 +154,34 @@ private String file =""; // puffer für Übergabe des Pfades der in Themengruppe
     public void speichern() {
         String titel = jTextField1.getText();
         String inhalt = jTextArea1.getText();
-        java.sql.Date sqldate = new java.sql.Date(jDateChooser1.getDate().getTime());
+        String faelligkeitsDatum = "";
+        try{
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            faelligkeitsDatum = formatter.format(jDateChooser1.getDate());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
         String datei = file;
-        Erinnerung.erinnerungErstellen(titel, inhalt, sqldate, datei);
-        dispose();
+        
+        if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
+            if(!el.erinnerungErstellen(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
+            } else {
+                this.dispose();
+                // ------------------------------------------------------------------------- Ansicht aktualisieren
+            }
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+        }
+        
     }
     
     // Datum vom DateChooser bekommen
-//    String anlagedatum = null;
+//    String faelligkeitsDatum = null;
 //        try{
 //            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//            anlagedatum = formatter.format(jDateChooser1.getDate());
+//            faelligkeitsDatum = formatter.format(jDateChooser1.getDate());
 //
 //        } catch (Exception e) {
 //            System.out.println(e.toString());

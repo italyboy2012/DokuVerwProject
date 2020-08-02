@@ -5,10 +5,6 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DB.DBConn;
-
-import java.sql.*;
-
 /**
  *
  * @author Giuseppe & Falk
@@ -36,40 +32,38 @@ public class Erinnerung {
 */
     public Erinnerung(){
 
-    };
-
-    public static void erinnerungErstellen(String titel, String inhalt,  java.sql.Date sqldate , String datei){
-    // Erinnerungen werden in der DB gespeichert
-       DBConn dbc = new DBConn();
-        Connection con = dbc.getConnection();
-        if ( con != null){
-            Statement stmt = null;
-            String query = "SELECT id FROM `erinnerungen`";
-            try {
-                stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-                while(rs.next()){
-                    long id = rs.getLong(1);
-                }
-            //id setzt db selbst, deshalb NULL
-                PreparedStatement ps = null;
-            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES (NULL,? ,?,?,"+false+",1,?,CURRENT_TIMESTAMP)";
-
-                ps = con.prepareStatement(addquery);
-                ps.setString(1, titel);
-                ps.setString(2, inhalt);
-                ps.setDate(3, sqldate);
-                ps.setString(4, datei);
-                ps.executeUpdate();
-                ps.close();
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                e.printStackTrace();
-            }
-        }
     }
 
-
+//    public static void erinnerungErstellen(String titel, String inhalt,  java.sql.Date sqldate , String datei){
+//    // Erinnerungen werden in der DB gespeichert
+//       DBConn dbc = new DBConn();
+//        Connection con = dbc.getConnection();
+//        if ( con != null){
+//            Statement stmt = null;
+//            String query = "SELECT id FROM `erinnerungen`";
+//            try {
+//                stmt = con.createStatement();
+//                ResultSet rs = stmt.executeQuery(query);
+//                while(rs.next()){
+//                    long id = rs.getLong(1);
+//                }
+//            //id setzt db selbst, deshalb NULL
+//                PreparedStatement ps = null;
+//            String addquery = "INSERT INTO `erinnerungen`(`id`, `titel`, `inhalt`, `faellig`, `erledigt`, `dateiPfad`, `created_TMSTMP`) " + "VALUES (NULL,? ,?,?,"+false+",1,?,CURRENT_TIMESTAMP)";
+//
+//                ps = con.prepareStatement(addquery);
+//                ps.setString(1, titel);
+//                ps.setString(2, inhalt);
+//                ps.setDate(3, sqldate);
+//                ps.setString(4, datei);
+//                ps.executeUpdate();
+//                ps.close();
+//            } catch (Exception e) {
+//                System.out.println(e.toString());
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public void dateiAnzeigen() {
         

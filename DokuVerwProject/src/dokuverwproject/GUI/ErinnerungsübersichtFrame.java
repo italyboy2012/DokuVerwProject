@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Giuseppe & Falk
  */
 public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
-    private ErinnerungenListe el = null;
+    private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     /**
      * Creates new form ThemengruppenFrame
      */
@@ -38,7 +38,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 //        } // --------------------------------------------- Änderung: Fehlermeldung geschieht in der Logik-Klasse und es muss der
 //                                                              aktuelle Status auf der Fußleiste des Fensters angezeigt werden.
         setStaturs("Laden...");
-        if(el.erinnerungenLaden()) {
+        if(el.erinnerungenLaden(-1)) { //-1, um alle Erinnerungen laden
             setStaturs(el.getGroesse() + " Erinnerungen geladen");
         } else {
             setStaturs("Fehler");
