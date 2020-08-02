@@ -6,7 +6,6 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ErinnerungenListe;
-import dokuverwproject.LOGIC.Erinnerung;
 import static dokuverwproject.commons.Common.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -17,6 +16,7 @@ import java.text.SimpleDateFormat;
  * @author Falk
  */
 public class ErinnerungErstellenFrame extends javax.swing.JFrame {
+    private ThemengruppeFrame tgf = null; // Referenz, um Tabellenanzeige zu aktualisieren
     private ErinnerungenListe el = null; // DB-Logik der Erinnerungen
     private long themengruppenID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
     private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
@@ -24,7 +24,8 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
     /**
      * Creates new form ErinnerungErstellenFrame
      */
-    public ErinnerungErstellenFrame(long themengruppenID, String dateiPfad) {
+    public ErinnerungErstellenFrame(ThemengruppeFrame tgf, long themengruppenID, String dateiPfad) {
+        this.tgf = tgf;
         this.themengruppenID = themengruppenID;
         this.file = dateiPfad;
         el = new ErinnerungenListe();
@@ -168,8 +169,8 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
             if(!el.erinnerungErstellen(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
             } else {
+                tgf.ansichtAktualisieren();
                 this.dispose();
-                // ------------------------------------------------------------------------- Ansicht aktualisieren
             }
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");

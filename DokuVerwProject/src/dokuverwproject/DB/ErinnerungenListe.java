@@ -16,9 +16,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import javax.swing.ImageIcon;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -121,20 +119,24 @@ public class ErinnerungenListe {
                     } else { // wenn für Themengruppen-Frame geladen wird
                         // mehr infos laden --> "Nr.", "Symbol", "Titel", "Fällig" --> Symbol für Fälligkeitsanzeige
                         row[0] = id;
-                        //ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(new File("../img/folder.png"));
-                        //ImageIcon img = new ImageIcon("../img/root-directory.png");
-                        ImageIcon img = (ImageIcon) new ImageIcon("../img/green.png");
+                        
+                        //ImageIcon img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/green.png").getFile()));
+                        ImageIcon img = null;
+                        
+                        if(erledigt) {
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/green.png").getFile()));
+                        } else {
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/red.png").getFile()));
+                        }
+                        
                         row[1] = img;
                         row[2] = titel;
                         row[3] = s_stamp;
                     }
-
                     model.addRow(row);
-                    
                     this.setGroesse(this.getGroesse() + 1);
                 }
                 stmt.close();
-                
                 return true;
             } catch (Exception e) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Erinnerungenliste.");

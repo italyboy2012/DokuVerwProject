@@ -8,11 +8,8 @@ package dokuverwproject.GUI;
 import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
-import java.awt.Color;
 import javax.swing.ImageIcon;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -64,25 +61,14 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         }
         
         //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
-        //TEST------------------------------
         el.erinnerungenLaden(selectedRowId);
-//                TableModel tModel = (TableModel) jTable2.getModel();
-//                int columnCount = tModel.getColumnCount();
-//
-//                //Loop through the model and get the values by tModel.getValueAt(row,column);
-//                for(int i = 0; i <= columnCount; i++) {
-//                     if(tModel.getValueAt(1,2) == "true") {
-//                         
-//                     }
-//                             
-//                }
         
     }
     
     public void erinnerungErstellen() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
+            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(this, selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
