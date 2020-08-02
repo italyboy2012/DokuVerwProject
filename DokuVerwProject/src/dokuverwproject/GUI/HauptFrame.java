@@ -204,7 +204,7 @@ public class HauptFrame extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem3);
 
-        jMenuItem4.setText("Erinnerugen");
+        jMenuItem4.setText("Erinnerungen");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
