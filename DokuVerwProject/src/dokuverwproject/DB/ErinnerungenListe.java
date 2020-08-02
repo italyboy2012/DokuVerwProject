@@ -16,7 +16,9 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -80,6 +82,7 @@ public class ErinnerungenListe {
             
             Statement stmt = null;
             String query = "";
+            
             if(tgID == -1) {
                 query = "SELECT * FROM `erinnerungen`";
                 row = new Object[3];
@@ -94,23 +97,22 @@ public class ErinnerungenListe {
 
                 while (rs.next()) {
                     // --------------------------------- Änderung: wir brauchen nur nr, titel, fälligkeit
-                        long id = rs.getLong(1);
-                        String titel = rs.getString(2);
-    //                    String inhalt = rs.getString(3);
-                        Date faellig = rs.getDate(4);  // --------------------------------- Änderung: Datum, nicht Timestamp
-                        Boolean erledigt = rs.getBoolean(5);  // --------------------------------- Änderung: Boolean (wird in der DB als tinyint gespeichert)
-//                        String pfad = rs.getString(6);
-                        //Timestamp stamp = rs.getTimestamp(7);  // --------------------------------- Änderung: Hier tritt eine Exception auf
+                    long id = rs.getLong(1);
+                    String titel = rs.getString(2);
+                    //String inhalt = rs.getString(3);
+                    Date faellig = rs.getDate(4);  // --------------------------------- Änderung: Datum, nicht Timestamp
+                    Boolean erledigt = rs.getBoolean(5);  // --------------------------------- Änderung: Boolean (wird in der DB als tinyint gespeichert)
+                    //String pfad = rs.getString(6);
+                    //Timestamp stamp = rs.getTimestamp(7);  // --------------------------------- Änderung: Hier tritt eine Exception auf
 
-                        SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
-                        sdfDate.setTimeZone(TimeZone.getTimeZone("MEZ"));
-    //
-    //                    SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
-    //                    sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
-    //
-    //                    String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
-                        String s_stamp = sdfDate.format(faellig);
-                        
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
+                    sdfDate.setTimeZone(TimeZone.getTimeZone("MEZ"));
+
+                    //SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
+                    //sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
+
+                    //String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
+                    String s_stamp = sdfDate.format(faellig);
                         
                     if(tgID == -1) { // Wenn für Hauptframe geladen wird
                         row[0] = id;
@@ -119,18 +121,20 @@ public class ErinnerungenListe {
                     } else { // wenn für Themengruppen-Frame geladen wird
                         // mehr infos laden --> "Nr.", "Symbol", "Titel", "Fällig" --> Symbol für Fälligkeitsanzeige
                         row[0] = id;
-                        ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(new File("../img/root-directory.png"));
-                        row[1] = "ddd";
+                        //ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(new File("../img/folder.png"));
+                        //ImageIcon img = new ImageIcon("../img/root-directory.png");
+                        ImageIcon img = (ImageIcon) new ImageIcon("../img/green.png");
+                        row[1] = img;
                         row[2] = titel;
                         row[3] = s_stamp;
                     }
-                    
 
                     model.addRow(row);
-
+                    
                     this.setGroesse(this.getGroesse() + 1);
                 }
                 stmt.close();
+                
                 return true;
             } catch (Exception e) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Erinnerungenliste.");

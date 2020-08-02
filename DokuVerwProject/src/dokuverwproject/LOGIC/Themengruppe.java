@@ -105,7 +105,7 @@ public class Themengruppe {
             final File[] x = f.listFiles();
             for (final File file : x) {
                 row = new Object[5];
-                ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon( file );
+                ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(file);
                 row[0] = img;
                 row[1] = file.getName();
                 row[2] = file.getPath();

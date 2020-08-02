@@ -8,8 +8,11 @@ package dokuverwproject.GUI;
 import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
+import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -45,7 +48,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
      */
     public void ansichtAktualisieren() {
-        //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
@@ -61,8 +63,20 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
         
+        //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
         //TEST------------------------------
         el.erinnerungenLaden(selectedRowId);
+//                TableModel tModel = (TableModel) jTable2.getModel();
+//                int columnCount = tModel.getColumnCount();
+//
+//                //Loop through the model and get the values by tModel.getValueAt(row,column);
+//                for(int i = 0; i <= columnCount; i++) {
+//                     if(tModel.getValueAt(1,2) == "true") {
+//                         
+//                     }
+//                             
+//                }
+        
     }
     
     public void erinnerungErstellen() {
@@ -231,14 +245,14 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nr.", "Symbol", "Titel", "Fällig"
+                "Nr.", "Status", "Titel", "Fällig"
             }
         ) {
 
             @Override
             public Class<?> getColumnClass(int column) {
                 switch (column) {
-                    case 0: return ImageIcon.class;
+                    case 1: return ImageIcon.class;
                     default: return String.class;
                 }
             }
@@ -271,11 +285,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
