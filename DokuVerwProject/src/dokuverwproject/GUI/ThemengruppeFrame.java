@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
  *      versucht die entsprechende Notiz über notizAusDBLaden zu laden
  * Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
  *      der markierten Datei an die Methode notizInDBSchreiben übergibt
+ * Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
  */
 public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
@@ -83,7 +84,21 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
-    
+
+    public void schreibeNotiz(){
+        String notizText = jTextArea1.getText();
+        String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+        if(!no.notizInDBSchreiben(notizText ,pfad)){
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
+        }
+    }
+
+    public void ladeNotiz(){
+        String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+        String ausgabe = no.notizAusDBLaden(test);
+        jTextArea1.setText(ausgabe);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -183,9 +198,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
                 if (jTable1.getSelectedRow() != -1){
                     jTextArea1.setEditable(true);
-                    String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-                    String ausgabe = no.notizAusDBLaden(test);
-                    jTextArea1.setText(ausgabe);
+                    ladeNotiz();
                     /* ------- Aenderungen:
                     Notizfeld wird freigegeben, wenn Zeile markiert wurde
                     String test liest Wert aus der Pfadzelle der Tabelle
@@ -340,16 +353,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
-                String notizText = jTextArea1.getText();
-                String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-              if(!no.notizInDBSchreiben(notizText ,pfad)){
-                  NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
-              }
-
-                /*
-                Änderungen:
-                    ein Klick auf das Speichern Symbol schreibt den Text aus dem Feld in den DB-Eintrag der Notiz
-                 */
+                schreibeNotiz();
             }
         });
 
