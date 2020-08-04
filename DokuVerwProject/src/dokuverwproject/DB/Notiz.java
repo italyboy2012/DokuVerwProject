@@ -21,7 +21,7 @@ public class Notiz {
     }
 
 
-    public String notizAusDBLaden(String pfad){
+    public String notizAusDBLaden(String pfad, long tgid){
         String ausgabe = ""; // initialisierung und definition des Ausgabeparameters
 
         // Erstellen der SQL-Verbindung
@@ -48,9 +48,10 @@ public class Notiz {
 
                 } else {
                         // falls keine Notiz für die Datei existiert wird hier eine neue leere erstellt
-                       query = "INSERT INTO `notizen`(`id`, `titel`, `inhalt`, `dateiPfad`, `created_TMSTMP`) VALUES (null,'created','',?,CURRENT_TIMESTAMP)";
+                       query = "INSERT INTO `notizen`(`id`, `inhalt`, `dateiPfad`, `themengruppenID`, `created_TMSTMP`) VALUES (NuLL , '',? ,?,CURRENT_TIMESTAMP)";
                        ps = con.prepareStatement(query);
                        ps.setString(1, pfad);
+                       ps.setLong(2, tgid);
                        ps.executeUpdate();
                        ps.close();}
 
@@ -82,14 +83,14 @@ public class Notiz {
         return false;
         }
 
-        public boolean notizLoeschen(String pfad){
-            String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
+        public boolean notizLoeschen(long tgID){
+            String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
             PreparedStatement ps = null;
             try {
                 DBConn dbc = new DBConn();
                 Connection con = dbc.getConnection();
                 ps = con.prepareStatement(query);
-                ps.setString(1, pfad);
+                ps.setLong(1, tgID);
                 ps.executeUpdate();
                 ps.close();
                 return true;

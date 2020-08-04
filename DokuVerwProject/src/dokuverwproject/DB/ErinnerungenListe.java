@@ -151,10 +151,29 @@ public class ErinnerungenListe {
         return false;
     }
 
-    public void erinnerungLöschen(Erinnerung erinnerung) {
-        // lösche Referenz auf erinngerung und starte garbage collector
-        erinnerung = null;
-        System.gc();
+
+
+    public boolean erinnerungLoeschen(long tgID){
+        String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`themengruppenID` = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        if(con!=null) {
+            try {
+                ps = con.prepareStatement(query);
+                ps.setLong(1, tgID);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            }
+        }
+        return false;
+
+
+
     }
     
     public void erinnerungBearbeiten(Erinnerung erinnerung,Timestamp zeit, String inhalt) {

@@ -61,7 +61,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
             jLabel1.setText(tg.toString()); //Titelleiste mit Themengruppenwerten setzen
             this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
-            
             if(tg.dateienIndexieren()) {
                 textField1.setText("Dateien indexiert und geladen.");
             } else {
@@ -95,7 +94,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     public void ladeNotiz(){
         String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        String ausgabe = no.notizAusDBLaden(test);
+        long themengruppenID = tg.getId();
+        String ausgabe = no.notizAusDBLaden(test, themengruppenID);
         jTextArea1.setText(ausgabe);
     }
 

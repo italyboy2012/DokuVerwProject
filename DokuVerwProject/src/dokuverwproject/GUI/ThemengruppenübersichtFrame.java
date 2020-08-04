@@ -5,15 +5,22 @@
  */
 package dokuverwproject.GUI;
 
+import dokuverwproject.DB.ErinnerungenListe;
+import dokuverwproject.DB.Notiz;
 import dokuverwproject.DB.ThemengruppenListe;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
+ *
+ * Changelog: Falk @ 04.08.2020
+ * anpassen der Methode deleteSelectedRow, damit ich Erinnerungen und Notizen der Themengruppe gelöscht werden
  */
 public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     private ThemengruppenListe tgl = null; // Logik dieser Klasse
+    private Notiz no = null;
+    private ErinnerungenListe el = null;
 
     /**
      * Konstruktor übergibt der Logikklasse das TableModel,
@@ -25,6 +32,8 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     public ThemengruppenübersichtFrame() {
         initComponents();
         tgl = new ThemengruppenListe((DefaultTableModel)jTable1.getModel());
+        el = new ErinnerungenListe();
+        no = new Notiz();
         themengruppenAusDBLaden();
     }
     
@@ -73,6 +82,16 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         if(jTable1.getSelectedRow() != -1) {
             setStaturs("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            if(!el.erinnerungLoeschen(selectedRowId)){
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Erinnerungen aufgetreten.");
+                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                return;
+            }
+            if(!no.notizLoeschen(selectedRowId)){
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Notizgen aufgetreten.");
+                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                return;
+            }
             if(!tgl.themaLoeschen(selectedRowId)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Themengruppe aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");

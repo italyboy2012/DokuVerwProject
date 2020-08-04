@@ -40,6 +40,10 @@ public class Themengruppe {
         this.table = table;
         this.pfadAnzeige = pfadAnzeige;
     }
+
+    public long getId(){
+        return this.id;
+    }
     
     @Override
     public String toString() {
