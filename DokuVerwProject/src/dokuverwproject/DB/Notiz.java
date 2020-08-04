@@ -12,6 +12,8 @@ public class Notiz {
      *      falls nein -> erstelle Notiz und gib leeren String zurück
      *
      * notizInDBSchreiben: Schreibt übergebenen Notiztext in Notiz der übergebenen Datei
+     *
+     * notizLoeschen: Löscht eine Notiz für übergebene Datei
      */
 
     public Notiz() {
@@ -80,6 +82,23 @@ public class Notiz {
         return false;
         }
 
+        public boolean notizLoeschen(String pfad){
+            String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
+            PreparedStatement ps = null;
+            try {
+                DBConn dbc = new DBConn();
+                Connection con = dbc.getConnection();
+                ps = con.prepareStatement(query);
+                ps.setString(1, pfad);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            }
+            return false;
+        }
 
     }
 
