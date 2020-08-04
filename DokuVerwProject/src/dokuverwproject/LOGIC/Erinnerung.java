@@ -34,6 +34,8 @@ public class Erinnerung {
 
     }
 
+
+
 //    public static void erinnerungErstellen(String titel, String inhalt,  java.sql.Date sqldate , String datei){
 //    // Erinnerungen werden in der DB gespeichert
 //       DBConn dbc = new DBConn();

@@ -29,6 +29,8 @@ public class ErinnerungenListe {
     public ErinnerungenListe() { // Konstruktor, um Sachen in die DB zu schreiben
         
     }
+
+
     
     public ErinnerungenListe(DefaultTableModel model) { //Konstruktor, um Tabelle eines Frames mit Inhalt zu füllen
         this.model = model;

@@ -6,6 +6,7 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ErinnerungenListe;
+import dokuverwproject.DB.Notiz;
 import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
 import javax.swing.ImageIcon;
@@ -19,6 +20,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
+    private Notiz no = null;
+    private int rowbuffer = -1; // Speicher für markierte Zeile
     
     /**
      * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
@@ -36,6 +39,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         
         tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2);
         el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
+        no = new Notiz();
         this.setVisible(true);
         ansichtAktualisieren();
     }
@@ -170,7 +174,24 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
+
+                if (jTable1.getSelectedRow() != -1){
+                    jTextArea1.setEditable(true);
+                    String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+                    // String ausgabe = notizAusDBLaden(test);
+                    String bla = "das hier brauch ich fürs debugging";
+                    jTextArea1.setText(bla);
+                    /* ------- Aenderungen:
+                    Notizfeld wird freigegeben, wenn Zeile markiert wurde
+                    String test liest Wert aus der Pfadspalte der Tabelle
+                    notizAusDBLaden guckt, ob für die Datei eine Notiz existiert und läd oder erstellt diese
+                    jTextArea1.setText läd den text aus der Notiz in das Textfeld
+
+
+                     */
+                }
             }
+
         });
         jScrollPane1.setViewportView(jTable1);
 
@@ -306,6 +327,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jLabel3.setText("Notizen:");
 
         jTextArea1.setColumns(20);
+        jTextArea1.setEditable(false);
+        //------- Aenderung: Da keine Datei markiert ist, wird das Notizfeld gesperrt
         jTextArea1.setRows(5);
         jScrollPane3.setViewportView(jTextArea1);
 
@@ -314,6 +337,13 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
+        //      notizInDBSchreiben(jTextArea1.getText(),(String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2));
+                /*
+                Änderungen:
+                    ein Klick auf das Speichern Symbol schreibt den Text aus dem Feld in den DB-Eintrag der Notiz
+
+
+                 */
             }
         });
 
@@ -498,6 +528,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
         ansichtAktualisieren();
+        jTextArea1.setEditable(false);
+        //------- Aenderung: Da keine Datei mehr markiert ist, wird das Notizfeld wieder gesperrt
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
