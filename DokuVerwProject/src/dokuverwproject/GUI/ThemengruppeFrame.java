@@ -201,10 +201,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                     ladeNotiz();
                     /* ------- Aenderungen:
                     Notizfeld wird freigegeben, wenn Zeile markiert wurde
-                    String test liest Wert aus der Pfadzelle der Tabelle
-                    notizAusDBLaden guckt, ob für die Datei eine Notiz existiert und läd oder erstellt diese
-                    jTextArea1.setText läd den text aus der Notiz in das Textfeld
-                     */
+                    */
                 }
             }
 
