@@ -10,37 +10,49 @@ public class Notiz {
     }
 
     public String notizAusDBLaden(String pfad){
-        String ausgabe = "";
-        try {
+        String ausgabe = ""; // initialisierung und definition des Ausgabeparameters
+
+        // Erstellen der SQL-Verbindung
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
-        Statement stmt = null;
-        PreparedStatement ps = null;
 
-        String query = "SELECT `inhalt` FROM `notizen` WHERE `dateiPfad` LIKE '?'";
-        ps = con.prepareStatement(query);
-        stmt = con.createStatement();
-        ps.setString(1,pfad);
-        ResultSet abfrage = ps.executeQuery();
+        // Testen ob Verbindung besteht
+            if (con != null) {
+                // initialisierung der für SQL benötigten Variablen
+                Statement stmt = null;
+                PreparedStatement ps = null;
+                String query = "SELECT `inhalt` FROM `notizen` WHERE `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
+                try {
+                    // Erstellen und Ausführen des injectionsicheren SQL-Befehls
+                    ps = con.prepareStatement(query);
+                    ps.setString(1,pfad);
+                    ResultSet abfrage = ps.executeQuery();
 
-        if (abfrage != null){
-            ausgabe = abfrage.getString(1);
+                   if(abfrage.next()) //Test ob Rückgabewert nicht leer ist
+                   {
+                        // auslesen und zurückgeben des Notizeninhaltes
+                        ausgabe = abfrage.getString(1);
+                        return ausgabe;
 
-        } else {
-            query = "INSERT INTO `notizen`(`id`, `titel`, `inhalt`, `dateiPfad`, `created_TMSTMP`) VALUES (null,banane,\"\",?,CURRENT_TIMESTAMP)";
-            ps = con.prepareStatement(query);
-            ps.setString(1, pfad);
-            ps.executeUpdate();
-            ps.close();
-        }
-        } catch (Exception e) {
+                } else {
+                        // falls keine Notiz für die Datei existiert wird hier eine neue leere erstellt
+                       query = "INSERT INTO `notizen`(`id`, `titel`, `inhalt`, `dateiPfad`, `created_TMSTMP`) VALUES (null,'created','',?,CURRENT_TIMESTAMP)";
+                       ps = con.prepareStatement(query);
+                       ps.setString(1, pfad);
+                       ps.executeUpdate();
+                       ps.close();}
+
+                    return ausgabe;
+                } catch(Exception e){
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim lesen der Notizen.");
             }
+        }
         return ausgabe;
     }
+
         public boolean notizInDBSchreiben(String text, String pfad){
-        String query = "UPDATE `notizen` SET `inhalt`= '?' WHERE dateipfad ='?'";
+        String query = "UPDATE `notizen` SET `inhalt`= ? WHERE dateipfad = ?";
         PreparedStatement ps = null;
             try {
                 DBConn dbc = new DBConn();
@@ -52,8 +64,8 @@ public class Notiz {
                 return true;
             } catch (Exception e) {
         System.out.println(e.toString());
-        NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
-    }
+        NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        }
         return false;
         }
 

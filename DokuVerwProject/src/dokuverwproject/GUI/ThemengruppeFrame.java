@@ -178,12 +178,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                 if (jTable1.getSelectedRow() != -1){
                     jTextArea1.setEditable(true);
                     String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-                    // String ausgabe = notizAusDBLaden(test);
-                    String bla = "das hier brauch ich fürs debugging";
-                    jTextArea1.setText(bla);
+                    String ausgabe = no.notizAusDBLaden(test);
+                    //String bla = "das hier brauch ich fürs debugging";
+                    jTextArea1.setText(ausgabe);
                     /* ------- Aenderungen:
                     Notizfeld wird freigegeben, wenn Zeile markiert wurde
-                    String test liest Wert aus der Pfadspalte der Tabelle
+                    String test liest Wert aus der Pfadzelle der Tabelle
                     notizAusDBLaden guckt, ob für die Datei eine Notiz existiert und läd oder erstellt diese
                     jTextArea1.setText läd den text aus der Notiz in das Textfeld
 
@@ -337,7 +337,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
-        //      notizInDBSchreiben(jTextArea1.getText(),(String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2));
+                String notizText = jTextArea1.getText();
+                String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+              if(!no.notizInDBSchreiben(notizText ,pfad)){
+                  NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
+              }
+
                 /*
                 Änderungen:
                     ein Klick auf das Speichern Symbol schreibt den Text aus dem Feld in den DB-Eintrag der Notiz
