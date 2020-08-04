@@ -60,6 +60,7 @@ public class Notiz {
                 ps = con.prepareStatement(query);
                 ps.setString(1, text);
                 ps.setString(2, pfad);
+                ps.executeUpdate();
                 ps.close();
                 return true;
             } catch (Exception e) {
