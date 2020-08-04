@@ -3,11 +3,21 @@ import dokuverwproject.GUI.NotifyFrame;
 
 import java.sql.*;
 public class Notiz {
-
+    /**
+     *
+     * @author Falk
+     * ChangeLog 04.08.2020
+     * notizAusDBLaden: überprüft Existenz einer Notiz für übergebene Datei.
+     *      falls ja   -> gib Notiztext zurück
+     *      falls nein -> erstelle Notiz und gib leeren String zurück
+     *
+     * notizInDBSchreiben: Schreibt übergebenen Notiztext in Notiz der übergebenen Datei
+     */
 
     public Notiz() {
         // Konstruktor für Notizen
     }
+
 
     public String notizAusDBLaden(String pfad){
         String ausgabe = ""; // initialisierung und definition des Ausgabeparameters

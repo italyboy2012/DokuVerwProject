@@ -14,14 +14,20 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
+ * ChangeLog: Falk @ 04.08.2020
+ * Hinzufügen einer Notizinstanz no
+ * Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
+ *      versucht die entsprechende Notiz über notizAusDBLaden zu laden
+ * Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
+ *      der markierten Datei an die Methode notizInDBSchreiben übergibt
  */
 public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
     private Notiz no = null;
-    private int rowbuffer = -1; // Speicher für markierte Zeile
+
     
     /**
      * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
@@ -179,15 +185,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                     jTextArea1.setEditable(true);
                     String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
                     String ausgabe = no.notizAusDBLaden(test);
-                    //String bla = "das hier brauch ich fürs debugging";
                     jTextArea1.setText(ausgabe);
                     /* ------- Aenderungen:
                     Notizfeld wird freigegeben, wenn Zeile markiert wurde
                     String test liest Wert aus der Pfadzelle der Tabelle
                     notizAusDBLaden guckt, ob für die Datei eine Notiz existiert und läd oder erstellt diese
                     jTextArea1.setText läd den text aus der Notiz in das Textfeld
-
-
                      */
                 }
             }
@@ -346,8 +349,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                 /*
                 Änderungen:
                     ein Klick auf das Speichern Symbol schreibt den Text aus dem Feld in den DB-Eintrag der Notiz
-
-
                  */
             }
         });
