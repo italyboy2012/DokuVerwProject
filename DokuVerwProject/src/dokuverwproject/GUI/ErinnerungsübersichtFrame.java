@@ -12,12 +12,31 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Giuseppe & Falk
+ *
+ * ChangeLog
+ * Falk @ 05.08.2020
+ * jButton2ActionPerformed setzt nun die markierte Erinnerung auf erledigt
+ * getIDOfSelectedRow() gibt ID der Erinnerung der markierten Zeile zurück.
+ *      getIDOfSelectedRow habe ich an entsprechenden Punkten bereits eingesetzt
+ * Einführung der Methode loescheErinnerung()
+ *      diese löscht die aktuell markierte Erinnerung
+ * Einführung der Methode erinnerungBearbeiten()
+ *      diese öffnet ein Fenster zur Bearbeitung der markierten Erinnerung.
+ * openSelectedRow() holt sich nun die ID der markierten Erinnerung, gibt diese an getTGID weiter
+ *      und öffnet die entsprechende Themengruppe
+ *
  */
 public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     /**
      * Creates new form ThemengruppenFrame
      */
+
+    public long getIDOfSelectedRow(){
+        long id = (long) jTable1.getValueAt(jTable1.getSelectedRow(),0);
+        return id;
+    }
+
     public ErinnerungsübersichtFrame() {
         initComponents();
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
@@ -43,17 +62,40 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
         } else {
             setStaturs("Fehler");
         }
+        return;
+    }
+
+    public void loescheErinnerung(){
+        el.erinnerungLoeschen(getIDOfSelectedRow());
+        return;
     }
 
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
-            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            ThemengruppeFrame tgf = new ThemengruppeFrame(selectedRowId);
+            long erinnerungsID = getIDOfSelectedRow();
+            long themengruppenID = el.getTGID(erinnerungsID);
+            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
+        return;
     }
 
+    public void erinnerungBearbeiten() {
+        if(jTable1.getSelectedRow() != -1) {
+            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(getIDOfSelectedRow()); //ID der Themengruppe und Pfad der Datei
+        }
+        //else {
+        //    NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        //}
+        return;
+    }
+
+    public void erinnerungErledigtSetzen(){
+
+        el.setzeErledigt(getIDOfSelectedRow());
+        return;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -231,6 +273,8 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         // Erinnerung bearbeiten
+        erinnerungBearbeiten();
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -241,16 +285,20 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        loescheErinnerung();
+        erinnerungenAusDBLaden();
         // Erinnerung Löschen
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         // Erinnerung auf erledigt
+        erinnerungErledigtSetzen();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        openSelectedRow();
         // Datei öffnen
     }//GEN-LAST:event_jButton5ActionPerformed
 

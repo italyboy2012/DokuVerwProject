@@ -6,14 +6,19 @@ public class Notiz {
     /**
      *
      * @author Falk
-     * ChangeLog 04.08.2020
+     * ChangeLog
+     * 04.08.2020
      * notizAusDBLaden: überprüft Existenz einer Notiz für übergebene Datei.
      *      falls ja   -> gib Notiztext zurück
      *      falls nein -> erstelle Notiz und gib leeren String zurück
      *
      * notizInDBSchreiben: Schreibt übergebenen Notiztext in Notiz der übergebenen Datei
      *
-     * notizLoeschen: Löscht eine Notiz für übergebene Datei
+     * notizLoeschen: Löscht eine Notiz für übergebene ThemengruppenID
+     *
+     * 05.08.2020
+     * notizLoeschen umbenannt in themengruppenNotizenLoeschen
+     * notizLoeschen löscht die Notiz mit dem Übergebenen Pfad
      */
 
     public Notiz() {
@@ -83,7 +88,7 @@ public class Notiz {
         return false;
         }
 
-        public boolean notizLoeschen(long tgID){
+        public boolean themengruppenNotizenLoeschen(long tgID){
             String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
             PreparedStatement ps = null;
             try {
@@ -100,7 +105,23 @@ public class Notiz {
             }
             return false;
         }
-
+    public boolean notizLoeschen(String pfad){
+        String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
+        PreparedStatement ps = null;
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, pfad);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        }
+        return false;
+    }
     }
 
 

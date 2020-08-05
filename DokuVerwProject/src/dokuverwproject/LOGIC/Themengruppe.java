@@ -18,7 +18,12 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe
+ * @author Giuseppe & Falk
+ * ChangeLog
+ * Falk @ 05.08.2020
+ * Funktion dateiLoeschen:
+ *      verschiebt übergebene Datei in den Papierkorb
+ *      löscht Notizen und Erinnerungen, die mit der Datei verknüpft sind.
  */
 public class Themengruppe {
     private long id = 0;
@@ -223,11 +228,13 @@ public class Themengruppe {
     
     public void dateiLöschen(String dateiPfad) {
         File f = new File(dateiPfad);
+        Desktop desktop = Desktop.getDesktop();
         if(!f.exists()) {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return;
         }
-        f.delete(); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
+        //// --------- Notiz für datei noch mit löschen.
+        desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
 
     }
     

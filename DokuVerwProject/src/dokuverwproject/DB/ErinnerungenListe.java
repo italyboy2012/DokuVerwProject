@@ -21,13 +21,23 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Giuseppe & Falk
+ * ChangeLog
+ * Falk @ 05.08.2020
+ * Einführung der Methoden textLaden und datumLaden.
+ *  beide Methoden benötigen eine long ID und einen String Typ. Dabei wird je nach String der entsprechende
+ *  Wert zurückgeliefert
+ * Umbenennen der Methode erinnerungLoeschen in erinnerungenLoeschen,
+ *      da diese alle Erinnerungen der übergebenen TG löscht
+ * Einführung der Methode erinnerungLoeschen
+ *      diese löscht die Erinnerung mit der übergebenen ID.
+ * Einführung der Methode getTGID
+ *      diese gibt die ThemengruppenID der übergebenen Erinnerung zurück
+ *
  */
 public class ErinnerungenListe {
     private long groesse = 0;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
-
     public ErinnerungenListe() { // Konstruktor, um Sachen in die DB zu schreiben
-        
     }
 
 
@@ -152,8 +162,65 @@ public class ErinnerungenListe {
     }
 
 
+    public String textLaden(long id, String typ){
+        String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        String ausgabe = "";
+            if (con != null){
+                try {
+                    ps = con.prepareStatement(query);
+                    //ps.setObject(1, "inhalt");
+                    ps.setLong(1, id);
+                    ResultSet result = ps.executeQuery();
+                    if(result.next()){
+                        if(typ.equals("inhalt")){
+                        ausgabe = result.getString(3);
+                        } else if (typ.equals("titel")){
+                        ausgabe = result.getString(2);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                    NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                }
+            }
+        return ausgabe;
+    }
+    public Date datumLaden(long id, String typ){
+        String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
+        PreparedStatement ps = null;
+        Date ausgabe = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        if (con != null){
+            ausgabe = new Date(System.currentTimeMillis());
+            try {
+                ps = con.prepareStatement(query);
+                ps.setLong(1, id);
+                ResultSet result = ps.executeQuery();
+                if(result.next()){
+                    if(typ.equals("faellig")){
+                        ausgabe = result.getDate(4);
+                    } else if (typ.equals("erstellt")){
+                        ausgabe = result.getDate(8);
+                    }
+                }
+                return ausgabe;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank Datum.");
+            }
+        }
+        return ausgabe;
+    }
 
-    public boolean erinnerungLoeschen(long tgID){
+
+
+
+
+    public boolean erinnerungenLoeschen(long tgID){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`themengruppenID` = ?";
         PreparedStatement ps = null;
         DBConn dbc = new DBConn();
@@ -171,20 +238,117 @@ public class ErinnerungenListe {
             }
         }
         return false;
-
-
-
     }
-    
-    public void erinnerungBearbeiten(Erinnerung erinnerung,Timestamp zeit, String inhalt) {
-        // setze inhalt und zeit auf entsprechende Variablen von erinnerung
-       //  erinnerung.setInhalt(inhalt);
-        // erinnerung.setFällig(zeit);
+    public boolean erinnerungLoeschen(long id){
+        String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`id` = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        if(con!=null) {
+            try {
+                ps = con.prepareStatement(query);
+                ps.setLong(1, id);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            }
+        }
+        return false;
     }
+
+
+    public boolean erinnerungLoeschen(String pfad){
+        String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`dateiPfad` = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        if(con!=null) {
+            try {
+                ps = con.prepareStatement(query);
+                ps.setString(1, pfad);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            }
+        }
+        return false;
+    }
+
+    public long getTGID(long id){
+        String query = "SELECT `themengruppenID` FROM `erinnerungen` WHERE `id` = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        long ausgabe = 0;
+        if (con != null){
+            try {
+                ps = con.prepareStatement(query);
+                ps.setLong(1, id);
+                ResultSet result = ps.executeQuery();
+                if(result.next()){
+                    ausgabe = result.getLong(1);
+                    }
+
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            }
+        }
+        return ausgabe;
+    }
+
+
+
+
     
-    public void aendereErledigt(Erinnerung erinnerung) {
-        //
-       // erinnerung.setErledigt( !erinnerung.getErledigt() );
+    public boolean erinnerungBearbeiten(long id,String titel, String text, String datum) {
+        String query = "UPDATE `erinnerungen` SET `titel`= ?, `inhalt`= ?, `faellig` = ? WHERE id = ?";
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        PreparedStatement ps = null;
+        if (con != null)
+        try {
+            ps = con.prepareStatement(query);
+            ps.setString(1,titel);
+            ps.setString(2, text);
+            ps.setString(3, datum);
+            ps.setLong(4, id);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        }
+        return false;
+    }
+
+    
+    public void setzeErledigt(long id) {
+        String query = "UPDATE `erinnerungen` SET `erledigt`= ? WHERE id = ?";
+        PreparedStatement ps = null;
+        DBConn dbc = new DBConn();
+        Connection con = dbc.getConnection();
+        if(con != null)
+        try {
+            ps = con.prepareStatement(query);
+            ps.setBoolean(1, true);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+            ps.close();
+            return;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        }
+        return;
+
     }
 
     public long getGroesse() {

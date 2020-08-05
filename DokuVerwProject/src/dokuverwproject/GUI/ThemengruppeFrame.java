@@ -15,13 +15,21 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Giuseppe & Falk
- * ChangeLog: Falk @ 04.08.2020
+ * ChangeLog:
+ * Falk @ 04.08.2020
  * Hinzufügen einer Notizinstanz no
  * Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
  *      versucht die entsprechende Notiz über notizAusDBLaden zu laden
  * Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
  *      der markierten Datei an die Methode notizInDBSchreiben übergibt
  * Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
+ *
+ * Falk @ 05.08.2020
+ * Methode DateiLoeschen verschiebt markierte Datei in den Papierkorb und löscht dazugehörige Erinnerungen und Notizen.
+ * Außerdem löscht Sie den Text aus dem Notizfeld
+ * Einführung der Methode leereSperreTextfeld1. Diese leert und sperrt jTextArea1
+ * Der Löschenbutton löscht jetzt auch markierte Erinnerungen
+ * Außerdem wird beim klicken eine Tabelle die Markierung der jeweils anderen aufgehoben.
  */
 public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
@@ -56,6 +64,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
      */
     public void ansichtAktualisieren() {
+        ladeThemengruppe();
+        //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
+        el.erinnerungenLaden(selectedRowId);
+    }
+
+    public void ladeThemengruppe(){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
@@ -69,10 +83,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         } else {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
-        
-        //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
-        el.erinnerungenLaden(selectedRowId);
-        
+
     }
     
     public void erinnerungErstellen() {
@@ -82,6 +93,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
+    }
+
+    public void leereSperreTextfeld1(){
+        jTextArea1.setText("");
+        jTextArea1.setEditable(false);
     }
 
     public void schreibeNotiz(){
@@ -97,6 +113,15 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         long themengruppenID = tg.getId();
         String ausgabe = no.notizAusDBLaden(test, themengruppenID);
         jTextArea1.setText(ausgabe);
+    }
+
+    public void dateiLoeschen(String pfad){
+
+        if(no.notizLoeschen(pfad)){
+            if(el.erinnerungLoeschen(pfad)) {
+                tg.dateiLöschen(pfad);
+            } else {NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen.");}
+        } else { NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");}
     }
 
     @SuppressWarnings("unchecked")
@@ -198,11 +223,13 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
                 if (jTable1.getSelectedRow() != -1){
                     jTextArea1.setEditable(true);
+                    jTable2.clearSelection();
                     ladeNotiz();
                     /* ------- Aenderungen:
                     Notizfeld wird freigegeben, wenn Zeile markiert wurde
                     */
                 }
+
             }
 
         });
@@ -291,6 +318,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable2.getTableHeader().setReorderingAllowed(false);
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+                jTable1.clearSelection();
                 jTable2MouseClicked(evt);
             }
         });
@@ -525,18 +554,25 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            tg.dateiLöschen(selectedRowPath);
+            dateiLoeschen(selectedRowPath);
+            leereSperreTextfeld1();
+
             ansichtAktualisieren();
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        } else if (jTable2.getSelectedRow() != -1){
+            long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
+            el.erinnerungLoeschen(erinnerungenID);
+            el.erinnerungenLaden(selectedRowId);
+            // Die Meldung stresst einfach.
+            // NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
         ansichtAktualisieren();
-        jTextArea1.setEditable(false);
-        //------- Aenderung: Da keine Datei mehr markiert ist, wird das Notizfeld wieder gesperrt
+        leereSperreTextfeld1();
+
+
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
