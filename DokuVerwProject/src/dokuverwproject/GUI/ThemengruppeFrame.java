@@ -69,6 +69,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         el.erinnerungenLaden(selectedRowId);
     }
 
+    public void errorDateiwaehlen(){
+        NotifyFrame nf = new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");;
+    }
+
+
     public void ladeThemengruppe(){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
@@ -91,7 +96,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(this, selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            errorDateiwaehlen();
         }
     }
 
@@ -535,7 +540,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
             } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+                errorDateiwaehlen();
             }
         }
         
@@ -563,7 +568,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             el.erinnerungLoeschen(erinnerungenID);
             el.erinnerungenLaden(selectedRowId);
             // Die Meldung stresst einfach.
-            // NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            //
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -580,7 +587,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         if(jTable1.getSelectedRow() != -1) {
             tg.openSelectedFile();
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            errorDateiwaehlen();
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -604,7 +611,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             DateiUmbenennenFrame duf = new DateiUmbenennenFrame(selectedRowPath, this, tg);
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            errorDateiwaehlen();
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
