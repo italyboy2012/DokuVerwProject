@@ -185,7 +185,7 @@ public class ThemengruppeBearbeitenFrame extends javax.swing.JFrame {
         if(!titel.equals("") && !titel.equals(null) && !pfad.equals("") && !pfad.equals(null)) {
             tgüf.setStaturs("Bearbeite Datensatz der Themengruppe...");
             if(!tgl.themaBearbeiten(selectedRowId, titel, pfad)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim BEarbeiten des Datensatzes in der Datenbank.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Bearbeiten des Datensatzes in der Datenbank.");
                 tgüf.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
             }
             tgüf.setStaturs("Datensatz bearbeitet.");
