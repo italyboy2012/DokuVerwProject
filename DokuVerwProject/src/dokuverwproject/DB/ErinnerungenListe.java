@@ -38,6 +38,8 @@ import javax.swing.table.DefaultTableModel;
  *      diese gibt die ThemengruppenID der übergebenen Erinnerung zurück
  *
  */
+
+
 public class ErinnerungenListe {
     private long groesse = 0;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
@@ -168,6 +170,7 @@ private boolean inTagen(Date current_date, Date faellig,int range){
                         } else if (inTagen(current_date,faellig,4)){
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/pin.png").getFile()));
                             img = resizeImageIcon(img, breite,breite);
+                            new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("../img/butcher.wav").getFile())).start();
                         }
                         
                         row[1] = img;
