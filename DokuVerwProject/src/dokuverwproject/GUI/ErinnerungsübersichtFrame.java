@@ -57,7 +57,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 //        } // --------------------------------------------- Änderung: Fehlermeldung geschieht in der Logik-Klasse und es muss der
 //                                                              aktuelle Status auf der Fußleiste des Fensters angezeigt werden.
         setStaturs("Laden...");
-        if(el.erinnerungenLaden(-1)) { //-1, um alle Erinnerungen laden
+        if(el.erinnerungenLaden(-1,0)) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame
             setStaturs(el.getGroesse() + " Erinnerungen geladen");
         } else {
             setStaturs("Fehler");

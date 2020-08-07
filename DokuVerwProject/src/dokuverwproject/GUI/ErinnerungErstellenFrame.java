@@ -38,6 +38,7 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
         initComponents();
         jDateChooser1.setDate(new Timestamp(System.currentTimeMillis())); // Datumsanzeige auf aktuelles Datum setzen
         this.setVisible(true);
+
     }
     public ErinnerungErstellenFrame(long id) {
         this.id = id;
@@ -49,7 +50,8 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
         jTextField1.setText(el.textLaden(id,"titel"));
         jTextArea1.setText(el.textLaden(id,"inhalt"));
         this.setVisible(true);
-
+        setTitle("Erinnerung ändern");
+        jLabel1.setText("Erinnerung ändern");
 
     }
     /**
@@ -109,15 +111,16 @@ public class ErinnerungErstellenFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Erinnerung erstellen");
+
         setAlwaysOnTop(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/get-ready.png"))); // NOI18N
-        jLabel1.setText("Erinnerung erstellen");
+
 
         jLabel3.setText("Titel:");
-
+        jLabel1.setText("Erinnerung erstellen");
         jLabel4.setText("Inhalt:");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/save.png"))); // NOI18N

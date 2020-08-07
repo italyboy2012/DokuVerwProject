@@ -58,15 +58,27 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         this.setVisible(true);
         ansichtAktualisieren();
     }
-    
+    public ThemengruppeFrame(long selectedRowId, String path) {
+        this.selectedRowId = selectedRowId;
+
+        initComponents();
+        initExternalFrame(this, "../img/open.png");
+
+        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2);
+        el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
+        no = new Notiz();
+        this.setVisible(true);
+        ansichtAktualisieren();
+    }
     /**
      * Methode lädt Details der Themengruppe und indexiert anschließend alle Dateien des OS innerhalb dieser Themengruppe.
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
      */
     public void ansichtAktualisieren() {
         ladeThemengruppe();
+        int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
-        el.erinnerungenLaden(selectedRowId);
+        el.erinnerungenLaden(selectedRowId,hoehe);
     }
 
     public void errorDateiwaehlen(){
@@ -564,11 +576,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
             ansichtAktualisieren();
         } else if (jTable2.getSelectedRow() != -1){
+            int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
             el.erinnerungLoeschen(erinnerungenID);
-            el.erinnerungenLaden(selectedRowId);
-            // Die Meldung stresst einfach.
-            //
+            el.erinnerungenLaden(selectedRowId,hoehe);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }

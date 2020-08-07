@@ -6,15 +6,19 @@
 package dokuverwproject.DB;
 import dokuverwproject.GUI.NotifyFrame;
 import dokuverwproject.LOGIC.Erinnerung;
+
+import java.awt.*;
 import java.io.File;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -40,7 +44,12 @@ public class ErinnerungenListe {
     public ErinnerungenListe() { // Konstruktor, um Sachen in die DB zu schreiben
     }
 
-
+private ImageIcon resizeImageIcon(ImageIcon bild, int breite, int hoehe){
+    Image image = bild.getImage(); // transform it
+    Image newimg = image.getScaledInstance(breite, hoehe,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+    ImageIcon ausgabe = new ImageIcon(newimg);  // transform it back
+    return ausgabe;
+    }
     
     public ErinnerungenListe(DefaultTableModel model) { //Konstruktor, um Tabelle eines Frames mit Inhalt zu füllen
         this.model = model;
@@ -49,6 +58,13 @@ public class ErinnerungenListe {
     public void ansichtAktualisieren() {
         // ----------------------------------------- Wahrscheinlich nicht mehr benötigt
     }
+
+private boolean inTagen(Date current_date, Date faellig,int range){
+        long diffInMillies = Math.abs(faellig.getTime() - current_date.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+        return (diff<range);
+}
     
     public Boolean erinnerungErstellen(String titel, String inhalt, String date, long tgID, String dateiPfad) {
     // Erinnerungen werden in der DB gespeichert
@@ -81,7 +97,7 @@ public class ErinnerungenListe {
         return false;
     }
 
-    public Boolean erinnerungenLaden(long tgID) { // wenn tgID = -1, dann aus Hauptframe, sonst aus Themengruppen-Frame
+    public Boolean erinnerungenLaden(long tgID, int breite) { // wenn tgID = -1, dann aus Hauptframe, sonst aus Themengruppen-Frame
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         if (con != null) {
@@ -117,13 +133,21 @@ public class ErinnerungenListe {
 
                     SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
                     sdfDate.setTimeZone(TimeZone.getTimeZone("MEZ"));
+                    Date current_date = new Date(System.currentTimeMillis());
+                    Date testDate = new Date(System.currentTimeMillis());
+
+
+
+
+
+
 
                     //SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
                     //sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
 
                     //String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
                     String s_stamp = sdfDate.format(faellig);
-                        
+
                     if(tgID == -1) { // Wenn für Hauptframe geladen wird
                         row[0] = id;
                         row[1] = titel;
@@ -136,9 +160,14 @@ public class ErinnerungenListe {
                         ImageIcon img = null;
                         
                         if(erledigt) {
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/green.png").getFile()));
-                        } else {
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/red.png").getFile()));
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/tick.png").getFile()));
+                            img = resizeImageIcon(img, breite,breite);
+                        } else if (faellig.before(current_date)) {
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/cross.png").getFile()));
+                            img = resizeImageIcon(img, breite,breite);
+                        } else if (inTagen(current_date,faellig,4)){
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/pin.png").getFile()));
+                            img = resizeImageIcon(img, breite,breite);
                         }
                         
                         row[1] = img;

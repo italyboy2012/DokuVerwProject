@@ -20,9 +20,9 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public ThemengruppeErstellenFrame(ThemengruppenListe tgl, ThemengruppenübersichtFrame tgüf) {
+    public ThemengruppeErstellenFrame(ThemengruppenListe tgl, ThemengruppenübersichtFrame tguf) {
         this.tgl = tgl;
-        this.tgüf = tgüf;
+        this.tgüf = tguf;
         
         initComponents();
         initExternalFrame(this, "../img/get-ready.png");
@@ -184,7 +184,7 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
             jTextField2.setText(fc.getSelectedFile().toString());
             // fc.getSelectedFile().toString();
         } else {
-            System.out.println("Die operation wurde abgebrochen.");
+            System.out.println("Die Operation wurde abgebrochen.");
         }
     }
     

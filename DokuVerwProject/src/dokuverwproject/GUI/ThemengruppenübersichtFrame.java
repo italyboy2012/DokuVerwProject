@@ -83,17 +83,17 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
             setStaturs("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             if(!el.erinnerungenLoeschen(selectedRowId)){
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Erinnerungen aufgetreten.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!no.themengruppenNotizenLoeschen(selectedRowId)){
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Notizgen aufgetreten.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!tgl.themaLoeschen(selectedRowId)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim löschen der Themengruppe aufgetreten.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
