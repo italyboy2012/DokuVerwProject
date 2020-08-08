@@ -171,7 +171,11 @@ private boolean inTagen(Date current_date, Date faellig,int range){
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/pin.png").getFile()));
                             img = resizeImageIcon(img, breite,breite);
                             new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("../img/butcher.wav").getFile())).start();
+                        } else {
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/working.png").getFile()));
+                            img = resizeImageIcon(img, breite,breite);
                         }
+
                         
                         row[1] = img;
                         row[2] = titel;

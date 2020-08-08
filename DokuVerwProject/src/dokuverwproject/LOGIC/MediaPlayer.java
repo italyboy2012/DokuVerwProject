@@ -12,7 +12,10 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
+/*
+@author: dberm22
+@source: https://github.com/dberm22/DBoard/blob/master/src/com/dberm22/utils/MediaPlayer.java
+ */
 
 public class MediaPlayer implements Runnable{
 
