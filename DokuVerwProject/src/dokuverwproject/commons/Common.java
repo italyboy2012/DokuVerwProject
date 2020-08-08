@@ -45,7 +45,8 @@ public class Common {
         frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
         
         //icon setzen
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht)));
+        //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht)));
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Common.class.getResource(iconPaht)));
         
         //Fenster der Liste aller offenen externen Fenster hinzufügen
         addExternalFrame(frame);
