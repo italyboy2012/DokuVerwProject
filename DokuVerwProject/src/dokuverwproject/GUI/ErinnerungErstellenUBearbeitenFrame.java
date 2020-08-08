@@ -63,7 +63,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.buttonText = "Speichern";
         initComponents();
         jLabel1.setText("Erinnerung ändern");
-        
+
         initExternalFrame(this, "../img/hourglass.png");
         
         jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
@@ -71,6 +71,11 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         jTextArea1.setText(el.textLaden(id,"inhalt"));
         this.setVisible(true);
         
+        this.buttonText = "Speichern";
+        this.setTitle("Erinnerung bearbeiten");
+        jLabel1.setText("Erinnerung bearbeiten");
+        
+        this.setVisible(true);
     }
     
     /**
