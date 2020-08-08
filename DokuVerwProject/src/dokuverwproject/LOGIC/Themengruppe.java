@@ -185,7 +185,6 @@ public class Themengruppe {
                     
                     this.pfadNav = file.getPath();
                     this.dateienIndexieren();
-                    System.out.println("HIERRRRRRRRRRRRRRR");
                 } else if(file.isFile()) {
                     if(file.exists()) desktop.open(file);
                 }
