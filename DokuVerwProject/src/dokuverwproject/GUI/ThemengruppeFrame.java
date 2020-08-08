@@ -158,11 +158,13 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }
     
     public void dateiOderErinnerungLoeschen() {
+        int row = jTable1.getSelectedRow();
         if(jTable1.getSelectedRow() != -1) { //Datei löschen
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             dateiLoeschen(selectedRowPath);
             leereSperreTextfeld1();
             ansichtAktualisieren();
+            return;
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }
@@ -172,6 +174,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
             el.erinnerungLoeschen(erinnerungenID);
             el.erinnerungenLaden(selectedRowId, hoehe);
+            return;
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }
@@ -646,6 +649,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
+                ansichtAktualisieren();
             } else {
                 errorDateiwaehlen();
             }

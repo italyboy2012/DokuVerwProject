@@ -104,6 +104,7 @@ public class Themengruppe {
     }
     
     public boolean dateienIndexieren() {
+        String ausgabe = "";
         try {
             DefaultTableModel model = (DefaultTableModel)table.getModel();
             model.setRowCount(0);
@@ -126,12 +127,15 @@ public class Themengruppe {
 
                 model.addRow(row);
             }
+            ausgabe = "fürs debugging";
             return true;
         } catch(Exception e) {
             System.out.println(e.toString());
             e.printStackTrace();
         }
+        ausgabe = "fürs debugging";
         return false;
+
     }
     
     public String readableDate(long lastModified) {
@@ -199,6 +203,7 @@ public class Themengruppe {
         DefaultTableModel model = (DefaultTableModel)table.getModel();
         model.setRowCount(0);
         tgf.leereSperreTextfeld1();
+
     }
     
     public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
@@ -241,16 +246,12 @@ public class Themengruppe {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return;
         } else {
+
             //f.renameTo (new File("C:\\$Recycle.Bin\\t.txt"));
             
         }
         //// --------- Notiz für datei noch mit löschen.
         //desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
-        
-        
-        
-        
-
     }
     
     public boolean dateiUmbenennen(String neuerName, String dateiPfad) {
