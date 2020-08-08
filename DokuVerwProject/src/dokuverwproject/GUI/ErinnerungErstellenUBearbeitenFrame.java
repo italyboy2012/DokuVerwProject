@@ -84,11 +84,12 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.id = id;
         el = new ErinnerungenListe();
         this.tgf = tgf;
-        this.setTitle("Erinnerung ändern");
-        this.buttonText = "Speichern";
+        //this.setTitle("Erinnerung ändern");
+//        this.buttonText = "Speichern";
         initComponents();
-        jLabel1.setText("Erinnerung ändern");
-        
+        setTitle("Erinnerung bearbeiten");
+        jLabel1.setText("Erinnerung bearbeiten");
+        jButton1.setText("speichern");
         initExternalFrame(this, "../img/hourglass.png");
         
         jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen

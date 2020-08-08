@@ -241,12 +241,12 @@ public class Themengruppe {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return;
         } else {
-
+      //  desktop.moveToTrash(f); verschiebt datei in Papierkorb. läuft bei falk
             //f.renameTo (new File("C:\\$Recycle.Bin\\t.txt"));
             
         }
         //// --------- Notiz für datei noch mit löschen.
-        //desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
+        desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
     }
     
     public boolean dateiUmbenennen(String neuerName, String dateiPfad) {
