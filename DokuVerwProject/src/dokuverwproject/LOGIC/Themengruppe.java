@@ -7,6 +7,7 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DB.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.ThemengruppeFrame;
 import java.awt.Desktop;
 import java.io.File;
 import java.sql.*;
@@ -33,6 +34,7 @@ public class Themengruppe {
     //private long größe = 0; NICHT MEHT BENÖTIGT -------------------------------------------------------------
     //private ArrayList<Datei> dateien = new ArrayList<>(); NICHT MEHT BENÖTIGT -------------------------------------------------------------
     private javax.swing.JTable table = null; // Zugriff auf Tabelle in ThemengruppeFrame
+    private ThemengruppeFrame tgf = null; // Zugriff auf Gui dieser Logik
     
     //FÜR DIE NAVIGATION
     private javax.swing.JTextField pfadAnzeige = null; //Pfadanzeige auf Frame für Themengruppe
@@ -40,10 +42,11 @@ public class Themengruppe {
     private ArrayList<String> pfadsNav = new ArrayList<String>();
     private int pfadsNavIndex = 0;
     
-    public Themengruppe(long id, javax.swing.JTable table, javax.swing.JTextField pfadAnzeige) {
+    public Themengruppe(long id, javax.swing.JTable table, javax.swing.JTextField pfadAnzeige, ThemengruppeFrame tgf) {
         this.id = id;
         this.table = table;
         this.pfadAnzeige = pfadAnzeige;
+        this.tgf = tgf;
     }
 
     public long getId(){
@@ -193,6 +196,7 @@ public class Themengruppe {
         }
         DefaultTableModel model = (DefaultTableModel)table.getModel();
         model.setRowCount(0);
+        tgf.leereSperreTextfeld1();
     }
     
     public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
@@ -235,7 +239,7 @@ public class Themengruppe {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return;
         } else {
-            f.renameTo (new File("C:\\$Recycle.Bin\\t.txt"));
+            //f.renameTo (new File("C:\\$Recycle.Bin\\t.txt"));
             
         }
         //// --------- Notiz für datei noch mit löschen.

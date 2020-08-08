@@ -52,7 +52,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/open.png");
         
-        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2);
+        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
         el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
         no = new Notiz();
         this.setVisible(true);
@@ -64,7 +64,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "../img/open.png");
 
-        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2);
+        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
         el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
         no = new Notiz();
         this.setVisible(true);
@@ -82,7 +82,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }
 
     public void errorDateiwaehlen(){
-        NotifyFrame nf = new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");;
+        new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");
     }
 
 
