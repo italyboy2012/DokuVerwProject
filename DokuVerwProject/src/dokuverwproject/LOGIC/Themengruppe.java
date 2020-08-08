@@ -180,7 +180,6 @@ public class Themengruppe {
                 
                 if(!file.exists()) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
-                    System.out.println("22222");
                     return;
                 }
                 
