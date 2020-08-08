@@ -76,7 +76,7 @@
                               <Group type="102" attributes="0">
                                   <Component id="jTextField3" min="-2" pref="54" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                                  <Component id="jTextField2" pref="534" max="32767" attributes="0"/>
+                                  <Component id="jTextField2" pref="536" max="32767" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="jButton8" min="-2" pref="99" max="-2" attributes="0"/>
                               </Group>
@@ -461,6 +461,9 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTextArea1MouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

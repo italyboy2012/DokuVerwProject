@@ -9,6 +9,7 @@ import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.DB.Notiz;
 import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -35,7 +36,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
-    private Notiz no = null;
+    private Notiz no = null; //Logik von Notiz
 
     
     /**
@@ -57,19 +58,22 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         no = new Notiz();
         this.setVisible(true);
         ansichtAktualisieren();
+        leereSperreTextfeld1();
     }
-    public ThemengruppeFrame(long selectedRowId, String path) {
-        this.selectedRowId = selectedRowId;
-
-        initComponents();
-        initExternalFrame(this, "../img/open.png");
-
-        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
-        el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
-        no = new Notiz();
-        this.setVisible(true);
-        ansichtAktualisieren();
-    }
+    
+//    public ThemengruppeFrame(long selectedRowId, String path) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
+//        this.selectedRowId = selectedRowId;
+//
+//        initComponents();
+//        initExternalFrame(this, "../img/open.png");
+//
+//        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
+//        el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
+//        no = new Notiz();
+//        this.setVisible(true);
+//        ansichtAktualisieren();
+//    }
+    
     /**
      * Methode lädt Details der Themengruppe und indexiert anschließend alle Dateien des OS innerhalb dieser Themengruppe.
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
@@ -77,8 +81,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void ansichtAktualisieren() {
         ladeThemengruppe();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
-        //HIER AUCH DAS AKTUALISIEREN DER ERINNERUNGEN-TABELLE EINFÜGEN -------------------------------------------------------------
-        el.erinnerungenLaden(selectedRowId,hoehe);
+        el.erinnerungenLaden(selectedRowId, hoehe);
     }
 
     public void errorDateiwaehlen(){
@@ -100,13 +103,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         } else {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
-
     }
     
     public void erinnerungErstellen() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(this, selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
+            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
         } else {
             errorDateiwaehlen();
         }
@@ -115,14 +117,29 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void leereSperreTextfeld1(){
         jTextArea1.setText("");
         jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new Color(244,247,252));
+        //[255,255,255] // weiß
+    }
+    
+    public void entsperreTextField1() {
+        // Text aus DB laden
+        jTextArea1.setEditable(true);
+        jTextArea1.setBackground(new Color(255,255,255));
     }
 
     public void schreibeNotiz(){
+        toggleEditableTable(false);
         String notizText = jTextArea1.getText();
         String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
         if(!no.notizInDBSchreiben(notizText ,pfad)){
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
         }
+        toggleEditableTable(true);
+    }
+    
+    public void toggleEditableTable(Boolean b) {
+        jTable1.setRowSelectionAllowed(b);
+        jTable1.setColumnSelectionAllowed(b);
     }
 
     public void ladeNotiz(){
@@ -141,6 +158,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         } else { NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");}
     }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -176,7 +194,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        jTextArea1.setLineWrap(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Themengruppe");
 
@@ -238,18 +255,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
-
-                if (jTable1.getSelectedRow() != -1){
-                    jTextArea1.setEditable(true);
-                    jTable2.clearSelection();
-                    ladeNotiz();
-                    /* ------- Aenderungen:
-                    Notizfeld wird freigegeben, wenn Zeile markiert wurde
-                    */
-                }
-
             }
-
         });
         jScrollPane1.setViewportView(jTable1);
 
@@ -336,8 +342,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable2.getTableHeader().setReorderingAllowed(false);
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-
-                jTable1.clearSelection();
                 jTable2MouseClicked(evt);
             }
         });
@@ -387,9 +391,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jLabel3.setText("Notizen:");
 
         jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        //------- Aenderung: Da keine Datei markiert ist, wird das Notizfeld gesperrt
         jTextArea1.setRows(5);
+        jTextArea1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextArea1MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTextArea1);
 
         jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/save.png"))); // NOI18N
@@ -397,7 +404,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
-                schreibeNotiz();
             }
         });
 
@@ -444,7 +450,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -549,6 +555,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+        entsperreTextField1();
         if (evt.getClickCount() == 2) {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
@@ -636,6 +643,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         //----SPEICHERN DER NOTIZ
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextArea1MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton10;

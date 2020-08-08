@@ -28,39 +28,32 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
-    /**
-     * Creates new form ThemengruppenFrame
-     */
-
-    public long getIDOfSelectedRow(){
-        long id = (long) jTable1.getValueAt(jTable1.getSelectedRow(),0);
-        return id;
-    }
-
+    
     public ErinnerungsübersichtFrame() {
         initComponents();
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
         erinnerungenAusDBLaden();
     }
     
+    public long getIDOfSelectedRow(){
+        long id = (long) jTable1.getValueAt(jTable1.getSelectedRow(),0);
+        return id;
+    }
+    
     /**
      * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
      * @param status 
      */
-    public void setStaturs(String status) {
+    public void setStatus(String status) {
         textField1.setText(status);
     }
     
     public void erinnerungenAusDBLaden(){
-//        if(!el.erinnerungenLaden()){
-//            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Erinnerungsliste"); 
-//        } // --------------------------------------------- Änderung: Fehlermeldung geschieht in der Logik-Klasse und es muss der
-//                                                              aktuelle Status auf der Fußleiste des Fensters angezeigt werden.
-        setStaturs("Laden...");
+        setStatus("Laden...");
         if(el.erinnerungenLaden(-1,0)) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame
-            setStaturs(el.getGroesse() + " Erinnerungen geladen");
+            setStatus(el.getGroesse() + " Erinnerungen geladen");
         } else {
-            setStaturs("Fehler");
+            setStatus("Fehler");
         }
         return;
     }
@@ -72,9 +65,11 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
-            long erinnerungsID = getIDOfSelectedRow();
+            long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
             long themengruppenID = el.getTGID(erinnerungsID);
             ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID);
+            //---------------- Änderung: Datei und Erinnerung im Frame highlighten
+            //ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, erinnerungsID);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
@@ -83,17 +78,18 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 
     public void erinnerungBearbeiten() {
         if(jTable1.getSelectedRow() != -1) {
-            ErinnerungErstellenFrame eef = new ErinnerungErstellenFrame(getIDOfSelectedRow()); //ID der Themengruppe und Pfad der Datei
+            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(getIDOfSelectedRow()); //ID der Erinnerung
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
-        //else {
-        //    NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
-        //}
-        return;
     }
 
-    public void erinnerungErledigtSetzen(){
-
-        el.setzeErledigt(getIDOfSelectedRow());
+    public void aendereErledigtStatus(){
+        if(el.aendereErledigtStatus(getIDOfSelectedRow())) {
+            this.setStatus("Erinnerung bearbeitet.");
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+        }
         return;
     }
 
@@ -158,7 +154,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
         jLabel7.setText("Erinnerungen");
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/to-do-list.png"))); // NOI18N
-        jButton2.setToolTipText("erledigt");
+        jButton2.setToolTipText("erledigt/offen setzen");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -293,7 +289,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         // Erinnerung auf erledigt
-        erinnerungErledigtSetzen();
+        aendereErledigtStatus();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

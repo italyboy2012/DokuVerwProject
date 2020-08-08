@@ -5,15 +5,12 @@
  */
 package dokuverwproject.DB;
 import dokuverwproject.GUI.NotifyFrame;
-import dokuverwproject.LOGIC.Erinnerung;
 
 import java.awt.*;
-import java.io.File;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -43,14 +40,15 @@ import javax.swing.table.DefaultTableModel;
 public class ErinnerungenListe {
     private long groesse = 0;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
+    
     public ErinnerungenListe() { // Konstruktor, um Sachen in die DB zu schreiben
     }
 
-private ImageIcon resizeImageIcon(ImageIcon bild, int breite, int hoehe){
-    Image image = bild.getImage(); // transform it
-    Image newimg = image.getScaledInstance(breite, hoehe,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-    ImageIcon ausgabe = new ImageIcon(newimg);  // transform it back
-    return ausgabe;
+    private ImageIcon resizeImageIcon(ImageIcon bild, int breite, int hoehe){
+        Image image = bild.getImage(); // transform it
+        Image newimg = image.getScaledInstance(breite, hoehe,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        ImageIcon ausgabe = new ImageIcon(newimg);  // transform it back
+        return ausgabe;
     }
     
     public ErinnerungenListe(DefaultTableModel model) { //Konstruktor, um Tabelle eines Frames mit Inhalt zu füllen
@@ -61,15 +59,23 @@ private ImageIcon resizeImageIcon(ImageIcon bild, int breite, int hoehe){
         // ----------------------------------------- Wahrscheinlich nicht mehr benötigt
     }
 
-private boolean inTagen(Date current_date, Date faellig,int range){
+    /**
+     * Zwei Datumswerte werden verglichen, ob sie unter einer bestimmten Distanz voneinander liegen.
+     * 
+     * @param current_date
+     * @param faellig 
+     * @param range - übergebene Distanz in Tagen
+     * @return 
+     */
+    private boolean inTagen(Date current_date, Date faellig,int range){ 
         long diffInMillies = Math.abs(faellig.getTime() - current_date.getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-        return (diff<range);
-}
+        return (diff < range);
+    }
     
     public Boolean erinnerungErstellen(String titel, String inhalt, String date, long tgID, String dateiPfad) {
-    // Erinnerungen werden in der DB gespeichert
+        // Erinnerungen werden in der DB gespeichert
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         if ( con != null){
@@ -99,7 +105,14 @@ private boolean inTagen(Date current_date, Date faellig,int range){
         return false;
     }
 
-    public Boolean erinnerungenLaden(long tgID, int breite) { // wenn tgID = -1, dann aus Hauptframe, sonst aus Themengruppen-Frame
+    /**
+     * @param tgID - wenn tgID = -1, dann aus Hauptframe (also alle Erinerungen laden),
+     * sonst aus Themengruppen-Frame (nur die Laden, die zu dierer tgID gehören)
+     * 
+     * @param hoehe - für das Rendern der Icons in den Spalten
+     * @return 
+     */
+    public Boolean erinnerungenLaden(long tgID, int hoehe) {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         if (con != null) {
@@ -138,12 +151,6 @@ private boolean inTagen(Date current_date, Date faellig,int range){
                     Date current_date = new Date(System.currentTimeMillis());
                     Date testDate = new Date(System.currentTimeMillis());
 
-
-
-
-
-
-
                     //SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
                     //sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
 
@@ -163,19 +170,16 @@ private boolean inTagen(Date current_date, Date faellig,int range){
                         
                         if(erledigt) {
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/tick.png").getFile()));
-                            img = resizeImageIcon(img, breite,breite);
                         } else if (faellig.before(current_date)) {
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/cross.png").getFile()));
-                            img = resizeImageIcon(img, breite,breite);
                         } else if (inTagen(current_date,faellig,4)){
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/pin.png").getFile()));
-                            img = resizeImageIcon(img, breite,breite);
                             new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("../img/butcher.wav").getFile())).start();
                         } else {
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/working.png").getFile()));
-                            img = resizeImageIcon(img, breite,breite);
                         }
-
+                        
+                        img = resizeImageIcon(img, hoehe,hoehe);
                         
                         row[1] = img;
                         row[2] = titel;
@@ -197,7 +201,13 @@ private boolean inTagen(Date current_date, Date faellig,int range){
         return false;
     }
 
-
+    /**
+     * Lädt inhalt oder Titel einer Erinnerung
+     * 
+     * @param id
+     * @param typ
+     * @return 
+     */
     public String textLaden(long id, String typ){
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
@@ -224,6 +234,7 @@ private boolean inTagen(Date current_date, Date faellig,int range){
             }
         return ausgabe;
     }
+    
     public Date datumLaden(long id, String typ){
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
@@ -366,25 +377,29 @@ private boolean inTagen(Date current_date, Date faellig,int range){
     }
 
     
-    public void setzeErledigt(long id) {
-        String query = "UPDATE `erinnerungen` SET `erledigt`= ? WHERE id = ?";
-        PreparedStatement ps = null;
+    public boolean aendereErledigtStatus(long id) {
+        //        UPDATE mytbl
+        //   SET field = !field
+        // WHERE id = 42
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
+
         if(con != null)
         try {
+            String query = "UPDATE `erinnerungen` SET `erledigt`= !`erledigt` WHERE id = ?";
+            PreparedStatement ps = null;
             ps = con.prepareStatement(query);
-            ps.setBoolean(1, true);
-            ps.setLong(2, id);
-            ps.executeUpdate();
+            ps.setLong(1, id);
+            if(ps.executeUpdate() != 0) {
+                ps.close();
+                return true;
+            }
             ps.close();
-            return;
         } catch (Exception e) {
             System.out.println(e.toString());
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
-        return;
-
+        return false;
     }
 
     public long getGroesse() {

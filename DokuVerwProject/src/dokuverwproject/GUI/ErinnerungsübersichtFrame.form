@@ -156,7 +156,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/dokuverwproject/IMG/to-do-list.png"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="erledigt"/>
+            <Property name="toolTipText" type="java.lang.String" value="erledigt/offen setzen"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>

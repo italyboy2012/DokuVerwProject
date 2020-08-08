@@ -243,7 +243,7 @@ public class Themengruppe {
             
         }
         //// --------- Notiz für datei noch mit löschen.
-        desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
+        //desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
         
         
         
