@@ -556,13 +556,20 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         entsperreTextField1();
+        if (jTable1.getSelectedRow() != -1){
+            jTextArea1.setEditable(true);
+            jTable2.clearSelection();
+            ladeNotiz();
+                    /* ------- Aenderungen:
+                    Notizfeld wird freigegeben, wenn Zeile markiert wurde
+                    */
+        }
         if (evt.getClickCount() == 2) {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
             } else {
                 errorDateiwaehlen();
             }
-
 
         }
 
