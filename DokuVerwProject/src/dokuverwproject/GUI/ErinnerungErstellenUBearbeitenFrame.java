@@ -21,11 +21,15 @@ import java.text.SimpleDateFormat;
  */
 public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
     private ThemengruppeFrame tgf = null; // Referenz, um Tabellenanzeige zu aktualisieren
+    private ErinnerungsuebersichtFrame euf = null; // Gui der Erinnerungsübersicht, um die Anzeige zu aktualisieren
+    
     private ErinnerungenListe el = null; // DB-Logik der Erinnerungen
+    
     private long themengruppenID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
     private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
     private long id = 0;
-    public String buttonText = "erstellen";
+    private String buttonText = "erstellen";
+    
     
     /**
      * Neue Erinnerung erstellen
@@ -51,9 +55,33 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
      * 
      * @param id 
      */
-    public ErinnerungErstellenUBearbeitenFrame(long id) {
+    public ErinnerungErstellenUBearbeitenFrame(ErinnerungsuebersichtFrame euf, long id) {
         this.id = id;
         el = new ErinnerungenListe();
+        this.euf = euf;
+        this.setTitle("Erinnerung ändern");
+        this.buttonText = "Speichern";
+        initComponents();
+        jLabel1.setText("Erinnerung ändern");
+        
+        initExternalFrame(this, "../img/hourglass.png");
+        
+        jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
+        jTextField1.setText(el.textLaden(id,"titel"));
+        jTextArea1.setText(el.textLaden(id,"inhalt"));
+        this.setVisible(true);
+        
+    }
+    
+    /**
+     * Vorhandene Erinnerung bearbeiten
+     * 
+     * @param id 
+     */
+    public ErinnerungErstellenUBearbeitenFrame(ThemengruppeFrame tgf, long id) {
+        this.id = id;
+        el = new ErinnerungenListe();
+        this.tgf = tgf;
         this.setTitle("Erinnerung ändern");
         this.buttonText = "Speichern";
         initComponents();
@@ -80,26 +108,24 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
         String datei = file;
-        if (this.themengruppenID != 0 && this.id == 0){
-        if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
+        if (this.themengruppenID != 0 && this.id == 0) {
+            if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
                 if(!el.erinnerungErstellen(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 } else {
                     tgf.ansichtAktualisieren();
                     this.dispose();
                 }
-                } else {
-                    NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
             }
+        } else if(this.themengruppenID == 0 && this.id != 0) {
+            el.erinnerungBearbeiten(this.id, titel, inhalt, faelligkeitsDatum);
+            this.dispose();
         }
-        else if(this.themengruppenID == 0 && this.id != 0) {
-
-                el.erinnerungBearbeiten(this.id, titel, inhalt, faelligkeitsDatum);
-                this.dispose();
-            }
-        }
-
-
+        if(euf != null) euf.erinnerungenAusDBLaden();
+        if(tgf != null) tgf.ansichtAktualisieren();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

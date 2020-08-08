@@ -26,10 +26,10 @@ import javax.swing.table.DefaultTableModel;
  *      und öffnet die entsprechende Themengruppe
  *
  */
-public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
+public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     
-    public ErinnerungsübersichtFrame() {
+    public ErinnerungsuebersichtFrame() {
         initComponents();
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
         erinnerungenAusDBLaden();
@@ -78,7 +78,7 @@ public class ErinnerungsübersichtFrame extends javax.swing.JInternalFrame {
 
     public void erinnerungBearbeiten() {
         if(jTable1.getSelectedRow() != -1) {
-            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(getIDOfSelectedRow()); //ID der Erinnerung
+            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, getIDOfSelectedRow()); //ID der Erinnerung
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }

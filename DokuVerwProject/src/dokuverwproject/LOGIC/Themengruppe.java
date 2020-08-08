@@ -176,6 +176,7 @@ public class Themengruppe {
                 
                 if(!file.exists()) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+                    System.out.println("22222");
                     return;
                 }
                 
@@ -184,7 +185,8 @@ public class Themengruppe {
                     pfadsNavIndex++;
                     
                     this.pfadNav = file.getPath();
-                    dateienIndexieren();
+                    this.dateienIndexieren();
+                    System.out.println("HIERRRRRRRRRRRRRRR");
                 } else if(file.isFile()) {
                     if(file.exists()) desktop.open(file);
                 }

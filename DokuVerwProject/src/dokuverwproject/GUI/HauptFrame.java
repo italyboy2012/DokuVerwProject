@@ -47,7 +47,7 @@ public class HauptFrame extends javax.swing.JFrame {
     }
     
     private void erinnerungenFrameOeffnen() {
-        ErinnerungsübersichtFrame ef = new ErinnerungsübersichtFrame();
+        ErinnerungsuebersichtFrame ef = new ErinnerungsuebersichtFrame();
         initInternalFrame(ef, jDesktopPane1, "../img/hourglass.png");
     }
 

@@ -82,6 +82,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         ladeThemengruppe();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         el.erinnerungenLaden(selectedRowId, hoehe);
+        leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
     }
 
     public void errorDateiwaehlen(){
@@ -118,7 +119,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTextArea1.setText("");
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new Color(244,247,252));
-        //[255,255,255] // weiß
     }
     
     public void entsperreTextField1() {
@@ -139,25 +139,60 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     
     public void toggleEditableTable(Boolean b) {
         jTable1.setRowSelectionAllowed(b);
-        jTable1.setColumnSelectionAllowed(b);
     }
 
     public void ladeNotiz(){
         String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
         long themengruppenID = tg.getId();
-        String ausgabe = no.notizAusDBLaden(test, themengruppenID);
+        String ausgabe = no.notizAusDBLaden(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
+        entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
     public void dateiLoeschen(String pfad){
-
         if(no.notizLoeschen(pfad)){
             if(el.erinnerungLoeschen(pfad)) {
                 tg.dateiLöschen(pfad);
             } else {NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen.");}
         } else { NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");}
     }
+    
+    public void dateiOderErinnerungLoeschen() {
+        if(jTable1.getSelectedRow() != -1) { //Datei löschen
+            String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
+            dateiLoeschen(selectedRowPath);
+            leereSperreTextfeld1();
+            ansichtAktualisieren();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
+        }
+        
+        if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
+            int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
+            long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
+            el.erinnerungLoeschen(erinnerungenID);
+            el.erinnerungenLaden(selectedRowId, hoehe);
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
+        }
+    }
 
+    public void erinnerungBearbeiten() {
+        if(jTable2.getSelectedRow() != -1) {
+            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+    }
+    
+    public void aendereErledigtStatus(){
+        if(el.aendereErledigtStatus((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
+            ansichtAktualisieren();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+        }
+        return;
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -183,6 +218,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        jButton13 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -351,6 +388,22 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Erinnerungen:");
 
+        jButton13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/edit-folder.png"))); // NOI18N
+        jButton13.setToolTipText("bearbeiten");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/to-do-list.png"))); // NOI18N
+        jButton2.setToolTipText("erledigt/offen setzen");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -358,15 +411,26 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton13)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
@@ -517,8 +581,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                         .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -573,24 +637,19 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        entsperreTextField1();
+        leereSperreTextfeld1(); // Textfeld sperren
         if (jTable1.getSelectedRow() != -1){
-            jTextArea1.setEditable(true);
             jTable2.clearSelection();
-            ladeNotiz();
-                    /* ------- Aenderungen:
-                    Notizfeld wird freigegeben, wenn Zeile markiert wurde
-                    */
+            ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
         }
+        
         if (evt.getClickCount() == 2) {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
             } else {
                 errorDateiwaehlen();
             }
-
         }
-
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -604,28 +663,13 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        if(jTable1.getSelectedRow() != -1) {
-            String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            dateiLoeschen(selectedRowPath);
-            leereSperreTextfeld1();
-
-            ansichtAktualisieren();
-        } else if (jTable2.getSelectedRow() != -1){
-            int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
-            long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
-            el.erinnerungLoeschen(erinnerungenID);
-            el.erinnerungenLaden(selectedRowId,hoehe);
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
-        }
+        dateiOderErinnerungLoeschen();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
         ansichtAktualisieren();
-        leereSperreTextfeld1();
-
-
+        
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -669,6 +713,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
         //----SPEICHERN DER NOTIZ
+        schreibeNotiz();
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
@@ -679,10 +724,24 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton12ActionPerformed
 
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        // TODO add your handling code here:
+        // Erinnerung bearbeiten
+        erinnerungBearbeiten();
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        // Erinnerung auf erledigt
+        aendereErledigtStatus();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
