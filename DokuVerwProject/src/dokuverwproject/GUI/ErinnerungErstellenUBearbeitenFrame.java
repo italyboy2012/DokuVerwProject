@@ -59,10 +59,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.id = id;
         el = new ErinnerungenListe();
         this.euf = euf;
-        this.setTitle("Erinnerung ändern");
-        this.buttonText = "Speichern";
         initComponents();
-        jLabel1.setText("Erinnerung ändern");
 
         initExternalFrame(this, "../img/hourglass.png");
         

@@ -152,10 +152,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             if(el.erinnerungLoeschen(pfad)) {
                 tg.dateiLöschen(pfad);
             } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen.");
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
             }
         } else { 
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
         }
     }
     
@@ -166,11 +166,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             leereSperreTextfeld1();
             ansichtAktualisieren();
             return;
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
-        }
-        
-        if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
+        } else if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
             int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
             el.erinnerungLoeschen(erinnerungenID);
@@ -178,7 +174,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             ansichtAktualisieren();
             return;
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
+            NotifyFrame nf = new NotifyFrame("Fehler", "wählen Sie bitte etwas zum Löschen aus.");
         }
     }
 
@@ -191,12 +187,16 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }
     
     public void aendereErledigtStatus(){
-        if(el.aendereErledigtStatus((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
-            ansichtAktualisieren();
+        if(jTable2.getSelectedRow() != -1) {
+            if(el.aendereErledigtStatus((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
+                ansichtAktualisieren();
+                return;
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+            }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+            errorDateiwaehlen();
         }
-        return;
     }
 
     @SuppressWarnings("unchecked")
@@ -373,6 +373,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             @Override
             public Class<?> getColumnClass(int column) {
                 switch (column) {
+                    case 0: return Long.class;
                     case 1: return ImageIcon.class;
                     default: return String.class;
                 }
@@ -650,10 +651,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        leereSperreTextfeld1();
         if (evt.getClickCount() == 2) {
             tg.openSelectedFile(); // Datei oder Verzeichnis öffnen
         }
-        
         if (jTable1.getSelectedRow() != -1){
             ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
         }

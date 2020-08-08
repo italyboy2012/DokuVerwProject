@@ -213,9 +213,16 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                 "Nr.", "Titel", "Pfad", "Anlagedatum"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
