@@ -176,7 +176,6 @@ public class Themengruppe {
                 
                 if(!file.exists()) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
-                    System.out.println("22222");
                     return;
                 }
                 
@@ -246,11 +245,6 @@ public class Themengruppe {
         }
         //// --------- Notiz für datei noch mit löschen.
         //desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
-        
-        
-        
-        
-
     }
     
     public boolean dateiUmbenennen(String neuerName, String dateiPfad) {

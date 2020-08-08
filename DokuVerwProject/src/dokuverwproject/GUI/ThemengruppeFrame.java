@@ -637,9 +637,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        leereSperreTextfeld1(); // Textfeld sperren
+        //leereSperreTextfeld1(); // Textfeld sperren
+        jTable2.clearSelection();
+        
         if (jTable1.getSelectedRow() != -1){
-            jTable2.clearSelection();
             ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
         }
         
@@ -692,7 +693,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        // TODO add your handling code here:
+        // TODO add your handling code here
+        jTable1.clearSelection();
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
