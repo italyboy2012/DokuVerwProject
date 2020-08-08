@@ -38,7 +38,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
     private Notiz no = null; //Logik von Notiz
 
-    
     /**
      * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
      * Tabelle des Frames übergeben.
@@ -88,8 +87,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void errorDateiwaehlen(){
         new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");
     }
-
-
+    
     public void ladeThemengruppe(){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
@@ -153,8 +151,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         if(no.notizLoeschen(pfad)){
             if(el.erinnerungLoeschen(pfad)) {
                 tg.dateiLöschen(pfad);
-            } else {NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen.");}
-        } else { NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");}
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen.");
+            }
+        } else { 
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen.");
+        }
     }
     
     public void dateiOderErinnerungLoeschen() {
@@ -297,6 +299,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTable1MouseEntered(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jTable1MouseReleased(evt);
@@ -645,20 +650,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        //leereSperreTextfeld1(); // Textfeld sperren
-        if (jTable1.getSelectedRow() != -1){
-            ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
+        if (evt.getClickCount() == 2) {
+            tg.openSelectedFile(); // Datei oder Verzeichnis öffnen
         }
         
-        if (evt.getClickCount() == 2) {
-            if(jTable1.getSelectedRow() != -1) {
-                tg.openSelectedFile();
-                ansichtAktualisieren();
-                this.ansichtAktualisieren();
-            } else {
-                errorDateiwaehlen();
-            }
+        if (jTable1.getSelectedRow() != -1){
+            ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -679,7 +676,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
         ansichtAktualisieren();
-        
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -703,7 +699,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here
-        
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -750,12 +745,18 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
         // TODO add your handling code here:
         jTable2.clearSelection();
+        
+ 
     }//GEN-LAST:event_jTable1MouseReleased
 
     private void jTable2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseReleased
         // TODO add your handling code here:
         jTable1.clearSelection();
     }//GEN-LAST:event_jTable2MouseReleased
+
+    private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseEntered
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton10;

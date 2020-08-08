@@ -198,10 +198,6 @@ public class Themengruppe {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
-        DefaultTableModel model = (DefaultTableModel)table.getModel();
-        model.setRowCount(0);
-        tgf.leereSperreTextfeld1();
-
     }
     
     public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
