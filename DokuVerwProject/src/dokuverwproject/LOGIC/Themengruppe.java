@@ -191,7 +191,8 @@ public class Themengruppe {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
-        
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        model.setRowCount(0);
     }
     
     public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
@@ -229,12 +230,20 @@ public class Themengruppe {
     public void dateiLöschen(String dateiPfad) {
         File f = new File(dateiPfad);
         Desktop desktop = Desktop.getDesktop();
+        
         if(!f.exists()) {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return;
+        } else {
+            f.renameTo (new File("C:\\$Recycle.Bin\\t.txt"));
+            
         }
         //// --------- Notiz für datei noch mit löschen.
         desktop.moveToTrash(f); // Es wird nur ein LEERES Verzeichnis oder eine Datei gelöscht.
+        
+        
+        
+        
 
     }
     
