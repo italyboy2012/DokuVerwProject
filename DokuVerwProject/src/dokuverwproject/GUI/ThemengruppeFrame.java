@@ -163,6 +163,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             dateiLoeschen(selectedRowPath);
             leereSperreTextfeld1();
             ansichtAktualisieren();
+            return;
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }
@@ -173,6 +174,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             el.erinnerungLoeschen(erinnerungenID);
             el.erinnerungenLaden(selectedRowId, hoehe);
             ansichtAktualisieren();
+            return;
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "wähle etwas zum Löschen aus");
         }
@@ -652,6 +654,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             if(jTable1.getSelectedRow() != -1) {
                 tg.openSelectedFile();
+                ansichtAktualisieren();
                 this.ansichtAktualisieren();
             } else {
                 errorDateiwaehlen();
