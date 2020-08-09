@@ -7,5 +7,6 @@ ___________________________
 
 -- Icons --
 
-Icons from www.flaticon.com
-green Tick, cross and pin by https://www.flaticon.com/authors/kiranshastry
+Icons from www.flaticon.com.
+
+Green Tick, cross and pin by https://www.flaticon.com/authors/kiranshastry
