@@ -5,6 +5,8 @@
  */
 package dokuverwproject;
 
+import dokuverwproject.DB.ReadWriteCredentials;
+import dokuverwproject.GUI.EinrichtungsassistentFrame;
 import dokuverwproject.GUI.LoginFrame;
 
 /**
@@ -36,7 +38,16 @@ public class Main {
         /* Create and display LoginForm */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
+//                ReadWriteCredentials rwc = new ReadWriteCredentials();
+//        
+//                if(!rwc.loadData()) {
+//                    new EinrichtungsassistentFrame();
+//                    return;
+//                }
+                    
                 new LoginFrame();
+                
             }
         });
     }

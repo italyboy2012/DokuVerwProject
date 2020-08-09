@@ -6,11 +6,12 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.DBConn;
+import dokuverwproject.DB.ReadWriteCredentials;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.Color;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -19,15 +20,22 @@ import java.sql.Statement;
  * @author Giuseppe
  */
 public class EinrichtungsassistentFrame extends javax.swing.JFrame {
+    //private String[] tables = {"erinnerungen", "notizen", "nutzer", "themengruppen"}; //Array mit den zu prüfenden Tabellen
+    private String[][] tables = { //2d Array mit Tabellennamen und SQL-Code, um sie einzurichten
+        {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `erinnerungen` ADD PRIMARY KEY (`id`); ALTER TABLE `erinnerungen` MODIFY `id` AUTO_INCREMENT;"},
+        {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `notizen` ADD PRIMARY KEY (`id`); ALTER TABLE `notizen` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;"},
+        {"nutzer", "CREATE TABLE `nutzer` (`id` bigint(11) NOT NULL,`username` text NOT NULL,`passwort` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `nutzer` ADD PRIMARY KEY (`id`); ALTER TABLE `nutzer` MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;"},
+        {"themengruppen", "CREATE TABLE `themengruppen` (`id` bigint(11) NOT NULL,`titel` text NOT NULL,`pfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `themengruppen` ADD PRIMARY KEY (`id`); ALTER TABLE `themengruppen` MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10001;"}
+    };
     
     /**
      * Datenverbindung
      */
-    private String host = "";
-    private String port = "";
-    private String nameDatenbank = "";
-    private String benutzername = "";
-    private String passwort = "";
+    private String db_host = "";
+    private String db_port = "";
+    private String db_name = "";
+    private String db_username = "";
+    private String db_password = "";
 
     /**
      * Creates new form EinrichtungGui
@@ -35,7 +43,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     public EinrichtungsassistentFrame() {
         initComponents();
         
-        initExternalFrame(this, "../img/setup.png");
+        initExternalFrame(this, "../img/edit-folder.png");
         
         this.setVisible(true);
     }
@@ -50,7 +58,6 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -86,6 +93,9 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jTextField13 = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField8 = new javax.swing.JTextField();
         jPanel10 = new javax.swing.JPanel();
         jButton6 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
@@ -99,8 +109,6 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
 
         jPanel2.setBackground(java.awt.SystemColor.controlHighlight);
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/barberisoftware/barberi/img/setup.png"))); // NOI18N
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Datenbankverbindung"));
 
@@ -410,13 +418,43 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
+
+        jLabel11.setText("Status:");
+
+        jTextField8.setEditable(false);
+        jTextField8.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField8)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
@@ -424,7 +462,9 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Account anlegen", jPanel11);
@@ -473,9 +513,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(19, 19, 19)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,17 +527,12 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel5))
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel4)))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel5))
+                .addGap(0, 0, 0)
+                .addComponent(jLabel4)
                 .addGap(0, 0, 0)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -554,19 +587,19 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    public void testDBConnection() {
+    public boolean testDBConnection() {
         enableBereichDatenbankstruktur(false);
         jTextField6.setText("Bitte warten...");
         jTextField6.setBackground(new Color(240,240,240));
 
-        this.host = jTextField1.getText();
-        this.port = jTextField12.getText();
-        this.nameDatenbank = jTextField10.getText();
-        this.benutzername = jTextField4.getText();
-        this.passwort = jPasswordField1.getText();
+        this.db_host = jTextField1.getText();
+        this.db_port = jTextField12.getText();
+        this.db_name = jTextField10.getText();
+        this.db_username = jTextField4.getText();
+        this.db_password = jPasswordField1.getText();
         
-        if(!host.equals("") && !host.equals(null) && !nameDatenbank.equals("") && !nameDatenbank.equals(null)) {
-            DBConn db = new DBConn(host, port, nameDatenbank, benutzername, passwort);
+        if(!db_host.equals("") && !db_host.equals(null) && !db_name.equals("") && !db_name.equals(null)) {
+            DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
             Connection con = db.getConnection();
 
             if(con != null) {
@@ -576,6 +609,8 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                 
                 jTextField7.setText("Mit Datenbank verbunden!");
                 jTextField7.setBackground(new Color(240,240,240));
+                
+                return true;
             } else {
                 enableBereichDatenbankstruktur(false);
                 jTextField6.setText("Fehler beim Verbinden mit der Datenbank!");
@@ -592,9 +627,163 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
             jTextField7.setText("Nicht mit der Datenbank verbunden.");
             jTextField7.setBackground(new Color(240,240,240));
         }
+        return false;
     }
    
-     public void enableBereichDatenbankstruktur(boolean enable) {
+    
+    
+    public void checkDatenbankstruktur(){
+        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
+        
+        int anzahlGefudenerTabellenInDB = 0; // Anzahl der in der DB gefundenen Tabellen
+        
+        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+        Connection con = db.getConnection();
+        
+        Statement stmt = null;
+        
+        try{
+            DatabaseMetaData dbm = con.getMetaData();
+            
+            for (int i = 0; i < tables.length; i++) {
+                ResultSet table = dbm.getTables(null, null, tables[i][0], null);
+                if (table.next()) { //if table exists
+                    anzahlGefudenerTabellenInDB ++;
+                }
+            }
+            
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            jTextField7.setText(e.toString());
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+        
+        if(anzahlGefudenerTabellenInDB == tables.length) {
+            jTextField7.setText("Datenbankstruktur überprüft und in Ordnung!");
+            jTextField7.setBackground(new Color(204,255,204));
+            
+            enableAccountBereich(true);
+            jTabbedPane1.setSelectedIndex(1);
+        } else {
+            jTextField7.setText("Datenbankstruktur fehlerhaft! Bitte 'anlegen' zur Reparatur klicken.");
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+    }
+   
+    public void createDatabaseStructure() {
+        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
+        
+        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+        Connection con = db.getConnection();
+        
+        Statement stmt = null;
+        
+        try{
+            DatabaseMetaData dbm = con.getMetaData();
+            
+            for (int i = 0; i < tables.length; i++) {
+                ResultSet tableAccounts = dbm.getTables(null, null, tables[i][0], null);
+                if (!tableAccounts.next()) { //if table does not exist
+                    try{
+                        stmt = con.createStatement();
+                        stmt.executeUpdate(tables[i][1]); //Tabelle erstellen
+                        stmt.executeUpdate(tables[i][2]); //Eigenschaften der Tabelle setzen
+                        stmt.close();
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        jTextField7.setText(e.toString());
+                        jTextField7.setBackground(new Color(255,204,204));
+                        return;
+                    }
+                }
+            }
+            
+            jTextField7.setText("Datenbankstruktur angelegt!");
+            jTextField7.setBackground(new Color(204,255,204));
+            
+            enableAccountBereich(true);
+            jTabbedPane1.setSelectedIndex(1);
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            jTextField7.setText(e.toString());
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+    }
+   
+    public void createRootUser() {
+        String usr_username = jTextField3.getText();
+        String usr_password = jPasswordField4.getText();
+        String usr_passwrdRpt = jPasswordField3.getText();
+        String user_lastname = jTextField11.getText();
+        String user_prename = jTextField13.getText();
+        
+        if(!usr_username.equals("") && !usr_username.equals(null) && !usr_password.equals("") && !usr_password.equals(null) && !usr_passwrdRpt.equals("") && !usr_passwrdRpt.equals(null) && !user_lastname.equals("") && !user_lastname.equals(null) && !user_prename.equals("") && !user_prename.equals(null)) {
+            if(usr_password.equals(usr_passwrdRpt)) {
+                try{
+                    DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+                    Connection con = db.getConnection();
+                    
+                    PreparedStatement ps = null;
+                    String queryCheckAccount = "SELECT * FROM `nutzer` WHERE `username` = ?";
+                    ps = con.prepareStatement(queryCheckAccount);
+                    ps.setString(1, usr_username);
+                    ResultSet rs = ps.executeQuery();
+                    
+                    if(!rs.isBeforeFirst()){ // keine Einträge mit dem selben Benutzernamen
+                        ps = null;
+                        String addUserQuery = "INSERT INTO `nutzer` (`id`, `username`, `passwort`, `name`, `vorname`, `created_TMSTMP`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
+
+                        ps = con.prepareStatement(addUserQuery);
+                        ps.setString(1, usr_username);
+                        ps.setString(2, usr_password);
+                        ps.setString(3, user_lastname);
+                        ps.setString(4, user_prename);
+                        
+                        if(!ps.execute()) {
+                            jTextField8.setText("Fehler beim Schreiben des Accounts in die Datenbank!");
+                            jTextField8.setBackground(new Color(255,204,204));
+                            return;
+                        }
+                        
+                        enableBereichSpeichern(true);
+                        jTabbedPane1.setSelectedIndex(2);
+
+                    } else {
+                        jTextField8.setText("Benutzername bereits vorhanden!");
+                        jTextField8.setBackground(new Color(255,204,204));
+                    }
+                    ps.close();
+                } catch(Exception e) {
+                    System.out.println(e.toString());
+                    jTextField8.setText("Fehler beim Erstellen des Accounts!");
+                    jTextField8.setBackground(new Color(255,204,204));
+                }
+                
+            } else {
+                jTextField8.setText("Passwörter stimmen nicht überein!");
+                jTextField8.setBackground(new Color(255,204,204));
+            }
+            
+        } else {
+            jTextField8.setText("Bitte alle Pflichtangaben ausfüllen!");
+            jTextField8.setBackground(new Color(255,204,204));
+        }
+       
+    }
+    
+    public void saveAndClose() {
+        ReadWriteCredentials rwc = new ReadWriteCredentials(db_host, db_port, db_name, db_username, db_password);
+        
+        if(!rwc.saveData()) {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");
+            return;
+        }
+        
+        new LoginFrame();
+        this.dispose();
+    }
+    
+    public void enableBereichDatenbankstruktur(boolean enable) {
         jPanel6.setEnabled(enable);
         jLabel9.setEnabled(enable);
         jTextField7.setEnabled(enable);
@@ -618,334 +807,10 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         jPasswordField3.setEnabled(enable);
         jButton8.setEnabled(enable);
     }
-   
-    public void checkDatenbankstruktur(){
-        testDBConnection();
-        
-        int datenbankFehlerhaft = 0;
-        
-        CreateConnection cc = new CreateConnection(hostDatenbank, nameDatenbank, benutzernameDatenbank, passwortDatenbank);
-        Connection con = cc.getConnection();
-        
-        Statement stmt = null;
-        
-        try{
-            DatabaseMetaData dbm = con.getMetaData();
-            
-            ResultSet tableAccounts = dbm.getTables(null, null, "accounts", null);
-            if (tableAccounts.next()) { //if table exists
-                datenbankFehlerhaft ++;
-            }
-            
-            ResultSet tableAkten = dbm.getTables(null, null, "akten", null);
-            if (tableAkten.next()) { //if table exists
-                datenbankFehlerhaft ++;
-            }
-            
-            ResultSet tableAufgaben = dbm.getTables(null, null, "aufgaben", null);
-            if (tableAufgaben.next()) { //if table exists
-                datenbankFehlerhaft ++;
-            }
-            
-            ResultSet tableFristen = dbm.getTables(null, null, "fristen", null);
-            if (tableFristen.next()) { //if table exists
-                datenbankFehlerhaft ++;
-            }
-            
-            ResultSet tableLoginlog = dbm.getTables(null, null, "loginlog", null);
-            if (tableLoginlog.next()) { //if table exists
-                datenbankFehlerhaft ++;
-            }
-            
-        } catch(Exception e) {
-            System.out.println(e.toString());
-            jTextField7.setText(e.toString());
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-        
-        if(datenbankFehlerhaft == 5) {
-            jTextField7.setText("Datenbankstruktur überprüft und in Ordnung!");
-            jTextField7.setBackground(new Color(204,255,204));
-            enableAccountBereich(true);
-            enableBereichSpeicher(true);
-            jTabbedPane1.setSelectedIndex(1);
-        } else {
-            jTextField7.setText("Datenbankstruktur fehlerhaft! Bitte 'anlegen' zur Reparatur klicken.");
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-       
-       
-    }
-   
-    public void deleteDatabaseStructure() {
-        testDBConnection();
-        
-        if(deleteDatenbankstrukturSicherheitsueberpruefung == 0) {
-            deleteDatenbankstrukturSicherheitsueberpruefung = 3;
-            
-            CreateConnection cc = new CreateConnection(hostDatenbank, nameDatenbank, benutzernameDatenbank, passwortDatenbank);
-            Connection con = cc.getConnection();
-
-            Statement stmt = null;
-
-            try{
-                DatabaseMetaData dbm = con.getMetaData();
-
-                ResultSet tableAccounts = dbm.getTables(null, null, "accounts", null);
-                if (tableAccounts.next()) { //if table exists
-                    String query = "DROP TABLE `accounts`";
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(query);
-                        stmt.close();
-
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                    }
-                }
-
-                ResultSet tableAkten = dbm.getTables(null, null, "akten", null);
-                if (tableAkten.next()) { //if table exists
-                    String query = "DROP TABLE `akten`";
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(query);
-                        stmt.close();
-
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                    }
-                }
-
-                ResultSet tableAufgaben = dbm.getTables(null, null, "aufgaben", null);
-                if (tableAufgaben.next()) { //if table exists
-                    String query = "DROP TABLE `aufgaben`";
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(query);
-                        stmt.close();
-
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                    }
-                }
-
-                ResultSet tableFristen = dbm.getTables(null, null, "fristen", null);
-                if (tableFristen.next()) { //if table exists
-                    String query = "DROP TABLE `fristen`";
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(query);
-                        stmt.close();
-
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                    }
-                }
-                
-                ResultSet tableLoginlog = dbm.getTables(null, null, "loginlog", null);
-                if (tableLoginlog.next()) { //if table exists
-                    String query = "DROP TABLE `loginlog`";
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(query);
-                        stmt.close();
-
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                    }
-                }
-
-                jTextField7.setText("Datenbankstruktur gelöscht!");
-                jTextField7.setBackground(new Color(255,204,102));
-            } catch(Exception e) {
-                System.out.println(e.toString());
-                jTextField7.setText(e.toString());
-                jTextField7.setBackground(new Color(255,204,204));
-            }
-            
-        } else {
-            deleteDatenbankstrukturSicherheitsueberpruefung --;
-            jTextField7.setText("Fortfahren? Alle Daten werden gelöscht. Noch " + (deleteDatenbankstrukturSicherheitsueberpruefung + 1) + " mal erneut klicken.");
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-    }
-   
-    public void createDatabaseStructure() {
-        testDBConnection();
-        
-        CreateConnection cc = new CreateConnection(hostDatenbank, nameDatenbank, benutzernameDatenbank, passwortDatenbank);
-        Connection con = cc.getConnection();
-        
-        Statement stmt = null;
-        
-        try{
-            DatabaseMetaData dbm = con.getMetaData();
-            
-            ResultSet tableAccounts = dbm.getTables(null, null, "accounts", null);
-            if (!tableAccounts.next()) { //if table does not exist
-                String query = "CREATE TABLE `accounts` (`id` int(11) NOT NULL AUTO_INCREMENT,`benutzername` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`status` int(11) NOT NULL,`kennwort` text NOT NULL,`notizen` text NOT NULL,`anlagedatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`erfasser` int(11) NOT NULL, PRIMARY KEY(id));";
-                try{
-                    stmt = con.createStatement();
-                    stmt.executeUpdate(query);
-                    stmt.close();
-
-                } catch(Exception e){
-                    System.out.println(e.toString());
-                }
-            }
-            
-            ResultSet tableAkten = dbm.getTables(null, null, "akten", null);
-            if (!tableAkten.next()) { //if table does not exist
-                String query = "CREATE TABLE `akten` (`id` int(11) NOT NULL AUTO_INCREMENT,`titel` text NOT NULL,`bearbeiter` int(11) NOT NULL,`anlagedatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`erfasser` int(11) NOT NULL,`ablagenummer` text NOT NULL,`notizen` text NOT NULL,`pfad` text NOT NULL, PRIMARY KEY(id));";
-                try{
-                    stmt = con.createStatement();
-                    stmt.executeUpdate(query);
-                    stmt.close();
-
-                } catch(Exception e){
-                    System.out.println(e.toString());
-                }
-            }
-            
-            ResultSet tableAufgaben = dbm.getTables(null, null, "aufgaben", null);
-            if (!tableAufgaben.next()) { //if table does not exist
-                String query = "CREATE TABLE `aufgaben` (`id` int(11) NOT NULL AUTO_INCREMENT,`titel` text NOT NULL,`frist` date NOT NULL,`status` int(11) NOT NULL,`notizen` text NOT NULL,`bearbeiter` int(11) NOT NULL,`anlagedatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`erfasser` int(11) NOT NULL, PRIMARY KEY(id));";
-                try{
-                    stmt = con.createStatement();
-                    stmt.executeUpdate(query);
-                    stmt.close();
-
-                } catch(Exception e){
-                    System.out.println(e.toString());
-                }
-            }
-            
-            ResultSet tableFristen = dbm.getTables(null, null, "fristen", null);
-            if (!tableFristen.next()) { //if table does not exist
-                String query = "CREATE TABLE `fristen` (`id` int(11) NOT NULL AUTO_INCREMENT,`titel` text NOT NULL,`frist` date NOT NULL,`status` int(11) NOT NULL,`notizen` text NOT NULL,`bearbeiter` int(11) NOT NULL,`anlagedatum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`erfasser` int(11) NOT NULL, PRIMARY KEY(id));";
-                try{
-                    stmt = con.createStatement();
-                    stmt.executeUpdate(query);
-                    stmt.close();
-
-                } catch(Exception e){
-                    System.out.println(e.toString());
-                }
-            }
-            
-            ResultSet tableLoginlog = dbm.getTables(null, null, "loginlog", null);
-            if (!tableLoginlog.next()) { //if table does not exist
-                String query = "CREATE TABLE `loginlog` (`id` int(11) NOT NULL AUTO_INCREMENT, `account` int(11) NOT NULL, `terminal` text NOT NULL, `zeitstempel` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id));";
-                try{
-                    stmt = con.createStatement();
-                    stmt.executeUpdate(query);
-                    stmt.close();
-
-                } catch(Exception e){
-                    System.out.println(e.toString());
-                }
-            }
-            
-            jTextField7.setText("Datenbankstruktur angelegt!");
-            jTextField7.setBackground(new Color(204,255,204));
-            enableAccountBereich(true);
-            enableBereichSpeicher(true);
-            jTabbedPane1.setSelectedIndex(1);
-        } catch(Exception e) {
-            System.out.println(e.toString());
-            jTextField7.setText(e.toString());
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-        
-    }
-   
-    public void createRootUser() {
-        String benutzername = jTextField3.getText();
-        String passwort = jPasswordField4.getText();
-        String passwortwdh = jPasswordField3.getText();
-        String name = jTextField11.getText();
-        String vorname = jTextField13.getText();
-        String notizen = jTextArea1.getText();
-        
-        if(!benutzername.equals("") && !benutzername.equals(null) && !passwort.equals("") && !passwort.equals(null) && !passwortwdh.equals("") && !passwortwdh.equals(null) && !name.equals("") && !name.equals(null) && !vorname.equals("") && !vorname.equals(null)) {
-            if(passwort.equals(passwortwdh)) {
-                
-                try{
-                    CreateConnection cc = new CreateConnection(hostDatenbank, nameDatenbank, benutzernameDatenbank, passwortDatenbank);
-                    Connection con = cc.getConnection();
-                    
-                    Statement stmt = null;
-                    String queryCheckAccount = "SELECT * FROM `accounts` WHERE `benutzername` = '" + benutzername + "'";
-                    
-                    stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(queryCheckAccount);
-                    if(!rs.isBeforeFirst()){ // keine Einträge mit dem selben Benutzernamen
-                        
-                        String queryCreateAccount = "INSERT INTO `accounts`(`benutzername`, `name`, `vorname`, `status`, `kennwort`, `notizen`, `erfasser`) VALUES ('" + benutzername + "', '" + name + "', '" + vorname + "', 3, md5('" + passwort + "'),'" + notizen + "', 0000)";
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(queryCreateAccount);
-                        
-                        jTextField12.setText("Administrator-Account angelegt!");
-                        jTextField12.setBackground(new Color(204,255,204));
-                        enableBereichSpeicher(true);
-                        jTabbedPane1.setSelectedIndex(2);
-                        
-                        
-                    } else {
-                        jTextField12.setText("Benutzername bereits vorhanden!");
-                        jTextField12.setBackground(new Color(255,204,204));
-                    }
-                    stmt.close();
-                    
-                } catch(Exception e) {
-                    System.out.println(e.toString());
-                    jTextField12.setText("Fehler beim Erstellen des Accounts!");
-                    jTextField12.setBackground(new Color(255,204,204));
-                }
-                
-            } else {
-                jTextField12.setText("Passwörter stimmen nicht überein!");
-                jTextField12.setBackground(new Color(255,204,204));
-            }
-            
-        } else {
-            jTextField12.setText("Bitte alle Pflichtangaben ausfüllen!");
-            jTextField12.setBackground(new Color(255,204,204));
-        }
-       
-    }
     
-    public void testSpeicher() {
-        this.pfadSpeicher = jTextField2.getText();
-        
-        if(!this.pfadSpeicher.equals("") && !this.pfadSpeicher.equals(null)) {
-
-            File f = new File(pfadSpeicher);
-            if (f.exists() && f.isDirectory()) {
-                jTextField8.setBackground(new Color(204,255,204));
-                jTextField8.setText("Speicherort erfolgreich verbunden!");
-                jButton6.setEnabled(true);
-                jTabbedPane1.setSelectedIndex(3);
-                
-            } else {
-                jTextField8.setBackground(new Color(255,204,204));
-                jTextField8.setText("Bitte gültigen Pfad angeben!");
-            }
-            
-        } else {
-            jTextField8.setBackground(new Color(255,204,204));
-            jTextField8.setText("Bitte Pfad angeben!");
-        }
-        
-    }
-    
-    public void saveAndClose() {
-        LogData ld = new LogData(hostDatenbank, nameDatenbank, benutzernameDatenbank, passwortDatenbank, pfadSpeicher);
-        ld.saveData();
-        
-        LoginGui lg = new LoginGui();
-        this.setVisible(false);
+    public void enableBereichSpeichern(boolean enable) {
+        jPanel10.setEnabled(enable);
+        jButton6.setEnabled(enable);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -954,8 +819,8 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -978,6 +843,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField3;
     private javax.swing.JPasswordField jPasswordField4;
@@ -991,5 +857,6 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jTextField8;
     // End of variables declaration//GEN-END:variables
 }

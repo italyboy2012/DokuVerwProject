@@ -24,7 +24,7 @@ public class LoginFrame extends javax.swing.JFrame {
      */
     public LoginFrame() {
         initComponents();
-        initExternalFrame(this, "../img/id.png");
+        initExternalFrame(this, "../img/edit-folder.png");
         this.setVisible(true);
     }
 
