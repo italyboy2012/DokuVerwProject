@@ -11,9 +11,12 @@ import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -600,6 +603,17 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         
         if(!db_host.equals("") && !db_host.equals(null) && !db_name.equals("") && !db_name.equals(null)) {
             DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+            
+            if(!db.createDBIfNotExists()) { //prüft und erstellt ggf. eine DB
+                enableBereichDatenbankstruktur(false);
+                jTextField6.setText("Fehler beim Erstellen/Prüfen der Datenbank!");
+                jTextField6.setBackground(new Color(255,204,204));
+                
+                jTextField7.setText("Nicht mit der Datenbank verbunden.");
+                jTextField7.setBackground(new Color(240,240,240));
+                return false;
+            }
+            
             Connection con = db.getConnection();
 
             if(con != null) {
@@ -629,9 +643,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
         }
         return false;
     }
-   
-    
-    
+
     public void checkDatenbankstruktur(){
         if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
         

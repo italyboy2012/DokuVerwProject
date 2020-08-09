@@ -60,9 +60,27 @@ public class DBConn {
             return con;
         } catch(Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Verbindungsversuch mit der Datenbank.");
+            //NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Verbindungsversuch mit der Datenbank.");
         }
         return null;
+    }
+    
+    public boolean createDBIfNotExists() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden
+            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            Connection con = DriverManager.getConnection(url, benutzername, passwort);
+            Statement s = con.createStatement();
+            int Result = s.executeUpdate("CREATE DATABASE IF NOT EXISTS "+ nameDatenbank + " CHARACTER SET utf8mb4");
+            return true;
+            //CREATE DATABASE [IF NOT EXISTS] database_name
+            //[CHARACTER SET charset_name]
+            //[COLLATE collation_name]
+        } catch (Exception e) {
+            e.printStackTrace();
+            //NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen/Prüfen der Datenbank.");
+        }
+        return false;
     }
     
 }
