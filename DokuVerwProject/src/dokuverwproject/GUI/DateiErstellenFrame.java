@@ -147,7 +147,7 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         String name = jTextField1.getText();
         
         if(!name.equals("") && !name.equals(null)) {
-            if(!tg.dateiHinzufuegen(name, cuttentNavPath)) {
+            if(!tg.dateiErstellen(name, cuttentNavPath)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgf.ansichtAktualisieren();

@@ -147,7 +147,7 @@ public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
         String name = jTextField1.getText();
         
         if(!name.equals("") && !name.equals(null)) {
-            if(!tg.verzeichnisHinzufuegen(name, cuttentNavPath)) {
+            if(!tg.verzeichnisErstellen(name, cuttentNavPath)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgf.ansichtAktualisieren();

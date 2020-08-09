@@ -10,10 +10,13 @@ import dokuverwproject.GUI.NotifyFrame;
 import dokuverwproject.GUI.ThemengruppeFrame;
 import java.awt.Desktop;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javafx.scene.shape.Path;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -201,7 +204,15 @@ public class Themengruppe {
         }
     }
     
-    public boolean dateiHinzufuegen(String name, String cuttentNavPath) {
+    public boolean dateiHinzufuegen(File file) {
+        //Datei in aktuell angezeigtes Verzeichnis (pfadNav) schieben
+        if(file.renameTo(new File(pfadNav + File.separator + file.getName()))) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean dateiErstellen(String name, String cuttentNavPath) {
         try {
             File f = new File(cuttentNavPath);
             if(!f.exists()) return false;
@@ -217,7 +228,7 @@ public class Themengruppe {
         return false;
     }
     
-    public boolean verzeichnisHinzufuegen(String name, String cuttentNavPath) {
+    public boolean verzeichnisErstellen(String name, String cuttentNavPath) {
         try {
             File f = new File(cuttentNavPath);
             if(!f.exists()) return false;

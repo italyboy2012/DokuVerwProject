@@ -11,6 +11,7 @@ import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -196,6 +197,25 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             }
         } else {
             errorDateiwaehlen();
+        }
+    }
+    
+    public void addFileFromOs() {
+        JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new java.io.File(System.getProperty("user.home")));
+        fc.setDialogTitle("Datei/Verzeichnis hinzufügen - DATEGT");
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.setAcceptAllFileFilterUsed(false);
+        int response = fc.showOpenDialog(this);
+        if(response == JFileChooser.APPROVE_OPTION) {
+            // Datei/Verzeichnis verschieben
+            if(!tg.dateiHinzufuegen(fc.getSelectedFile())) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
+                return;
+            }
+            ansichtAktualisieren();
+        } else {
+            System.out.println("The operation was cancelled.");
         }
     }
 
@@ -530,8 +550,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jButton14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/root-directory.png"))); // NOI18N
-        jButton14.setToolTipText("Datei hinzufügen");
+        jButton14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/movement.png"))); // NOI18N
+        jButton14.setToolTipText("Datei/Verzeichnis hinzufügen");
         jButton14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton14ActionPerformed(evt);
@@ -764,6 +784,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         // TODO add your handling code here:
+        addFileFromOs();
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
