@@ -39,12 +39,12 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-//                ReadWriteCredentials rwc = new ReadWriteCredentials();
-//        
-//                if(!rwc.loadData()) {
-//                    new EinrichtungsassistentFrame();
-//                    return;
-//                }
+                ReadWriteCredentials rwc = new ReadWriteCredentials();
+        
+                if(!rwc.loadData()) {
+                    new EinrichtungsassistentFrame();
+                    return;
+                }
                     
                 new LoginFrame();
                 

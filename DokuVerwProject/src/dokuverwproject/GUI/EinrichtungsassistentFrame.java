@@ -22,10 +22,10 @@ import java.sql.Statement;
 public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     //private String[] tables = {"erinnerungen", "notizen", "nutzer", "themengruppen"}; //Array mit den zu prüfenden Tabellen
     private String[][] tables = { //2d Array mit Tabellennamen und SQL-Code, um sie einzurichten
-        {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `erinnerungen` ADD PRIMARY KEY (`id`); ALTER TABLE `erinnerungen` MODIFY `id` AUTO_INCREMENT;"},
-        {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `notizen` ADD PRIMARY KEY (`id`); ALTER TABLE `notizen` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;"},
-        {"nutzer", "CREATE TABLE `nutzer` (`id` bigint(11) NOT NULL,`username` text NOT NULL,`passwort` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `nutzer` ADD PRIMARY KEY (`id`); ALTER TABLE `nutzer` MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;"},
-        {"themengruppen", "CREATE TABLE `themengruppen` (`id` bigint(11) NOT NULL,`titel` text NOT NULL,`pfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;", "ALTER TABLE `themengruppen` ADD PRIMARY KEY (`id`); ALTER TABLE `themengruppen` MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10001;"}
+        {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"nutzer", "CREATE TABLE `nutzer` (`id` bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`username` text NOT NULL,`passwort` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"themengruppen", "CREATE TABLE `themengruppen` (`id` bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`titel` text NOT NULL,`pfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"}
     };
     
     /**
@@ -687,7 +687,6 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                     try{
                         stmt = con.createStatement();
                         stmt.executeUpdate(tables[i][1]); //Tabelle erstellen
-                        stmt.executeUpdate(tables[i][2]); //Eigenschaften der Tabelle setzen
                         stmt.close();
                     } catch(Exception e){
                         System.out.println(e.toString());
@@ -739,14 +738,12 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                         ps.setString(3, user_lastname);
                         ps.setString(4, user_prename);
                         
-                        if(!ps.execute()) {
-                            jTextField8.setText("Fehler beim Schreiben des Accounts in die Datenbank!");
-                            jTextField8.setBackground(new Color(255,204,204));
-                            return;
-                        }
+                        ps.execute();
                         
                         enableBereichSpeichern(true);
                         jTabbedPane1.setSelectedIndex(2);
+                        
+                        return;
 
                     } else {
                         jTextField8.setText("Benutzername bereits vorhanden!");
