@@ -19,6 +19,18 @@ public class DBConn {
     private String benutzername = "root";
     private String passwort = "";
     
+    public DBConn() { //Verbindung selbst aufbauen
+        
+    }
+    
+    public DBConn(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
+        this.host = host;
+        this.port = port;
+        this.nameDatenbank = nameDatenbank;
+        this.benutzername = benutzername;
+        this.passwort = passwort;
+    }
+    
     public Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden
