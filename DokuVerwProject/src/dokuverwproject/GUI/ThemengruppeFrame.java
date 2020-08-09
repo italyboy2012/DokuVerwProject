@@ -214,6 +214,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                 return;
             }
             ansichtAktualisieren();
+            return;
         } else {
             System.out.println("The operation was cancelled.");
         }
