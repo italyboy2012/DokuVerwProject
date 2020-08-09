@@ -613,7 +613,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                 jTextField7.setBackground(new Color(240,240,240));
                 return false;
             }
-            
+
             Connection con = db.getConnection();
 
             if(con != null) {
@@ -751,6 +751,9 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                         ps.setString(4, user_prename);
                         
                         ps.execute();
+                        
+                        jTextField8.setText("Benutzer erstellt!");
+                        jTextField8.setBackground(new Color(204,255,204));
                         
                         enableBereichSpeichern(true);
                         jTabbedPane1.setSelectedIndex(2);
