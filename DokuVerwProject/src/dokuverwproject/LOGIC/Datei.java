@@ -21,7 +21,7 @@ public class Datei {
     private String größe = "";
     private Themengruppe themengruppe = null;
     private ArrayList<Erinnerung> erinnerungen = new ArrayList<>();
-    private Notiz notiz = null;
+ //   private Notiz notiz = null;
     
     public Datei(String pfad, Themengruppe themengruppe) {
         this.pfad = pfad;
@@ -44,7 +44,7 @@ public class Datei {
         
     }
     
-    public void notizLöschen() {
+    public void notizLoeschen() {
         
     }
     
@@ -60,11 +60,12 @@ public class Datei {
         
     }
     
-    public void erinnerungLöschen() {
+    public void erinnerungLoeschen() {
         
     }
     
     public void erinnerungErledigtSetzen() {
         
     }
+
 }

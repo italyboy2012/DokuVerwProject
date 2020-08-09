@@ -150,7 +150,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void dateiLoeschen(String pfad){
         if(no.notizLoeschen(pfad)){
             if(el.erinnerungLoeschen(pfad)) {
-                tg.dateiLöschen(pfad);
+                tg.dateiLoeschen(pfad);
             } else {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
             }

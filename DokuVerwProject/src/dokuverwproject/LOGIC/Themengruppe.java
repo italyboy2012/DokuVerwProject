@@ -233,7 +233,7 @@ public class Themengruppe {
         return false;
     }
     
-    public void dateiLöschen(String dateiPfad) {
+    public void dateiLoeschen(String dateiPfad) {
         File f = new File(dateiPfad);
         Desktop desktop = Desktop.getDesktop();
         
