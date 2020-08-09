@@ -13,16 +13,37 @@ import java.sql.*;
  * @author Giuseppe
  */
 public class DBConn {
-    private String host = "localhost";
-    private String port = "3306";
-    private String nameDatenbank = "dategt_dokuverw";
-    private String benutzername = "root";
+    private String host = "";
+    private String port = "";
+    private String nameDatenbank = "";
+    private String benutzername = "";
     private String passwort = "";
     
-    public DBConn() { //Verbindung selbst aufbauen
-        
+    /**
+     * Konsturktor lädt beim Aufruf die Verbindungsvariablen zur DB
+     * aus der .bin-Datei
+     */
+    public DBConn() {
+        ReadWriteCredentials rwc = new ReadWriteCredentials();
+        if(rwc.loadData()) {
+            this.host = rwc.getHost();
+            this.port = rwc.getPort();
+            this.nameDatenbank = rwc.getNameDatenbank();
+            this.benutzername = rwc.getBenutzername();
+            this.passwort = rwc.getPasswort();
+        }
     }
     
+    /**
+     * Konstruktor setzt die übergebenen Verbindungsvariablen als
+     * Variablen für den Verbindungsaufbau zur DB
+     * 
+     * @param host
+     * @param port
+     * @param nameDatenbank
+     * @param benutzername
+     * @param passwort 
+     */
     public DBConn(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
         this.host = host;
         this.port = port;

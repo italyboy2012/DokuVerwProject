@@ -744,7 +744,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
                         jTabbedPane1.setSelectedIndex(2);
                         
                         return;
-                        //
+                        
                     } else {
                         jTextField8.setText("Benutzername bereits vorhanden!");
                         jTextField8.setBackground(new Color(255,204,204));
