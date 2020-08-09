@@ -243,6 +243,7 @@ public class Themengruppe {
         } else {
             try {
                 //desktop.moveToTrash(f);
+                //
                 //// --------- Notiz für datei noch mit löschen.
             } catch (Exception e) {
                 e.printStackTrace();
