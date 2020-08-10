@@ -401,6 +401,33 @@ public class ErinnerungenListe {
         }
         return false;
     }
+    
+    /**
+     * Wenn ein File umbenannt wird, dann setzt diese Methode die Referenzen
+     * der dazugehörenden Erinnerungen in der DB auf das neue File.
+     * 
+     * @param dateiPfadAlt
+     * @param dateiPfadNeu
+     * @return 
+     */
+    public boolean resetReferenceToFile(String dateiPfadAlt, String dateiPfadNeu) {
+        String query = "UPDATE `erinnerungen` SET `dateiPfad`= ? WHERE `dateiPfad` = ?";
+        PreparedStatement ps = null;
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, dateiPfadNeu);
+            ps.setString(2, dateiPfadAlt);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        }
+        return false;
+    }
 
     public long getGroesse() {
         return this.groesse;

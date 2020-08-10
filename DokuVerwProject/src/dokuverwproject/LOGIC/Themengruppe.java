@@ -288,11 +288,13 @@ public class Themengruppe {
         if(f2.exists()) return false;
         
         if(f.renameTo(f2)) {
-            //------------------------------------------------Referent Notizen und Erinnerungen neu setzen!!
-            if(!n.resetReferenceToFile(dateiPfad, f2.getAbsolutePath())) {
+            // Referent Notizen und Erinnerungen in DB neu setzen
+            if(!n.resetReferenceToFile(dateiPfad, f2.getAbsolutePath())) { //Notizen
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
             }
-
+            if(!e.resetReferenceToFile(dateiPfad, f2.getAbsolutePath())) { //Erinnerungen
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
+            }
             return true;
         }
         return false;
