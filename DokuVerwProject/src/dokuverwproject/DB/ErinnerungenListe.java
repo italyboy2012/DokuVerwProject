@@ -124,11 +124,13 @@ public class ErinnerungenListe {
             Statement stmt = null;
             String query = "";
             
+            // SELECT * FROM `erinnerungen` ORDER BY `faellig` ASC
+            
             if(tgID == -1) {
-                query = "SELECT * FROM `erinnerungen`";
+                query = "SELECT * FROM `erinnerungen` ORDER BY `faellig` ASC";
                 row = new Object[3];
             } else {
-                query = "SELECT * FROM `erinnerungen` where `themengruppenID` = " + tgID;
+                query = "SELECT * FROM `erinnerungen` where `themengruppenID` = " + tgID + " ORDER BY `faellig` ASC";
                 row = new Object[4]; 
             }
             
