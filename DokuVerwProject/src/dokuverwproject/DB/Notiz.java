@@ -75,42 +75,43 @@ public class Notiz {
         return ausgabe;
     }
 
-        public boolean notizInDBSchreiben(String text, String pfad){
+    public boolean notizInDBSchreiben(String text, String pfad) {
         String query = "UPDATE `notizen` SET `inhalt`= ? WHERE dateipfad = ?";
         PreparedStatement ps = null;
-            try {
-                DBConn dbc = new DBConn();
-                Connection con = dbc.getConnection();
-                ps = con.prepareStatement(query);
-                ps.setString(1, text);
-                ps.setString(2, pfad);
-                ps.executeUpdate();
-                ps.close();
-                return true;
-            } catch (Exception e) {
-        System.out.println(e.toString());
-        NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            ps = con.prepareStatement(query);
+            ps.setString(1, text);
+            ps.setString(2, pfad);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
-        }
+    }
 
-        public boolean themengruppenNotizenLoeschen(long tgID){
-            String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
-            PreparedStatement ps = null;
-            try {
-                DBConn dbc = new DBConn();
-                Connection con = dbc.getConnection();
-                ps = con.prepareStatement(query);
-                ps.setLong(1, tgID);
-                ps.executeUpdate();
-                ps.close();
-                return true;
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
-            }
-            return false;
+    public boolean themengruppenNotizenLoeschen(long tgID){
+        String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
+        PreparedStatement ps = null;
+        try {
+            DBConn dbc = new DBConn();
+            Connection con = dbc.getConnection();
+            ps = con.prepareStatement(query);
+            ps.setLong(1, tgID);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
+        return false;
+    }
+    
     public boolean notizLoeschen(String pfad){
         String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
         PreparedStatement ps = null;
@@ -128,6 +129,6 @@ public class Notiz {
         }
         return false;
     }
-    }
+}
 
 
