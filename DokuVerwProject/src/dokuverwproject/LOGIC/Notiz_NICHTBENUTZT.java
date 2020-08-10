@@ -9,13 +9,13 @@ package dokuverwproject.LOGIC;
  *
  * @author Giuseppe & Falk
  */
-public class Notiz {
+public class Notiz_NICHTBENUTZT {
     private long id = 0;
     private String titel = "";
     private String inhalt = "";
     private Datei datei = null;
     
-    public Notiz(long id, String titel, String inhalt, Datei datei) {
+    public Notiz_NICHTBENUTZT(long id, String titel, String inhalt, Datei datei) {
         this.id = id;
         this.titel = titel;
         this.inhalt = inhalt;

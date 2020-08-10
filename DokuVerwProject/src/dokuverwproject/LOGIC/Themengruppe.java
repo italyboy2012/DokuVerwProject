@@ -6,17 +6,16 @@
 package dokuverwproject.LOGIC;
 
 import dokuverwproject.DB.DBConn;
+import dokuverwproject.DB.ErinnerungenListe;
+import dokuverwproject.DB.Notiz;
 import dokuverwproject.GUI.NotifyFrame;
 import dokuverwproject.GUI.ThemengruppeFrame;
 import java.awt.Desktop;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import javafx.scene.shape.Path;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,6 +37,9 @@ public class Themengruppe {
     //private ArrayList<Datei> dateien = new ArrayList<>(); NICHT MEHT BENÖTIGT -------------------------------------------------------------
     private javax.swing.JTable table = null; // Zugriff auf Tabelle in ThemengruppeFrame
     private ThemengruppeFrame tgf = null; // Zugriff auf Gui dieser Logik
+    
+    private Notiz n = new Notiz(); //Zugriff auf DB-Schicht der Notizen
+    private ErinnerungenListe e = new ErinnerungenListe(); //Zugriff auf DB-Schicht der Erinnerungen
     
     //FÜR DIE NAVIGATION
     private javax.swing.JTextField pfadAnzeige = null; //Pfadanzeige auf Frame für Themengruppe
@@ -255,13 +257,24 @@ public class Themengruppe {
             try {
                 //desktop.moveToTrash(f);
                 //
-                //// --------- Notiz für datei noch mit löschen.
+                //// --------- Notiz_NICHTBENUTZT für datei noch mit löschen.
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
     
+    /**
+     * Methode benännt eine Datei/ein Verzeichnis um.
+     * Sie veranlasst auch, dass die Referentz  der
+     * zu dieser Datei gehörende Notizen und Erinnerungen in der DB
+     * geändert werden, damit das umbenannte File immer noch
+     * auf die Erinnerungen und auf die Notizen zugreifen kann.
+     * 
+     * @param neuerName - Name der neuen Datei
+     * @param dateiPfad - Pfad des umzubenennenen Files
+     * @return 
+     */
     public boolean dateiUmbenennen(String neuerName, String dateiPfad) {
         // File (or directory) with old name
         File f = new File(dateiPfad);
@@ -274,8 +287,14 @@ public class Themengruppe {
         File f2 = new File(parentPath + File.separator + neuerName);
         if(f2.exists()) return false;
         
-        if(f.renameTo(f2)) return true;
-        
+        if(f.renameTo(f2)) {
+            //------------------------------------------------Referent Notizen und Erinnerungen neu setzen!!
+            if(!n.resetReferenceToFile(dateiPfad, f2.getAbsolutePath())) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
+            }
+
+            return true;
+        }
         return false;
     }
     

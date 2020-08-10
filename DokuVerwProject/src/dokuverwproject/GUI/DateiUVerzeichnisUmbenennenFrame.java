@@ -13,7 +13,7 @@ import java.io.File;
  *
  * @author Giuseppe
  */
-public class DateiUmbenennenFrame extends javax.swing.JFrame {
+public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
     private String selectedRowPath = "";
     private ThemengruppeFrame tgf = null;
     private Themengruppe tg = null;
@@ -22,7 +22,7 @@ public class DateiUmbenennenFrame extends javax.swing.JFrame {
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiUmbenennenFrame(String selectedRowPath, ThemengruppeFrame tgf, Themengruppe tg) {
+    public DateiUVerzeichnisUmbenennenFrame(String selectedRowPath, ThemengruppeFrame tgf, Themengruppe tg) {
         this.selectedRowPath = selectedRowPath;
         this.tgf = tgf;
         this.tg = tg;

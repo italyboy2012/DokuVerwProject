@@ -734,7 +734,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            DateiUmbenennenFrame duf = new DateiUmbenennenFrame(selectedRowPath, this, tg);
+            DateiUVerzeichnisUmbenennenFrame duf = new DateiUVerzeichnisUmbenennenFrame(selectedRowPath, this, tg);
         } else {
             errorDateiwaehlen();
         }
