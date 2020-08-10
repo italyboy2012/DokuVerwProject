@@ -104,23 +104,63 @@ public class Themengruppe {
         return false;
     }
     
-    public void ansichtAktualisieren() {
-        // METHODE ÜBERFLÜSSIG ------------------------------------
-    }
-    
     public boolean dateienIndexieren() {
-        String ausgabe = "";
-        try {
-            DefaultTableModel model = (DefaultTableModel)table.getModel();
-            model.setRowCount(0);
-            table.scrollRectToVisible(table.getCellRect(0,0, true)); 
+//        try {
+//            DefaultTableModel model = (DefaultTableModel)table.getModel();
+//            model.setRowCount(0);
+//            table.scrollRectToVisible(table.getCellRect(0,0, true)); 
 
-            Object[] row = null;
+//            Object[] row = null;
 
             pfadAnzeige.setText(pfadNav);
             File f = new File(pfadNav);
             if(!f.exists()) return false;
-            final File[] x = f.listFiles();
+//            final File[] x = f.listFiles();
+            return dateienInTabelleAnzeigen(f.listFiles());
+//            for (final File file : x) {
+//                row = new Object[5];
+//                ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(file);
+//                row[0] = img;
+//                row[1] = file.getName();
+//                row[2] = file.getPath();
+//                row[3] = readableDate(file.lastModified());
+//                row[4] = readableFileSize(file, file.length()); //größe
+//
+//                model.addRow(row);
+//            }
+//        } catch(Exception e) {
+//            System.out.println(e.toString());
+//            e.printStackTrace();
+//        }
+    }
+    
+    public void gesuchteDateienIndexieren(String suchwort) {
+        //alle dateien des aktuell angezeigten Orts werden nach gesuchten Suchwort durchsucht
+        File[] allFilesInCurrentNavPath = new File(pfadNav).listFiles();
+        if(allFilesInCurrentNavPath!=null) {
+            ArrayList<File> foundFiles = new ArrayList<>();
+            for (File file : allFilesInCurrentNavPath) {
+                if (file.getName().toLowerCase().contains(suchwort.toLowerCase())){
+                    foundFiles.add(file);
+                }
+            }
+            // da "(File[]) foundFiles.toArray()" nicht funktioniert, muss
+            // die Umwandlung zum Array hier händisch erfolgen
+            File[] x = new File[foundFiles.size()];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = foundFiles.get(i);
+            }
+            dateienInTabelleAnzeigen(x);
+        }
+    }
+    
+    public boolean dateienInTabelleAnzeigen(File[] x) {
+        try {
+            DefaultTableModel model = (DefaultTableModel)table.getModel();
+            model.setRowCount(0);
+            table.scrollRectToVisible(table.getCellRect(0,0, true)); 
+            Object[] row = null;
+
             for (final File file : x) {
                 row = new Object[5];
                 ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(file);
@@ -132,15 +172,12 @@ public class Themengruppe {
 
                 model.addRow(row);
             }
-            ausgabe = "fürs debugging";
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
             e.printStackTrace();
         }
-        ausgabe = "fürs debugging";
         return false;
-
     }
     
     public String readableDate(long lastModified) {

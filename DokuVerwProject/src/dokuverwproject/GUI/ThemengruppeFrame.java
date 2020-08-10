@@ -10,6 +10,8 @@ import dokuverwproject.DB.Notiz;
 import dokuverwproject.LOGIC.Themengruppe;
 import static dokuverwproject.commons.Common.*;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +40,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
     private Notiz no = null; //Logik von Notiz
+    
+    private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
+                                        //wird hier eine Referenz zwischengespeichert.
 
+    
     /**
      * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
      * Tabelle des Frames übergeben.
@@ -56,6 +62,13 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
         el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
         no = new Notiz();
+        
+        this.addWindowListener(new WindowAdapter() { // Schließt beim Schließen des Frames das SuchenFrame mit
+            public void windowClosing(WindowEvent event) {
+                if(dsf != null) dsf.dispose();
+            }
+        });
+        
         this.setVisible(true);
         ansichtAktualisieren();
         leereSperreTextfeld1();
@@ -220,6 +233,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         }
     }
 
+    public void resetDateiSuchenFrame() {
+        this.dsf = null;
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -747,6 +763,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        if(dsf == null) dsf = new DateiSuchenFrame(this, tg);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
