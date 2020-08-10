@@ -96,6 +96,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         el.erinnerungenLaden(selectedRowId, hoehe);
         leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
+        if(dsf != null) dsf.setThemengruppenTitel(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
+                                                                  // dann dort den Titel der Themengruppe anzeigen,
+                                                                  // damit der user weiß, dass dieses SuchenFrame
+                                                                  // in dieser Themengruppe sucht.
+                                                                  // Beim Aktualisieren wird hier der aktuelle Name
+                                                                  // aus der DB geladen und angezeigt.
     }
 
     public void errorDateiwaehlen(){

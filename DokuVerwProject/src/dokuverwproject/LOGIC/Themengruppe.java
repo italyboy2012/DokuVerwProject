@@ -60,7 +60,7 @@ public class Themengruppe {
     
     @Override
     public String toString() {
-     return this.id + " - " + this.titel;   
+     return "[" + this.id + "] : " + this.titel;   
     }
     
     public boolean loadFromDB() {

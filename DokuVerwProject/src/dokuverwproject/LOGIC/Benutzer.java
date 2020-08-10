@@ -22,7 +22,7 @@ public class Benutzer {
     
     @Override
     public String toString() {
-        return "[" + id + "] " + name + ", " + vorname;
+        return "[" + id + "] : " + name + ", " + vorname;
     }
 
     // Getter
