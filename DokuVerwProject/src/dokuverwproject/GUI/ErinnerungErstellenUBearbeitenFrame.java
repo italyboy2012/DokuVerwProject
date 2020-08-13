@@ -61,7 +61,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.euf = euf;
         initComponents();
 
-        initExternalFrame(this, "../img/hourglass.png");
+        initExternalFrame(this, "hourglass.png");
         
         jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
         jTextField1.setText(el.textLaden(id,"titel"));
@@ -90,7 +90,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         setTitle("Erinnerung bearbeiten");
         jLabel1.setText("Erinnerung bearbeiten");
         jButton1.setText("speichern");
-        initExternalFrame(this, "../img/hourglass.png");
+        initExternalFrame(this, "hourglass.png");
         
         jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
         jTextField1.setText(el.textLaden(id,"titel"));
