@@ -40,13 +40,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
     private Notiz no = null; //Logik von Notiz
+    
     private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
-    
-    //------ Änderung: hinzufügen der Variablen zum Puffern der Notiz vorm automatischen Speichern
-    private String noteBuffer = "";
-    private long noteID = -1;
-    private int previousRow = -1;
 
     
     /**
@@ -100,8 +96,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         el.erinnerungenLaden(selectedRowId, hoehe);
         leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
-        // -------- Änderung: Da die Dateitabelle nicht mehr markiert ist, wird die Variable für die vorherige markierte Zeile auf -1 gesetzt
-        this.previousRow = -1;
         if(dsf != null) dsf.setThemengruppenTitel(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
                                                                   // dann dort den Titel der Themengruppe anzeigen,
                                                                   // damit der user weiß, dass dieses SuchenFrame
@@ -160,30 +154,16 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         }
         toggleEditableTable(true);
     }
-
-
-    //------------- Änderung: Methode ließt Klassenvariablen aus und gibt diese an die Funktion notizInDBSchreiben weiter
-    private void schreibeNotizVonBuffer(){
-        if(!no.notizInDBSchreiben(this.noteBuffer, this.noteID)){
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
-        }
-        toggleEditableTable(true);
-
-    }
     
     public void toggleEditableTable(Boolean b) {
         jTable1.setRowSelectionAllowed(b);
     }
 
     public void ladeNotiz(){
-        String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+        String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
         long themengruppenID = tg.getId();
-        this.noteID = no.getNoteID(pfad);
-        String ausgabe = no.notizAusDBLaden(pfad, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
+        String ausgabe = no.notizAusDBLaden(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
-
-        //------- Änderung der Puffer erhält nun den Text der geladenen Notiz
-        this.noteBuffer = ausgabe;
         entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
@@ -722,14 +702,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        schreibeNotizVonBuffer();
         leereSperreTextfeld1();
         if (evt.getClickCount() == 2) {
             tg.openSelectedFile(); // Datei oder Verzeichnis öffnen
         }
-
         if (jTable1.getSelectedRow() != -1){
-            ladeNotiz();// Methode entsperrt nach Laden TextFeld wieder
+            ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -836,8 +814,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
         // TODO add your handling code here:
-        this.noteBuffer = jTextArea1.getText();
-        ; // -------- Änderung: Text wird erstmal nur in den noteBuffer geschrieben und erst beim markieren einer neuen Zeilen an den Server geschrieben
+        schreibeNotiz();
     }//GEN-LAST:event_jTextArea1KeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

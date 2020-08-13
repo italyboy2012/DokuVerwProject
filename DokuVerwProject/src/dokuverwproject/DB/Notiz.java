@@ -10,17 +10,18 @@ import java.sql.*;
 
 public class Notiz {
     /**
+     *
      * @author Falk
      * ChangeLog
      * 04.08.2020
      * notizAusDBLaden: überprüft Existenz einer Notiz für übergebene Datei.
-     * falls ja   -> gib Notiztext zurück
-     * falls nein -> erstelle Notiz und gib leeren String zurück
-     * <p>
+     *      falls ja   -> gib Notiztext zurück
+     *      falls nein -> erstelle Notiz und gib leeren String zurück
+     *
      * notizInDBSchreiben: Schreibt übergebenen Notiztext in Notiz der übergebenen Datei
-     * <p>
+     *
      * notizLoeschen: Löscht eine Notiz für übergebene ThemengruppenID
-     * <p>
+     *
      * 05.08.2020
      * notizLoeschen umbenannt in themengruppenNotizenLoeschen
      * notizLoeschen löscht die Notiz mit dem Übergebenen Pfad
@@ -31,7 +32,7 @@ public class Notiz {
     }
 
 
-    public String notizAusDBLaden(String pfad, long tgid) {
+    public String notizAusDBLaden(String pfad, long tgid){
         String ausgabe = ""; // initialisierung und definition des Ausgabeparameters
 
         // Erstellen der SQL-Verbindung
@@ -39,35 +40,34 @@ public class Notiz {
         Connection con = dbc.getConnection();
 
         // Testen ob Verbindung besteht
-        if (con != null) {
-            // initialisierung der für SQL benötigten Variablen
-            Statement stmt = null;
-            PreparedStatement ps = null;
-            String query = "SELECT `inhalt` FROM `notizen` WHERE `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
-            try {
-                // Erstellen und Ausführen des injectionsicheren SQL-Befehls
-                ps = con.prepareStatement(query);
-                ps.setString(1, pfad);
-                ResultSet abfrage = ps.executeQuery();
+            if (con != null) {
+                // initialisierung der für SQL benötigten Variablen
+                Statement stmt = null;
+                PreparedStatement ps = null;
+                String query = "SELECT `inhalt` FROM `notizen` WHERE `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
+                try {
+                    // Erstellen und Ausführen des injectionsicheren SQL-Befehls
+                    ps = con.prepareStatement(query);
+                    ps.setString(1,pfad);
+                    ResultSet abfrage = ps.executeQuery();
 
-                if (abfrage.next()) //Test ob Rückgabewert nicht leer ist
-                {
-                    // auslesen und zurückgeben des Notizeninhaltes
-                    ausgabe = abfrage.getString(1);
-                    return ausgabe;
+                   if(abfrage.next()) //Test ob Rückgabewert nicht leer ist
+                   {
+                        // auslesen und zurückgeben des Notizeninhaltes
+                        ausgabe = abfrage.getString(1);
+                        return ausgabe;
 
                 } else {
-                    // falls keine Notiz für die Datei existiert wird hier eine neue leere erstellt
-                    query = "INSERT INTO `notizen`(`id`, `inhalt`, `dateiPfad`, `themengruppenID`, `created_TMSTMP`) VALUES (NuLL , '',? ,?,CURRENT_TIMESTAMP)";
-                    ps = con.prepareStatement(query);
-                    ps.setString(1, pfad);
-                    ps.setLong(2, tgid);
-                    ps.executeUpdate();
-                    ps.close();
-                }
+                        // falls keine Notiz für die Datei existiert wird hier eine neue leere erstellt
+                       query = "INSERT INTO `notizen`(`id`, `inhalt`, `dateiPfad`, `themengruppenID`, `created_TMSTMP`) VALUES (NuLL , '',? ,?,CURRENT_TIMESTAMP)";
+                       ps = con.prepareStatement(query);
+                       ps.setString(1, pfad);
+                       ps.setLong(2, tgid);
+                       ps.executeUpdate();
+                       ps.close();}
 
-                return ausgabe;
-            } catch (Exception e) {
+                    return ausgabe;
+                } catch(Exception e){
                 System.out.println(e.toString());
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim lesen der Notizen.");
             }
@@ -94,27 +94,7 @@ public class Notiz {
         return false;
     }
 
-    public boolean notizInDBSchreiben(String text, long id) {
-
-        String query = "UPDATE `notizen` SET `inhalt`= ? WHERE id = ?";
-        PreparedStatement ps = null;
-        try {
-            DBConn dbc = new DBConn();
-            Connection con = dbc.getConnection();
-            ps = con.prepareStatement(query);
-            ps.setString(1, text);
-            ps.setLong(2, id);
-            ps.executeUpdate();
-            ps.close();
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
-        }
-        return false;
-    }
-
-    public boolean themengruppenNotizenLoeschen(long tgID) {
+    public boolean themengruppenNotizenLoeschen(long tgID){
         String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
         PreparedStatement ps = null;
         try {
@@ -131,8 +111,8 @@ public class Notiz {
         }
         return false;
     }
-
-    public boolean notizLoeschen(String pfad) {
+    
+    public boolean notizLoeschen(String pfad){
         String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
         PreparedStatement ps = null;
         try {
@@ -149,14 +129,14 @@ public class Notiz {
         }
         return false;
     }
-
+    
     /**
      * Wenn ein File umbenannt wird, dann setzt diese Methode die Referenzen
      * der dazugehörenden Notiz in der DB auf das neue File.
-     *
+     * 
      * @param dateiPfadAlt
      * @param dateiPfadNeu
-     * @return
+     * @return 
      */
     public boolean resetReferenceToFile(String dateiPfadAlt, String dateiPfadNeu) {
         String query = "UPDATE `notizen` SET `dateipfad`= ? WHERE `dateipfad` = ?";
@@ -176,48 +156,7 @@ public class Notiz {
         }
         return false;
     }
-
-    /**
-     * Wenn ein File umbenannt wird, dann setzt diese Methode die Referenzen
-     * der dazugehörenden Notiz in der DB auf das neue File.
-     *
-     * @param dateiPfadAlt
-     * @param dateiPfadNeu
-     * @return
-     */
-
-    public int getNoteID(String pfad) {
-        int ausgabe = -1;
-        DBConn dbc = new DBConn();
-        Connection con = dbc.getConnection();
-
-        // Testen ob Verbindung besteht
-        if (con != null) {
-            // initialisierung der für SQL benötigten Variablen
-            Statement stmt = null;
-            PreparedStatement ps = null;
-            String query = "SELECT `id` FROM `notizen` WHERE `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
-            try {
-                // Erstellen und Ausführen des injectionsicheren SQL-Befehls
-                ps = con.prepareStatement(query);
-                ps.setString(1, pfad);
-                ResultSet abfrage = ps.executeQuery();
-
-                if (abfrage.next()) //Test ob Rückgabewert nicht leer ist
-                {
-                    // auslesen und zurückgeben des Notizeninhaltes
-                    ausgabe = abfrage.getInt(1);
-                    return ausgabe;
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
-            }
-        }
-        return ausgabe;
-    }
+    
 }
-
-
 
 
