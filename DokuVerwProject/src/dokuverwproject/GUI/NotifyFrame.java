@@ -22,15 +22,15 @@ public class NotifyFrame extends javax.swing.JFrame {
         jLabel2.setText(titel);
         jTextArea1.setText(text);
         
-        this.setVisible(true);
+//        try {
+//            //Clip clip = AudioSystem.getClip();
+//            //clip.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/dokuverwproject/SOUNDS/NotifyMessaging.wav")));
+//            //clip.start();
+//        } catch (Exception e) {
+//            System.out.println(e.toString());
+//        }
         
-        try {
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("sound/WindowsError.wav")));
-            clip.start();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
+        this.setVisible(true);
         
     }
 

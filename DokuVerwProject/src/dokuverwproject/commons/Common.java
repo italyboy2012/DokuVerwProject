@@ -8,7 +8,6 @@ package dokuverwproject.commons;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import javax.swing.DesktopManager;
