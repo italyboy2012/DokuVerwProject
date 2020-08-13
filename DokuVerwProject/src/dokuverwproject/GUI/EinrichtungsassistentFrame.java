@@ -11,12 +11,9 @@ import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,10 +22,10 @@ import java.util.logging.Logger;
 public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     //private String[] tables = {"erinnerungen", "notizen", "nutzer", "themengruppen"}; //Array mit den zu prüfenden Tabellen
     private String[][] tables = { //2d Array mit Tabellennamen und SQL-Code, um sie einzurichten
-        {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL PRIMARY KEY AUTO_INCREMENT,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
-        {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
-        {"nutzer", "CREATE TABLE `nutzer` (`id` bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`username` text NOT NULL,`passwort` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
-        {"themengruppen", "CREATE TABLE `themengruppen` (`id` bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,`titel` text NOT NULL,`pfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"}
+        {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) AUTO_INCREMENT = 30001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) AUTO_INCREMENT = 60001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"nutzer", "CREATE TABLE `nutzer` (`id` bigint(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,`username` text NOT NULL,`passwort` text NOT NULL,`name` text NOT NULL,`vorname` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) AUTO_INCREMENT = 80001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
+        {"themengruppen", "CREATE TABLE `themengruppen` (`id` bigint(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,`titel` text NOT NULL,`pfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) AUTO_INCREMENT = 10001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"}
     };
     
     /**

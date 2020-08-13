@@ -42,7 +42,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private Notiz no = null; //Logik von Notiz
     private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
-//------ Änderung: hinzufügen der Variablen zum Puffern der Notiz vorm automatischen Speichern
+    
+    //------ Änderung: hinzufügen der Variablen zum Puffern der Notiz vorm automatischen Speichern
     private String noteBuffer = "";
     private long noteID = -1;
     private int previousRow = -1;
@@ -163,11 +164,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     //------------- Änderung: Methode ließt Klassenvariablen aus und gibt diese an die Funktion notizInDBSchreiben weiter
     private void schreibeNotizVonBuffer(){
-        if(!no.notizInDBSchreiben(this.noteBuffer ,this.noteID)){
+        if(!no.notizInDBSchreiben(this.noteBuffer, this.noteID)){
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
         }
         toggleEditableTable(true);
-
 
     }
     
@@ -262,6 +262,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void resetDateiSuchenFrame() {
         this.dsf = null;
     }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -729,7 +730,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
         if (jTable1.getSelectedRow() != -1){
             ladeNotiz();// Methode entsperrt nach Laden TextFeld wieder
-
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -810,8 +810,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
         // TODO add your handling code here:
         jTable2.clearSelection();
-        
- 
     }//GEN-LAST:event_jTable1MouseReleased
 
     private void jTable2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseReleased
