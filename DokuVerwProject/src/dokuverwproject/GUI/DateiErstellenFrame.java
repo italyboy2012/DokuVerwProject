@@ -31,7 +31,7 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         if(!f.exists()) return;
         
         initComponents();
-        initExternalFrame(this, "../img/root-directory.png");
+        initExternalFrame(this, "root-directory.png");
         
         jLabel2.setText(f.getPath());
         this.setVisible(true);

@@ -43,7 +43,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     public EinrichtungsassistentFrame() {
         initComponents();
         
-        initExternalFrame(this, "../img/edit-folder.png");
+        initExternalFrame(this, "edit-folder.png");
         
         this.setVisible(true);
     }
@@ -672,6 +672,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
             jTextField7.setBackground(new Color(204,255,204));
             
             enableAccountBereich(true);
+            enableBereichSpeichern(true);
             jTabbedPane1.setSelectedIndex(1);
         } else {
             jTextField7.setText("Datenbankstruktur fehlerhaft! Bitte 'anlegen' zur Reparatur klicken.");
@@ -710,6 +711,7 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
             jTextField7.setBackground(new Color(204,255,204));
             
             enableAccountBereich(true);
+            enableBereichSpeichern(true);
             jTabbedPane1.setSelectedIndex(1);
         } catch(Exception e) {
             System.out.println(e.toString());

@@ -9,8 +9,6 @@ import dokuverwproject.LOGIC.Login;
 
 import static dokuverwproject.commons.Common.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 /**
  *
  * @author Giuseppe & Falk
@@ -24,7 +22,7 @@ public class LoginFrame extends javax.swing.JFrame {
      */
     public LoginFrame() {
         initComponents();
-        initExternalFrame(this, "../img/edit-folder.png");
+        initExternalFrame(this, "edit-folder.png");
         this.setVisible(true);
     }
 

@@ -28,7 +28,7 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
         this.tg = tg;
         
         initComponents();
-        initExternalFrame(this, "../img/search.png");
+        initExternalFrame(this, "search.png");
         
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {

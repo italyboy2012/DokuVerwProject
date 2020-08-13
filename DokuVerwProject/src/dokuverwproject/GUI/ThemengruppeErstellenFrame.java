@@ -25,7 +25,7 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
         this.tgüf = tguf;
         
         initComponents();
-        initExternalFrame(this, "../img/get-ready.png");
+        initExternalFrame(this, "get-ready.png");
         
         this.setVisible(true);
     }

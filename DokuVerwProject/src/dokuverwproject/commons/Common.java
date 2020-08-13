@@ -7,14 +7,11 @@ package dokuverwproject.commons;
 
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.DesktopManager;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -39,23 +36,20 @@ public class Common {
      * Zentralisiert das ihr übergebene externe Frame und setzt das Frame-Icon auf den übergebenen Pfad.
      * 
      * @param frame
-     * @param iconPath 
+     * @param iconFileName 
      */
-    public static void initExternalFrame (javax.swing.JFrame frame, String iconPath) {
+    public static void initExternalFrame (javax.swing.JFrame frame, String iconFileName) {
         //zentralisieren
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
         
         //icon setzen
-        //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht)));
-        //File f = new File(iconPath);
-        //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(f.getPath())));
         try{
-            frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Common.class.getResource(iconPath).getPath()));
+            String filePathCompatibleWithJarFile = "/dokuverwproject/IMG/" + iconFileName;
+            frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Common.class.getResource(filePathCompatibleWithJarFile)));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         
         //Fenster der Liste aller offenen externen Fenster hinzufügen
         addExternalFrame(frame);
@@ -67,9 +61,9 @@ public class Common {
      * 
      * @param frame - internes Frame
      * @param dp - DesktopPane
-     * @param iconPaht - Pfad des Icons des internalFrame
+     * @param iconFileName - Pfad des Icons des internalFrame
      */
-    public static void initInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, String iconPaht) {
+    public static void initInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, String iconFileName) {
         //zentralisieren
         //Dimension desktopSize = dp.getSize();
         //Dimension jInternalFrameSize = frame.getSize();
@@ -77,7 +71,8 @@ public class Common {
         
         //icon setzen
         try {
-            frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht))));
+            String filePathCompatibleWithJarFile = "/dokuverwproject/IMG/" + iconFileName;
+            frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(filePathCompatibleWithJarFile))));
         } catch (Exception e) {
             e.printStackTrace();
         }

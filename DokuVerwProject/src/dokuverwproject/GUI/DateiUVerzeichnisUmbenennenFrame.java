@@ -31,7 +31,7 @@ public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
         if(!f.exists()) return;
         
         initComponents();
-        initExternalFrame(this, "../img/rename.png");
+        initExternalFrame(this, "rename.png");
         
         jLabel2.setText(f.getName());
         jTextField1.setText(f.getName());

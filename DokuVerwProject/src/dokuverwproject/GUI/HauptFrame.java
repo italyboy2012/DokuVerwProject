@@ -22,7 +22,7 @@ public class HauptFrame extends javax.swing.JFrame {
     public HauptFrame(Benutzer u) {
         this.user = u;
         initComponents();
-        initExternalFrame(this, "../img/edit-folder.png");
+        initExternalFrame(this, "edit-folder.png");
         this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         jLabel5.setText(user.toString());
         jLabel6.setText(getInternalIP());
@@ -43,12 +43,12 @@ public class HauptFrame extends javax.swing.JFrame {
     
     private void themengruppenFrameOeffnen() {
         ThemengruppenübersichtFrame tf = new ThemengruppenübersichtFrame();
-        initInternalFrame(tf, jDesktopPane1, "../img/folder.png");
+        initInternalFrame(tf, jDesktopPane1, "folder.png");
     }
     
     private void erinnerungenFrameOeffnen() {
         ErinnerungsuebersichtFrame ef = new ErinnerungsuebersichtFrame();
-        initInternalFrame(ef, jDesktopPane1, "../img/hourglass.png");
+        initInternalFrame(ef, jDesktopPane1, "hourglass.png");
     }
 
     /**

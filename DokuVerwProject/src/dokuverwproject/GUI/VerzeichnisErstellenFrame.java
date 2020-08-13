@@ -31,7 +31,7 @@ public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
         if(!f.exists()) return;
         
         initComponents();
-        initExternalFrame(this, "../img/add.png");
+        initExternalFrame(this, "add.png");
         
         jLabel2.setText(f.getPath());
         this.setVisible(true);

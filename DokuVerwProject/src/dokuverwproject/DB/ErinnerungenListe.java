@@ -171,14 +171,14 @@ public class ErinnerungenListe {
                         ImageIcon img = null;
                         
                         if(erledigt) {
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/tick.png").getFile()));
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/tick.png")));
                         } else if (faellig.before(current_date)) {
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/cross.png").getFile()));
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/cross.png")));
                         } else if (inTagen(current_date,faellig,4)){
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/pin.png").getFile()));
-                            new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("../img/butcher.wav").getFile())).start();
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/pin.png")));
+                            //new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
                         } else {
-                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("../img/working.png").getFile()));
+                            img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/working.png")));
                         }
                         
                         img = resizeImageIcon(img, hoehe,hoehe);

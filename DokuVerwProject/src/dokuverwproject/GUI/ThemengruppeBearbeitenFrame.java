@@ -31,7 +31,7 @@ public class ThemengruppeBearbeitenFrame extends javax.swing.JFrame {
         this.tgüf = tgüf;
         
         initComponents();
-        initExternalFrame(this, "../img/get-ready.png");
+        initExternalFrame(this, "get-ready.png");
         
         jLabel2.setText(selectedRowId + " - " + this.titel);
         jTextField1.setText(titel);

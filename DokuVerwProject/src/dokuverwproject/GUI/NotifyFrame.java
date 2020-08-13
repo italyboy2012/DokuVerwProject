@@ -17,7 +17,7 @@ public class NotifyFrame extends javax.swing.JFrame {
 
     public NotifyFrame(String titel, String text) {
         initComponents();
-        initExternalFrame(this, "../img/help.png");
+        initExternalFrame(this, "help.png");
         
         jLabel2.setText(titel);
         jTextArea1.setText(text);

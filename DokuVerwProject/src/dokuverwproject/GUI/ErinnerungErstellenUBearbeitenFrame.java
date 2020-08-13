@@ -43,7 +43,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.themengruppenID = themengruppenID;
         this.file = dateiPfad;
         el = new ErinnerungenListe();
-        initExternalFrame(this, "../img/hourglass.png");
+        initExternalFrame(this, "hourglass.png");
         initComponents();
         jDateChooser1.setDate(new Timestamp(System.currentTimeMillis())); // Datumsanzeige auf aktuelles Datum setzen
         this.setVisible(true);

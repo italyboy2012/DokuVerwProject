@@ -61,7 +61,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         this.selectedRowId = selectedRowId;
         
         initComponents();
-        initExternalFrame(this, "../img/open.png");
+        initExternalFrame(this, "open.png");
         
         tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
         el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
