@@ -5,14 +5,16 @@
  */
 package dokuverwproject.commons;
 
-import dokuverwproject.DB.DBConn;
 import dokuverwproject.GUI.NotifyFrame;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
 import java.net.InetAddress;
-import java.sql.Connection;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.DesktopManager;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -24,29 +26,36 @@ import javax.swing.JInternalFrame;
 public class Common {
     private static ArrayList<JFrame> externalFrames = new ArrayList<JFrame>(); // Liste aller offener externen Fenster
     
-    // DB Connection am Anfang und dauerhaft aufbauen
-    public static Connection con = null; //DB Connection für Programm
-    public static void establishSQLConnection() throws Exception {
-        DBConn dbc = new DBConn();
-        con = dbc.getConnection();
-    }
-    
-    
+//    // DB Connection am Anfang und dauerhaft aufbauen
+//    public static Connection con = null; //DB Connection für Programm
+//    public static void establishSQLConnection() throws Exception {
+//        DBConn dbc = new DBConn();
+//        con = dbc.getConnection();
+//    }
+//    
+//    
     
     /**
      * Zentralisiert das ihr übergebene externe Frame und setzt das Frame-Icon auf den übergebenen Pfad.
      * 
      * @param frame
-     * @param iconPaht 
+     * @param iconPath 
      */
-    public static void initExternalFrame (javax.swing.JFrame frame, String iconPaht) {
+    public static void initExternalFrame (javax.swing.JFrame frame, String iconPath) {
         //zentralisieren
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
         
         //icon setzen
         //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht)));
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Common.class.getResource(iconPaht)));
+        //File f = new File(iconPath);
+        //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(f.getPath())));
+        try{
+            frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Common.class.getResource(iconPath).getPath()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         
         //Fenster der Liste aller offenen externen Fenster hinzufügen
         addExternalFrame(frame);
@@ -67,7 +76,11 @@ public class Common {
         //frame.setLocation((desktopSize.width - jInternalFrameSize.width)/2, (desktopSize.height- jInternalFrameSize.height)/2);
         
         //icon setzen
-        frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht))));
+        try {
+            frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(frame.getClass().getResource(iconPaht))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         //internal Frame dem DesktopPane hinzufügen und anzeigen
         dp.add(frame);
