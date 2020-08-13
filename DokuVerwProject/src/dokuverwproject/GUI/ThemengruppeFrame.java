@@ -833,10 +833,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextArea1KeyReleased
-
-    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
-        // TODO add your handling code here:
         int length = jTextArea1.getText().length();
         setCharCountNote(length);
         
@@ -846,6 +842,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
                     + "\nIhre Änderungen wurdne nicht gespeichert!");
         }
+    }//GEN-LAST:event_jTextArea1KeyReleased
+
+    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextArea1KeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
