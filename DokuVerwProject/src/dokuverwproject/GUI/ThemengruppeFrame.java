@@ -41,6 +41,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private Themengruppe tg = null; //Logik von ThemengruppeFrame
     private Notiz no = null; //Logik von Notiz
     
+    private final int NOTE_MAX_LENGTH = 60000;
+    
     private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
 
@@ -124,6 +126,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         }
     }
     
+    public void setCharCountNote(int i) {
+        jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
+    }
+    
     public void erinnerungErstellen() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
@@ -137,6 +143,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTextArea1.setText("");
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new Color(244,247,252));
+        setCharCountNote(0);
     }
     
     public void entsperreTextField1() {
@@ -164,6 +171,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         long themengruppenID = tg.getId();
         String ausgabe = no.notizAusDBLaden(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
+        setCharCountNote(jTextArea1.getText().length());
         entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
@@ -275,6 +283,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
         jButton14 = new javax.swing.JButton();
@@ -533,8 +542,14 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextArea1KeyReleased(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextArea1KeyTyped(evt);
+            }
         });
         jScrollPane3.setViewportView(jTextArea1);
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -545,7 +560,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3))
                 .addContainerGap())
         );
@@ -553,10 +569,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/search.png"))); // NOI18N
@@ -815,8 +833,20 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
         // TODO add your handling code here:
-        schreibeNotiz();
     }//GEN-LAST:event_jTextArea1KeyReleased
+
+    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+        // TODO add your handling code here:
+        int length = jTextArea1.getText().length();
+        setCharCountNote(length);
+        
+        if(length <= NOTE_MAX_LENGTH) {
+            schreibeNotiz();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
+                    + "\nIhre Änderungen wurdne nicht gespeichert!");
+        }
+    }//GEN-LAST:event_jTextArea1KeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton10;
@@ -834,6 +864,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
