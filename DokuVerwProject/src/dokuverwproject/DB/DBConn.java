@@ -5,7 +5,6 @@
  */
 package dokuverwproject.DB;
 
-import dokuverwproject.GUI.NotifyFrame;
 import java.sql.*;
 
 /**
