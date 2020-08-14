@@ -55,7 +55,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * 
      * @param selectedRowId 
      */
-    public ThemengruppeFrame(long selectedRowId,String pfad) {
+    public ThemengruppeFrame(long selectedRowId,String pfad, long erID) {
         this.selectedRowId = selectedRowId;
         
         initComponents();
@@ -72,7 +72,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         });
         
         this.setVisible(true);
-        ansichtAktualisieren(pfad);
+        ansichtAktualisieren(pfad,erID);
         leereSperreTextfeld1();
     }
 
@@ -94,11 +94,16 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * Methode lädt Details der Themengruppe und indexiert anschließend alle Dateien des OS innerhalb dieser Themengruppe.
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
      */
-    public void ansichtAktualisieren(String pfad) {
+    public void ansichtAktualisieren(String pfad, long erID) {
+        jTable1.clearSelection();
         ladeThemengruppe(pfad);
-        //jTable1.setRowSelectionInterval(-1,-1);
+        jTable2.clearSelection();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
-        el.erinnerungenLaden(selectedRowId, hoehe);
+        int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
+        if (erID >= 0) {
+            jTable2.setRowSelectionInterval(erinnerungZeile,erinnerungZeile);
+        }
+
         leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
         if(dsf != null) dsf.setThemengruppenTitel(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
                                                                   // dann dort den Titel der Themengruppe anzeigen,
@@ -108,7 +113,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                                                                   // aus der DB geladen und angezeigt.
     }
     public void ansichtAktualisieren(){
-        ansichtAktualisieren("");
+        ansichtAktualisieren("",-1);
     }
 
     public void errorDateiwaehlen(){
@@ -118,7 +123,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void ladeThemengruppe(String pfad){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
-            int markierteZeile = (int) tg.dateienIndexieren(pfad);
+            int markierteZeile = tg.dateienIndexieren(pfad);
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
             jLabel1.setText(tg.toString()); //Titelleiste mit Themengruppenwerten setzen
             this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
@@ -127,7 +132,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
                 textField1.setText("Dateien indexiert und geladen.");
                 if (markierteZeile >= 0){jTable1.setRowSelectionInterval(markierteZeile,markierteZeile);}
-
                 return;
             } else {
                 textField1.setText("Fehler beim Indexieren der Dateien auf dem OS");
@@ -211,7 +215,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
             el.erinnerungLoeschen(erinnerungenID);
-            el.erinnerungenLaden(selectedRowId, hoehe);
+            el.erinnerungenLaden(selectedRowId, hoehe,-1);
             ansichtAktualisieren();
             return;
         } else {

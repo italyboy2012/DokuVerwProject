@@ -110,15 +110,20 @@ public class ErinnerungenListe {
      * sonst aus Themengruppen-Frame (nur die Laden, die zu dierer tgID gehören)
      * 
      * @param hoehe - für das Rendern der Icons in den Spalten
-     * @return 
+     * @return
+     * -2 = fehler
+     * -1 = alles ok
+     * ab 0 = zeile
      */
-    public Boolean erinnerungenLaden(long tgID, int hoehe) {
+    public int erinnerungenLaden(long tgID, int hoehe, long erID) {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
+        int ausgabe = -1;
+
         if (con != null) {
             this.setGroesse(0);
             model.setRowCount(0);
-
+            int counter = 0;
             Object[] row = null;
             
             Statement stmt = null;
@@ -187,11 +192,15 @@ public class ErinnerungenListe {
                         row[2] = titel;
                         row[3] = s_stamp;
                     }
+                    if (row[0].equals(erID)){
+                        ausgabe = counter;
+                    }
                     model.addRow(row);
                     this.setGroesse(this.getGroesse() + 1);
+                    counter++;
                 }
                 stmt.close();
-                return true;
+                return ausgabe;
             } catch (Exception e) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Erinnerungenliste.");
                 System.out.println(e.toString());
@@ -200,7 +209,7 @@ public class ErinnerungenListe {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank");
         }
-        return false;
+        return -2;
     }
 
     /**

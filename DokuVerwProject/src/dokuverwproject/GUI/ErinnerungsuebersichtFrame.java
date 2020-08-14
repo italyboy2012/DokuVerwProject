@@ -50,7 +50,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     
     public void erinnerungenAusDBLaden(){
         setStatus("Laden...");
-        if(el.erinnerungenLaden(-1,0)) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame
+        if(el.erinnerungenLaden(-1,0,-1)!=-2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame
             setStatus(el.getGroesse() + " Erinnerungen geladen");
         } else {
             setStatus("Fehler");
@@ -68,7 +68,8 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
             long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
             long themengruppenID = el.getTGID(erinnerungsID);
             String pfad = el.textLaden(getIDOfSelectedRow(), "pfad");
-            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, pfad);
+            long erID = getIDOfSelectedRow();
+            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, pfad,erID);
             //---------------- Änderung: Datei und Erinnerung im Frame highlighten
             //ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, erinnerungsID);
         } else {

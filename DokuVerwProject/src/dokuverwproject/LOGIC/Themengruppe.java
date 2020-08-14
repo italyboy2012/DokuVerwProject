@@ -104,7 +104,7 @@ public class Themengruppe {
         return false;
     }
     
-    public long dateienIndexieren(String suche) {
+    public int dateienIndexieren(String suche) {
 //        try {
 //            DefaultTableModel model = (DefaultTableModel)table.getModel();
 //            model.setRowCount(0);
@@ -156,8 +156,8 @@ public class Themengruppe {
     //-2 == false
     //-1 == true
     // ab 0 == Suchergebnis
-    public long dateienInTabelleAnzeigen(File[] x, String suche) {
-        long ausgabe = -2;
+    public int dateienInTabelleAnzeigen(File[] x, String suche) {
+        int ausgabe = -2;
         int counter = 0;
         try {
             DefaultTableModel model = (DefaultTableModel)table.getModel();
