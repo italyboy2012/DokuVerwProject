@@ -46,14 +46,14 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
 
-    
+
     /**
      * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
      * Tabelle des Frames übergeben.
      * Die ID wird der Logikklasse Themengruppe übergeben.
      * Diese lädt alle Daten der Themengruppe aus der DB und zeigt alle indexierten Dateien an.
-     * 
-     * @param selectedRowId 
+     *
+     * @param selectedRowId
      */
     public ThemengruppeFrame(long selectedRowId,String pfad, long erID) {
         this.selectedRowId = selectedRowId;
@@ -100,8 +100,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable2.clearSelection();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
-        if (erID >= 0) {
-            jTable2.setRowSelectionInterval(erinnerungZeile,erinnerungZeile);
+        try {
+            if (erID >= 0) {
+                jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
+            }
+        } catch (Exception e){
+            System.out.println("keine Erinnerung ausgewählt");
         }
 
         leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
@@ -131,7 +135,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             if(markierteZeile!=-2) {
 
                 textField1.setText("Dateien indexiert und geladen.");
-                if (markierteZeile >= 0){jTable1.setRowSelectionInterval(markierteZeile,markierteZeile);}
+                if (markierteZeile >= 0){
+                    jTable1.setRowSelectionInterval(markierteZeile,markierteZeile);
+                    ladeNotiz();
+                }
                 return;
             } else {
                 textField1.setText("Fehler beim Indexieren der Dateien auf dem OS");
@@ -140,9 +147,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
     }
-    public void paintTable(int row1,int row2){
 
-    }
     public void setCharCountNote(int i) {
         jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
     }
@@ -849,7 +854,6 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         String pfad = el.textLaden(erID,"pfad");
         int markierendeZeile = getRowOfPath(pfad);
         if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);}
-        String debugmich = "bla";
     }//GEN-LAST:event_jTable2MouseReleased
 
     private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered

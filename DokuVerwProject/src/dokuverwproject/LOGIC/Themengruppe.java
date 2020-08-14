@@ -104,7 +104,7 @@ public class Themengruppe {
         return false;
     }
     
-    public int dateienIndexieren(String suche) {
+    public int dateienIndexieren(String erPfad) {
 //        try {
 //            DefaultTableModel model = (DefaultTableModel)table.getModel();
 //            model.setRowCount(0);
@@ -116,7 +116,7 @@ public class Themengruppe {
             File f = new File(pfadNav);
             if(!f.exists()) return -2;
 //            final File[] x = f.listFiles();
-            return dateienInTabelleAnzeigen(f.listFiles(),suche);
+            return dateienInTabelleAnzeigen(f.listFiles(),erPfad);
 //            for (final File file : x) {
 //                row = new Object[5];
 //                ImageIcon img = (ImageIcon) javax.swing.filechooser.FileSystemView.getFileSystemView().getSystemIcon(file);
@@ -156,8 +156,8 @@ public class Themengruppe {
     //-2 == false
     //-1 == true
     // ab 0 == Suchergebnis
-    public int dateienInTabelleAnzeigen(File[] x, String suche) {
-        int ausgabe = -2;
+    public int dateienInTabelleAnzeigen(File[] x, String erPfad) {
+        int ausgabe = -1;
         int counter = 0;
         try {
             DefaultTableModel model = (DefaultTableModel)table.getModel();
@@ -173,17 +173,13 @@ public class Themengruppe {
                 row[2] = file.getPath();
                 row[3] = readableDate(file.lastModified());
                 row[4] = readableFileSize(file, file.length()); //größe
-                if (row[2].equals(suche)){
+                if (row[2].equals(erPfad)){
                 ausgabe = counter;
                 }
                 counter++;
                 model.addRow(row);
             }
-            if (ausgabe==-2){
-                return -1;
-            }else {
-                return ausgabe;
-            }
+            return ausgabe;
         } catch (Exception e) {
             System.out.println(e.toString());
             e.printStackTrace();
