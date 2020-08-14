@@ -267,6 +267,21 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void resetDateiSuchenFrame() {
         this.dsf = null;
     }
+
+    private int getRowOfPath(String pfad){
+        int i = 0;
+        while (i <= jTable1.getRowCount()){
+            if (pfad.equals(jTable1.getValueAt(i,2))) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    private void markiereZeileInTabelle1(int row){
+        jTable1.setRowSelectionInterval(row,row);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -829,6 +844,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     private void jTable2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseReleased
         // TODO add your handling code here:
         jTable1.clearSelection();
+        long erID = 0;
+        erID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
+        String pfad = el.textLaden(erID,"pfad");
+        int markierendeZeile = getRowOfPath(pfad);
+        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);}
+        String debugmich = "bla";
     }//GEN-LAST:event_jTable2MouseReleased
 
     private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
