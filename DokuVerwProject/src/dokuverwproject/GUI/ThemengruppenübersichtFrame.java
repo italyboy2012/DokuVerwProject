@@ -67,7 +67,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            ThemengruppeFrame tgf = new ThemengruppeFrame(selectedRowId);
+            ThemengruppeFrame tgf = new ThemengruppeFrame(selectedRowId,"");
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }

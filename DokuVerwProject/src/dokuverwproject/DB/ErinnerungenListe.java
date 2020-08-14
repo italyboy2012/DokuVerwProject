@@ -228,6 +228,9 @@ public class ErinnerungenListe {
                         } else if (typ.equals("titel")){
                         ausgabe = result.getString(2);
                         }
+                        else if(typ.equals("pfad")){
+                        ausgabe = result.getString(7);
+                        }
                     }
                 } catch (Exception e) {
                     System.out.println(e.toString());

@@ -55,7 +55,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * 
      * @param selectedRowId 
      */
-    public ThemengruppeFrame(long selectedRowId) {
+    public ThemengruppeFrame(long selectedRowId,String pfad) {
         this.selectedRowId = selectedRowId;
         
         initComponents();
@@ -72,11 +72,12 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         });
         
         this.setVisible(true);
-        ansichtAktualisieren();
+        ansichtAktualisieren(pfad);
         leereSperreTextfeld1();
     }
-    
-//    public ThemengruppeFrame(long selectedRowId, String path) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
+
+
+//    public ThemengruppeFrame(long selectedRowId, String path, long id) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
 //        this.selectedRowId = selectedRowId;
 //
 //        initComponents();
@@ -93,8 +94,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
      * Methode lädt Details der Themengruppe und indexiert anschließend alle Dateien des OS innerhalb dieser Themengruppe.
      * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
      */
-    public void ansichtAktualisieren() {
-        ladeThemengruppe();
+    public void ansichtAktualisieren(String pfad) {
+        ladeThemengruppe(pfad);
+        //jTable1.setRowSelectionInterval(-1,-1);
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
         el.erinnerungenLaden(selectedRowId, hoehe);
         leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
@@ -105,19 +107,28 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                                                                   // Beim Aktualisieren wird hier der aktuelle Name
                                                                   // aus der DB geladen und angezeigt.
     }
+    public void ansichtAktualisieren(){
+        ansichtAktualisieren("");
+    }
 
     public void errorDateiwaehlen(){
         new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");
     }
-    
-    public void ladeThemengruppe(){
+
+    public void ladeThemengruppe(String pfad){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
+            int markierteZeile = (int) tg.dateienIndexieren(pfad);
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
             jLabel1.setText(tg.toString()); //Titelleiste mit Themengruppenwerten setzen
             this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
-            if(tg.dateienIndexieren()) {
+
+            if(markierteZeile!=-2) {
+
                 textField1.setText("Dateien indexiert und geladen.");
+                if (markierteZeile >= 0){jTable1.setRowSelectionInterval(markierteZeile,markierteZeile);}
+
+                return;
             } else {
                 textField1.setText("Fehler beim Indexieren der Dateien auf dem OS");
             }
@@ -125,7 +136,9 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
     }
-    
+    public void paintTable(int row1,int row2){
+
+    }
     public void setCharCountNote(int i) {
         jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
     }

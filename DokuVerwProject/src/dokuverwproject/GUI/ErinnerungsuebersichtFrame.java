@@ -67,7 +67,8 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         if(jTable1.getSelectedRow() != -1) {
             long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
             long themengruppenID = el.getTGID(erinnerungsID);
-            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID);
+            String pfad = el.textLaden(getIDOfSelectedRow(), "pfad");
+            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, pfad);
             //---------------- Änderung: Datei und Erinnerung im Frame highlighten
             //ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, erinnerungsID);
         } else {
