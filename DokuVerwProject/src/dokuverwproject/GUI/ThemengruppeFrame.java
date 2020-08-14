@@ -73,7 +73,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         
         this.setVisible(true);
         ansichtAktualisieren(pfad,erID);
-        leereSperreTextfeld1();
+       // leereSperreTextfeld1();
     }
 
 
@@ -103,12 +103,14 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         try {
             if (erID >= 0) {
                 jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
+            } else {
+                leereSperreTextfeld1();
             }
         } catch (Exception e){
             System.out.println("keine Erinnerung ausgewählt");
         }
 
-        leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
+        //leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
         if(dsf != null) dsf.setThemengruppenTitel(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
                                                                   // dann dort den Titel der Themengruppe anzeigen,
                                                                   // damit der user weiß, dass dieses SuchenFrame
@@ -853,7 +855,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         erID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
         String pfad = el.textLaden(erID,"pfad");
         int markierendeZeile = getRowOfPath(pfad);
-        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);}
+        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);ladeNotiz();}
     }//GEN-LAST:event_jTable2MouseReleased
 
     private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
