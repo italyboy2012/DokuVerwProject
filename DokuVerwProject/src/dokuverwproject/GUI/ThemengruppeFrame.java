@@ -99,9 +99,10 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         ladeThemengruppe(pfad);
         jTable2.clearSelection();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
-        int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
+
         try {
             if (erID >= 0) {
+                int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
                 jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
             } else {
                 leereSperreTextfeld1();
