@@ -26,12 +26,18 @@ public class Notiz {
      * notizLoeschen umbenannt in themengruppenNotizenLoeschen
      * notizLoeschen löscht die Notiz mit dem Übergebenen Pfad
      */
-
+    /**
+     * Konstruktor für Notizen
+     */
     public Notiz() {
-        // Konstruktor für Notizen
     }
 
-
+    /**
+     * Prüft ob eine Notiz für eine Datei schon existiert und läd diese. Falls diese noch nicht besteht, wird diese erstellt.
+     * @param pfad Pfad der Datei für die die Notiz gespeichert werden soll.
+     * @param tgid Themengruppen ID, der Datei, für die die Notiz erstellt werden soll.
+     * @return gibt den inhalt der Notiz zurück
+     */
     public String notizAusDBLaden(String pfad, long tgid){
         String ausgabe = ""; // initialisierung und definition des Ausgabeparameters
 
@@ -75,6 +81,12 @@ public class Notiz {
         return ausgabe;
     }
 
+    /**
+     * Speichert den Text in die Notiz mit dem Pfad
+     * @param text zu speichernder Text
+     * @param pfad Pfad der Datei, für die die Notiz gespeichert werden soll
+     * @return gibt Rückmeldung, ob die Methode erfolgreich durchlaufen wurde
+     */
     public boolean notizInDBSchreiben(String text, String pfad) {
         String query = "UPDATE `notizen` SET `inhalt`= ? WHERE dateipfad = ?";
         PreparedStatement ps = null;
@@ -94,6 +106,12 @@ public class Notiz {
         return false;
     }
 
+    /**
+     * Wenn eine Themengruppe gelöscht wird, löscht diese Methode die Notizen der Dateien, die zu der TG gehören
+     * @param tgID ID der zu löschenden Themengruppe
+     * @return gibt Rückmeldung, ob die Methode erfolgreich durchlaufen wurde
+     */
+
     public boolean themengruppenNotizenLoeschen(long tgID){
         String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
         PreparedStatement ps = null;
@@ -111,7 +129,12 @@ public class Notiz {
         }
         return false;
     }
-    
+
+    /**
+     * Wenn eine Datei gelöscht wird, löscht diese Methode die dazugehörige Notiz
+     * @param pfad Pfad der gelöschten Datei
+     * @return gibt zurück, ob die Methode erfolgreich durchlaufen wurde
+     */
     public boolean notizLoeschen(String pfad){
         String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
         PreparedStatement ps = null;

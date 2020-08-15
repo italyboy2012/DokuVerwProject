@@ -40,18 +40,32 @@ import javax.swing.table.DefaultTableModel;
 public class ErinnerungenListe {
     private long groesse = 0;
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
-    
-    public ErinnerungenListe() { // Konstruktor, um Sachen in die DB zu schreiben
+
+    /**
+     * Konstruktor, um Sachen in die DB zu schreiben
+     */
+    public ErinnerungenListe() {
     }
 
+    /**
+     * Skalliert das übergebene Bild auf die übergebene höhe und breite
+     * @param bild
+     * @param breite
+     * @param hoehe
+     * @return
+     */
     private ImageIcon resizeImageIcon(ImageIcon bild, int breite, int hoehe){
         Image image = bild.getImage(); // transform it
         Image newimg = image.getScaledInstance(breite, hoehe,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         ImageIcon ausgabe = new ImageIcon(newimg);  // transform it back
         return ausgabe;
     }
-    
-    public ErinnerungenListe(DefaultTableModel model) { //Konstruktor, um Tabelle eines Frames mit Inhalt zu füllen
+
+    /**
+     * Konstruktor, um Tabelle eines Frames mit Inhalt zu füllen
+     * @param model
+     */
+    public ErinnerungenListe(DefaultTableModel model) {
         this.model = model;
     }
     
@@ -73,9 +87,18 @@ public class ErinnerungenListe {
 
         return (diff < range);
     }
-    
+
+    /**
+     * Schreibt die übergebenen Daten als Erinnerung in die Datenbank
+     * @param titel
+     * @param inhalt
+     * @param date
+     * @param tgID
+     * @param dateiPfad
+     * @return
+     */
+
     public Boolean erinnerungErstellen(String titel, String inhalt, String date, long tgID, String dateiPfad) {
-        // Erinnerungen werden in der DB gespeichert
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         if ( con != null){
@@ -106,14 +129,16 @@ public class ErinnerungenListe {
     }
 
     /**
+     * Läd Erinnerungen abhängig aus der DB
      * @param tgID - wenn tgID = -1, dann aus Hauptframe (also alle Erinerungen laden),
-     * sonst aus Themengruppen-Frame (nur die Laden, die zu dierer tgID gehören)
-     * 
+     * sonst aus Themengruppen-Frame (nur die Laden, die zu dieser tgID gehören)
+     * @param erID - ist die ID der zu suchenden Erinnerung
+     *             - wenn -1 wird nach keiner Erinnerung gesucht
      * @param hoehe - für das Rendern der Icons in den Spalten
      * @return
-     * -2 = fehler
-     * -1 = alles ok
-     * ab 0 = zeile
+     * -2 = Methode wurde nicht erfolgreich beendet
+     * -1 = Methode wurde erfolgreich beendet, wenn keine Erinnerung gesucht wurde
+     * ab 0 = zeile der gesuchten Erinnerung in der Tabelle, sofern eine Erinnerung gesucht wurde
      */
     public int erinnerungenLaden(long tgID, int hoehe, long erID) {
         DBConn dbc = new DBConn();
@@ -213,11 +238,11 @@ public class ErinnerungenListe {
     }
 
     /**
-     * Lädt inhalt oder Titel einer Erinnerung
+     * Lädt inhalt, Titel oder pfad einer Erinnerung
      * 
-     * @param id
-     * @param typ
-     * @return 
+     * @param id ID der gewünschten Erinnerung
+     * @param typ zu landender Typ
+     * @return gibt den in der DB gespeicherten Text abhängig vom Typ zurück
      */
     public String textLaden(long id, String typ){
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
@@ -248,7 +273,13 @@ public class ErinnerungenListe {
             }
         return ausgabe;
     }
-    
+
+    /**
+     * Läd Erstellungs- oder Fölligkeitsdatum einer Erinnerung
+     * @param id ID der Erinnerung, von der geladen werden soll
+     * @param typ Typ des zu ladenden Datums ("fällig" oder "erstellt")
+     * @return gibt das geladenene Datum abhängiy von typ zurück
+     */
     public Date datumLaden(long id, String typ){
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
@@ -278,8 +309,11 @@ public class ErinnerungenListe {
     }
 
 
-
-
+    /**
+     * Wenn eine Themengruppe gelöscht wird, löscht diese Methode die Erinnerungen, die an Dateien dieser TG hängen
+     * @param tgID ID der Themengruppe
+     * @return gibt zurück, ob die Methode erfolgreich durchgelaufen wurde
+     */
 
     public boolean erinnerungenLoeschen(long tgID){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`themengruppenID` = ?";
@@ -300,6 +334,12 @@ public class ErinnerungenListe {
         }
         return false;
     }
+
+    /**
+     * Löscht die Erinnerung mit der übergebenen ID
+     * @param id ID der zu löschenden Erinnerung
+     * @return gibt zurück, ob die Methoe erfolgreich durchlaufen wurde
+     */
     public boolean erinnerungLoeschen(long id){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`id` = ?";
         PreparedStatement ps = null;
@@ -320,7 +360,11 @@ public class ErinnerungenListe {
         return false;
     }
 
-
+    /**
+     * Wenn eine Datei gelöscht wird, löscht diese Methode die zu der Datei gehörenden Erinnerungen
+     * @param pfad Pfad der zu löschenden Datei
+     * @return Gibt zurück, ob die Methode erfolgreich durchlaufen wurde
+     */
     public boolean erinnerungLoeschen(String pfad){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`dateiPfad` = ?";
         PreparedStatement ps = null;
@@ -341,6 +385,11 @@ public class ErinnerungenListe {
         return false;
     }
 
+    /**
+     * Gibt die ThemengruppenID einer Erinnerung zurück
+     * @param id ID der Erinnerung, deren Themengruppen ID benötigt wird
+     * @return ThemengruppenID der Erinnerung
+     */
     public long getTGID(long id){
         String query = "SELECT `themengruppenID` FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
@@ -365,8 +414,14 @@ public class ErinnerungenListe {
     }
 
 
-
-
+    /**
+     * Speichert die Daten Titel, text, Datum in der Erinnerung mit der übergebenen id
+     * @param id ID der Erinnerung
+     * @param titel Titel der Erinnerung
+     * @param text Inhalt der Erinnerung
+     * @param datum neues Fälligkeitsdatum der Erinnerung
+     * @return gibt zurück, ob die Methode erfolgreich durchlaufen wurde.
+     */
     
     public boolean erinnerungBearbeiten(long id,String titel, String text, String datum) {
         String query = "UPDATE `erinnerungen` SET `titel`= ?, `inhalt`= ?, `faellig` = ? WHERE id = ?";
@@ -390,7 +445,11 @@ public class ErinnerungenListe {
         return false;
     }
 
-    
+    /**
+     * Ändert den Erinnerungsstatus einer Erinnerung
+     * @param id ID der anzupassenden Erinnerung
+     * @return gibt zurück, ob die Methode erfolgreich durchlaufen wurde
+     */
     public boolean aendereErledigtStatus(long id) {
         //        UPDATE mytbl
         //   SET field = !field

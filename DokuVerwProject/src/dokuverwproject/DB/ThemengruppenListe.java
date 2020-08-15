@@ -27,7 +27,11 @@ public class ThemengruppenListe {
     public void ansichtAktualisieren() {
         // METHODE ÜBERFLÜSSIG -------------------------------------------------
     }
-    
+
+    /**
+     * Läd alle Themengruppen aus der Datenbank in eine Tabelle
+     * @return gibt zurück, ob die Methode erfolgreich druchlaufen wurde
+     */
     public boolean themenAusDBLaden() {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
@@ -83,7 +87,13 @@ public class ThemengruppenListe {
         }
         return false;
     }
-    
+
+    /**
+     *
+     * @param titel
+     * @param pfad
+     * @return
+     */
     public boolean themaErstellen(String titel, String pfad) {
         try {
             DBConn dbc = new DBConn();
@@ -107,7 +117,16 @@ public class ThemengruppenListe {
         }
         return false;
     }
-    
+
+
+    /**
+     *
+     * @param id
+     * @param titel
+     * @param pfad
+     * @return
+     */
+
     public boolean themaBearbeiten(long id, String titel, String pfad) {
         try {
             DBConn dbc = new DBConn();
@@ -131,7 +150,12 @@ public class ThemengruppenListe {
         }
         return false;
     }
-    
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     public boolean themaLoeschen(long id) {
         try {
             DBConn dbc = new DBConn();
@@ -153,11 +177,19 @@ public class ThemengruppenListe {
         }
         return false;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public long getGroesse() {
         return this.groesse;
     }
-    
+
+    /**
+     *
+     * @param groesse
+     */
     public void setGroesse(long groesse) {
         this.groesse = groesse;
     }

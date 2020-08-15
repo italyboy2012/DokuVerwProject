@@ -50,7 +50,11 @@ public class DBConn {
         this.benutzername = benutzername;
         this.passwort = passwort;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden
@@ -63,7 +67,11 @@ public class DBConn {
         }
         return null;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public boolean createDBIfNotExists() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden

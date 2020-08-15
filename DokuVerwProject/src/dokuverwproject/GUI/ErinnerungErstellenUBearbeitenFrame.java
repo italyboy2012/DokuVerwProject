@@ -29,14 +29,13 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
     private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
     private long id = 0;
     private String buttonText = "erstellen";
-    
-    
+
+
     /**
-     * Neue Erinnerung erstellen
-     * 
-     * @param tgf
-     * @param themengruppenID
-     * @param dateiPfad 
+     * Fenster zum Erstellen einer neuen Erinnerung
+     * @param tgf Frame der Themengruppe, aus dem die Erinnerung erstellt werden soll
+     * @param themengruppenID ID der Themengruppe
+     * @param dateiPfad Pfad der Datei, für die diese Erinnerung erstellt wird
      */
     public ErinnerungErstellenUBearbeitenFrame(ThemengruppeFrame tgf, long themengruppenID, String dateiPfad) {
         this.tgf = tgf;
@@ -49,11 +48,11 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         this.setVisible(true);
 
     }
-    
+
     /**
-     * Vorhandene Erinnerung bearbeiten
-     * 
-     * @param id 
+     * Fenster zum Bearbeiten einer bestehenden Erinnerung
+     * @param euf Frame der Erinnerungsübersicht aus dem die Erinnerung erstellt wird.
+     * @param id ID der zu ändernder Erinnerung
      */
     public ErinnerungErstellenUBearbeitenFrame(ErinnerungsuebersichtFrame euf, long id) {
         this.id = id;
@@ -74,11 +73,11 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         
         this.setVisible(true);
     }
-    
+
     /**
-     * Vorhandene Erinnerung bearbeiten
-     * 
-     * @param id 
+     * Fenster zum Bearbeiten einer bestehenden Erinnerung
+     * @param tgf Frame der Themengruppe aus dem die Erinnerung erstellt wird.
+     * @param id ID der zu ändernder Erinnerung
      */
     public ErinnerungErstellenUBearbeitenFrame(ThemengruppeFrame tgf, long id) {
         this.id = id;
@@ -99,6 +98,9 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         
     }
 
+    /**
+     * Liest die einzelnen Felder des Fensters aus, und gibt diese Daten zum Speichern an die Klasse ErinnerungsListe weiter
+     */
     public void speichern() {
         String titel = jTextField1.getText();
         String inhalt = jTextArea1.getText();
@@ -241,18 +243,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         speichern();
     }//GEN-LAST:event_jButton1ActionPerformed
-    
-    // Datum vom DateChooser bekommen
-//    String faelligkeitsDatum = null;
-//        try{
-//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//            faelligkeitsDatum = formatter.format(jDateChooser1.getDate());
-//
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//        
-//        
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

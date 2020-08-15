@@ -34,7 +34,11 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
         erinnerungenAusDBLaden();
     }
-    
+
+    /**
+     * gibt ID der aktuell markierten Zeile zurück
+     * @return gibt ID der aktuell markierten Zeile zurück
+     */
     public long getIDOfSelectedRow(){
         long id = (long) jTable1.getValueAt(jTable1.getSelectedRow(),0);
         return id;
@@ -47,10 +51,13 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     public void setStatus(String status) {
         textField1.setText(status);
     }
-    
+
+    /**
+     * gibt den Befehl zum Laden aller Erinnerungen an die Klasse ErinnerungenListe weiter
+     */
     public void erinnerungenAusDBLaden(){
         setStatus("Laden...");
-        if(el.erinnerungenLaden(-1,0,-1)!=-2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame
+        if(el.erinnerungenLaden(-1,0,-1)!=-2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
             setStatus(el.getGroesse() + " Erinnerungen geladen");
         } else {
             setStatus("Fehler");
@@ -58,11 +65,17 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         return;
     }
 
+    /**
+     * gibt den Befehl zum löschen der Erinnerung hinter der markierten Zeile an die Klasse ErinnerungenListe weiter
+     */
     public void loescheErinnerung(){
         el.erinnerungLoeschen(getIDOfSelectedRow());
         return;
     }
 
+    /**
+     * Läd die ID und ThemengruppenID der Erinnerung der markierten Zeile und öffnet einen ThemengruppenFrame mit den geladenen Informationen
+     */
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
@@ -78,6 +91,9 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         return;
     }
 
+    /**
+     * öffnet einen ErinnerungErstellenUBearbeitenFrame für die markierte Erinnerung
+     */
     public void erinnerungBearbeiten() {
         if(jTable1.getSelectedRow() != -1) {
             ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, getIDOfSelectedRow()); //ID der Erinnerung
@@ -86,6 +102,9 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         }
     }
 
+    /**
+     * gibt den Befehl zum Ändern des Erledigt-Status der markierten Erinnerung an die Klasse ErinnerungenListe weiter
+     */
     public void aendereErledigtStatus(){
         if(el.aendereErledigtStatus(getIDOfSelectedRow())) {
             this.setStatus("Erinnerung bearbeitet.");
