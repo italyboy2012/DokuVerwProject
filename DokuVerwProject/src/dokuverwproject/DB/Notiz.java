@@ -35,7 +35,7 @@ public class Notiz {
     /**
      * Prüft ob eine Notiz für eine Datei schon existiert und läd diese. Falls diese noch nicht besteht, wird diese erstellt.
      * @param pfad Pfad der Datei für die die Notiz gespeichert werden soll.
-     * @param tgid Themengruppen ID, der Datei, für die die Notiz erstellt werden soll.
+     * @param tgID Themengruppen ID, der Datei, für die die Notiz erstellt werden soll.
      * @return gibt den inhalt der Notiz zurück
      */
     public String notizAusDBLaden(String pfad, long tgID){
