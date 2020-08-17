@@ -38,7 +38,7 @@ public class Notiz {
      * @param tgid Themengruppen ID, der Datei, für die die Notiz erstellt werden soll.
      * @return gibt den inhalt der Notiz zurück
      */
-    public String notizAusDBLaden(String pfad, long tgid){
+    public String notizAusDBLaden(String pfad, long tgID){
         String ausgabe = ""; // initialisierung und definition des Ausgabeparameters
 
         // Erstellen der SQL-Verbindung
@@ -50,11 +50,12 @@ public class Notiz {
                 // initialisierung der für SQL benötigten Variablen
                 Statement stmt = null;
                 PreparedStatement ps = null;
-                String query = "SELECT `inhalt` FROM `notizen` WHERE `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
+                String query = "SELECT `inhalt` FROM `notizen` WHERE themengruppenID = ? AND `dateiPfad` = ?"; // Abfrage nach Notizinhalt der übergebenen Datei
                 try {
                     // Erstellen und Ausführen des injectionsicheren SQL-Befehls
                     ps = con.prepareStatement(query);
-                    ps.setString(1,pfad);
+                    ps.setLong(1,tgID);
+                    ps.setString(2,pfad);
                     ResultSet abfrage = ps.executeQuery();
 
                    if(abfrage.next()) //Test ob Rückgabewert nicht leer ist
@@ -68,7 +69,7 @@ public class Notiz {
                        query = "INSERT INTO `notizen`(`id`, `inhalt`, `dateiPfad`, `themengruppenID`, `created_TMSTMP`) VALUES (NuLL , '',? ,?,CURRENT_TIMESTAMP)";
                        ps = con.prepareStatement(query);
                        ps.setString(1, pfad);
-                       ps.setLong(2, tgid);
+                       ps.setLong(2, tgID);
                        ps.executeUpdate();
                        ps.close();}
 
@@ -85,17 +86,19 @@ public class Notiz {
      * Speichert den Text in die Notiz mit dem Pfad
      * @param text zu speichernder Text
      * @param pfad Pfad der Datei, für die die Notiz gespeichert werden soll
+     * @param tgID ThemengruppenID, damit die Notiz der richtigen Themengruppe geladen wird
      * @return gibt Rückmeldung, ob die Methode erfolgreich durchlaufen wurde
      */
-    public boolean notizInDBSchreiben(String text, String pfad) {
-        String query = "UPDATE `notizen` SET `inhalt`= ? WHERE dateipfad = ?";
+    public boolean notizInDBSchreiben(String text,long tgID, String pfad) {
+        String query = "UPDATE `notizen` SET `inhalt`= ? WHERE themengruppenID = ? AND dateipfad = ?";
         PreparedStatement ps = null;
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, text);
-            ps.setString(2, pfad);
+            ps.setLong(2, tgID);
+            ps.setString(3, pfad);
             ps.executeUpdate();
             ps.close();
             return true;

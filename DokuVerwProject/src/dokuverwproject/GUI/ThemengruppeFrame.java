@@ -181,7 +181,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         toggleEditableTable(false);
         String notizText = jTextArea1.getText();
         String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        if(!no.notizInDBSchreiben(notizText ,pfad)){
+        if(!no.notizInDBSchreiben(notizText, this.selectedRowId ,pfad)){
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
         }
         toggleEditableTable(true);
