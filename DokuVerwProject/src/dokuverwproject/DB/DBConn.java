@@ -52,8 +52,9 @@ public class DBConn {
     }
 
     /**
-     *
-     * @return
+     * Methode erstellt eine Connection zur DB und gibt diese zurück
+     * 
+     * @return Connection zur DB
      */
     public Connection getConnection() {
         try {
@@ -63,14 +64,16 @@ public class DBConn {
             return con;
         } catch(Exception e) {
             System.out.println(e.toString());
-            //NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Verbindungsversuch mit der Datenbank.");
         }
         return null;
     }
 
     /**
-     *
-     * @return
+     * Methode erstellt eine Verbindung zum MySQL-Server und prüft, ob eine Datenbank
+     * mit den ihr übergebenen Parametern erreichbar ist.
+     * Ist sie es nicht, dann wird eine DB angelegt.
+     * 
+     * @return boolean; true = DB vorhanden oder angelegt; false = fehler
      */
     public boolean createDBIfNotExists() {
         try {
