@@ -160,7 +160,7 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
         
         if(!titel.equals("") && !titel.equals(null) && !pfad.equals("") && !pfad.equals(null)) {
             tgüf.setStaturs("Erstelle Datensatz der Themengruppe...");
-            if(!tgl.themaErstellen(titel, pfad)) {
+            if(!tgl.createTG(titel, pfad)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 tgüf.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
             }

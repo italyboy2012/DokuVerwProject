@@ -67,8 +67,8 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
      */
     public void themengruppenAusDBLaden() {
         setStaturs("Laden...");
-        if(tgl.themenAusDBLaden()) {
-            setStaturs(tgl.getGroesse() + " Themengruppen geladen");
+        if(tgl.loadFromDB()) {
+            setStaturs(tgl.getSize() + " Themengruppen geladen");
         } else {
             setStaturs("Fehler");
         }
@@ -108,7 +108,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
-            if(!tgl.themaLoeschen(selectedRowId)) {
+            if(!tgl.deleteTG(selectedRowId)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;

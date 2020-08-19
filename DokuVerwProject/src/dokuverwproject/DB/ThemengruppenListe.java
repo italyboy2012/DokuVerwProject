@@ -16,29 +16,28 @@ import javax.swing.table.DefaultTableModel;
  * @author Giuseppe
  */
 public class ThemengruppenListe {
-    private long groesse = 0;
-    //private ArrayList<Themengruppe> themengruppen = null;
+    private long size = 0; // Anzahl der geladenen TG
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ThemengruppenübersichtFrame
     
+    /**
+     * 
+     * @param model - Tabellenmodell der Tabelle eines Frames, um die Daten in ihr rendern zu können
+     */
     public ThemengruppenListe(DefaultTableModel model) {
         this.model = model;
     }
     
-    public void ansichtAktualisieren() {
-        // METHODE ÜBERFLÜSSIG -------------------------------------------------
-    }
-
     /**
      * Läd alle Themengruppen aus der Datenbank in eine Tabelle
-     * @return gibt zurück, ob die Methode erfolgreich druchlaufen wurde
+     * 
+     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
      */
-    public boolean themenAusDBLaden() {
+    public boolean loadFromDB() {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
         
         if(con != null) {
-            this.setGroesse(0);
-            //this.themengruppen = new ArrayList<>();
+            this.setSize(0);
             model.setRowCount(0);
 
             Object[] row = new Object[4];
@@ -51,8 +50,8 @@ public class ThemengruppenListe {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     long id = rs.getLong(1);
-                    String titel = rs.getString(2);
-                    String pfad = rs.getString(3);
+                    String title = rs.getString(2);
+                    String path = rs.getString(3);
                     Timestamp tmstp = rs.getTimestamp(4);
 
                     SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
@@ -64,16 +63,13 @@ public class ThemengruppenListe {
                     String anlagedatum = sdfDate.format(tmstp) + " " + sdfTime.format(tmstp) + " Uhr";
 
                     row[0] = id;
-                    row[1] = titel;
-                    row[2] = pfad;
+                    row[1] = title;
+                    row[2] = path;
                     row[3] = anlagedatum;
 
                     model.addRow(row);
                     
-                    this.setGroesse(this.getGroesse()+1);
-                    
-                    //themengruppen.add(new Themengruppe(id, titel, pfad, tmstp, null));
-
+                    this.setSize(this.getSize()+1);
                 };
                 stmt.close();
                 return true;
@@ -89,22 +85,22 @@ public class ThemengruppenListe {
     }
 
     /**
-     *
-     * @param titel
-     * @param pfad
-     * @return
+     *  Erstellt eine Themengruppe mit den ihr übergebenen Attributen
+     * 
+     * @param title
+     * @param path
+     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
      */
-    public boolean themaErstellen(String titel, String pfad) {
+    public boolean createTG(String title, String path) {
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;
-                //nach begreifen löschen... ? und ps.setstring gegen sql injection
                 String query = "INSERT INTO `themengruppen` (`id`, `titel`, `pfad`, `created_TMSTMP`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP);";
                 ps = con.prepareStatement(query);
-                ps.setString(1, titel);
-                ps.setString(2, pfad);
+                ps.setString(1, title);
+                ps.setString(2, path);
                 ps.executeUpdate();
                 ps.close();
                 return true;
@@ -118,16 +114,15 @@ public class ThemengruppenListe {
         return false;
     }
 
-
     /**
-     *
+     * Bearbeitet eine TG in der DB mit den ihr übergebenen Attributen
+     * 
      * @param id
-     * @param titel
-     * @param pfad
-     * @return
+     * @param title
+     * @param path
+     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
      */
-
-    public boolean themaBearbeiten(long id, String titel, String pfad) {
+    public boolean editTG(long id, String title, String path) {
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
@@ -135,8 +130,8 @@ public class ThemengruppenListe {
                 PreparedStatement ps = null;
                 String query = "UPDATE `themengruppen` SET `titel` = ?, `pfad` = ?, `created_TMSTMP` = CURRENT_TIMESTAMP WHERE `themengruppen`.`id` = ?;";
                 ps = con.prepareStatement(query);
-                ps.setString(1, titel);
-                ps.setString(2, pfad);
+                ps.setString(1, title);
+                ps.setString(2, path);
                 ps.setLong(3, id);
                 ps.executeUpdate();
                 ps.close();
@@ -152,11 +147,12 @@ public class ThemengruppenListe {
     }
 
     /**
-     *
+     * Methode löscht eine Themengruppe mit der ihr übergenenen ID
+     * 
      * @param id
-     * @return
+     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
      */
-    public boolean themaLoeschen(long id) {
+    public boolean deleteTG(long id) {
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
@@ -177,21 +173,15 @@ public class ThemengruppenListe {
         }
         return false;
     }
+    
+    // Getter und Setter
 
-    /**
-     *
-     * @return
-     */
-    public long getGroesse() {
-        return this.groesse;
+    public long getSize() {
+        return this.size;
     }
-
-    /**
-     *
-     * @param groesse
-     */
-    public void setGroesse(long groesse) {
-        this.groesse = groesse;
+    
+    public void setSize(long groesse) {
+        this.size = groesse;
     }
     
 }
