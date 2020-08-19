@@ -101,7 +101,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
 
         try {
-            int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
+            int erinnerungZeile = el.loadReminders(selectedRowId, hoehe, erID);
             if (erID >= 0) {
                 jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
             } else {
@@ -214,8 +214,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         } else if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
             int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
-            el.erinnerungLoeschen(erinnerungenID);
-            el.erinnerungenLaden(selectedRowId, hoehe,-1);
+            el.deleteReminder(erinnerungenID);
+            el.loadReminders(selectedRowId, hoehe,-1);
             ansichtAktualisieren();
             return;
         } else {
@@ -233,7 +233,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     
     public void aendereErledigtStatus(){
         if(jTable2.getSelectedRow() != -1) {
-            if(el.aendereErledigtStatus((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
+            if(el.changeDoneState((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
                 ansichtAktualisieren();
                 return;
             } else {
@@ -846,7 +846,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         jTable1.clearSelection();
         long erID = 0;
         erID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
-        String pfad = el.textLaden(erID,"pfad");
+        String pfad = el.loadText(erID,"pfad");
         int markierendeZeile = getRowOfPath(pfad);
         if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);ladeNotiz();}
     }//GEN-LAST:event_jTable2MouseReleased

@@ -98,7 +98,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         if(jTable1.getSelectedRow() != -1) {
             setStaturs("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            if(!el.erinnerungenLoeschen(selectedRowId)){
+            if(!el.deleteTGReminders(selectedRowId)){
                 NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;

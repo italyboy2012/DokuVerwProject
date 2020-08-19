@@ -62,9 +62,9 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
 
         initExternalFrame(this, "hourglass.png");
         
-        jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
-        jTextField1.setText(el.textLaden(id,"titel"));
-        jTextArea1.setText(el.textLaden(id,"inhalt"));
+        jDateChooser1.setDate(el.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
+        jTextField1.setText(el.loadText(id,"titel"));
+        jTextArea1.setText(el.loadText(id,"inhalt"));
         this.setVisible(true);
         
         this.buttonText = "Speichern";
@@ -91,9 +91,9 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         jButton1.setText("speichern");
         initExternalFrame(this, "hourglass.png");
         
-        jDateChooser1.setDate(el.datumLaden(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
-        jTextField1.setText(el.textLaden(id,"titel"));
-        jTextArea1.setText(el.textLaden(id,"inhalt"));
+        jDateChooser1.setDate(el.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
+        jTextField1.setText(el.loadText(id,"titel"));
+        jTextArea1.setText(el.loadText(id,"inhalt"));
         this.setVisible(true);
         
     }
@@ -115,7 +115,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
         String datei = file;
         if (this.themengruppenID != 0 && this.id == 0) {
             if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
-                if(!el.erinnerungErstellen(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
+                if(!el.createReminder(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 } else {
                     tgf.ansichtAktualisieren();
@@ -125,7 +125,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
             }
         } else if(this.themengruppenID == 0 && this.id != 0) {
-            el.erinnerungBearbeiten(this.id, titel, inhalt, faelligkeitsDatum);
+            el.editReminder(this.id, titel, inhalt, faelligkeitsDatum);
             this.dispose();
         }
         if(euf != null) euf.erinnerungenAusDBLaden();

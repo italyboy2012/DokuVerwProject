@@ -198,7 +198,7 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
         String pfad = this.f.getAbsolutePath();
         
         if(this.no.notizLoeschen(pfad)){
-            if(this.el.erinnerungLoeschen(pfad)) {
+            if(this.el.deleteFileReminders(pfad)) {
                 if(!tg.dateiLoeschen(pfad)) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
                 } else {

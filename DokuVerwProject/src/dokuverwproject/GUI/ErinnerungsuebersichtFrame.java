@@ -17,19 +17,19 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe & Falk
- *
- * ChangeLog
- * Falk @ 05.08.2020
- * jButton2ActionPerformed setzt nun die markierte Erinnerung auf erledigt
- * getIDOfSelectedRow() gibt ID der Erinnerung der markierten Zeile zurück.
- *      getIDOfSelectedRow habe ich an entsprechenden Punkten bereits eingesetzt
- * Einführung der Methode loescheErinnerung()
- *      diese löscht die aktuell markierte Erinnerung
- * Einführung der Methode erinnerungBearbeiten()
- *      diese öffnet ein Fenster zur Bearbeitung der markierten Erinnerung.
- * openSelectedRow() holt sich nun die ID der markierten Erinnerung, gibt diese an getTGID weiter
- *      und öffnet die entsprechende Themengruppe
+ * @author Giuseppe &  Falk
+
+ ChangeLog
+ Falk @ 05.08.2020
+ jButton2ActionPerformed setzt nun die markierte Erinnerung auf erledigt
+ getIDOfSelectedRow() gibt ID der Erinnerung der markierten Zeile zurück.
+      getIDOfSelectedRow habe ich an entsprechenden Punkten bereits eingesetzt
+ Einführung der Methode loescheErinnerung()
+      diese löscht die aktuell markierte Erinnerung
+ Einführung der Methode editReminder()
+      diese öffnet ein Fenster zur Bearbeitung der markierten Erinnerung.
+ openSelectedRow() holt sich nun die ID der markierten Erinnerung, gibt diese an getTGID weiter
+      und öffnet die entsprechende Themengruppe
  *
  */
 public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
@@ -76,8 +76,8 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     public void erinnerungenAusDBLaden(){
         setStatus("Laden...");
         int hoehe = jTable1.getRowHeight() - jTable1.getRowHeight()/10;
-        if(el.erinnerungenLaden(-1, hoehe, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
-            setStatus(el.getGroesse() + " Erinnerungen geladen");
+        if(el.loadReminders(-1, hoehe, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
+            setStatus(el.getSize() + " Erinnerungen geladen");
         } else {
             setStatus("Fehler");
         }
@@ -89,7 +89,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
      */
     public void loescheErinnerung(){
         if(jTable1.getSelectedRow() != -1) {
-            if(!el.erinnerungLoeschen(getIDOfSelectedRow())) {
+            if(!el.deleteReminder(getIDOfSelectedRow())) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
             }
             erinnerungenAusDBLaden();
@@ -107,7 +107,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
         if(jTable1.getSelectedRow() != -1) {
             long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
             long themengruppenID = el.getTGID(erinnerungsID);
-            String pfad = el.textLaden(getIDOfSelectedRow(), "pfad");
+            String pfad = el.loadText(getIDOfSelectedRow(), "pfad");
             long erID = getIDOfSelectedRow();
             ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, pfad,erID);
             //---------------- Änderung: Datei und Erinnerung im Frame highlighten
@@ -134,7 +134,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
      */
     public void aendereErledigtStatus(){
         if(jTable1.getSelectedRow() != -1) {
-            if(el.aendereErledigtStatus(getIDOfSelectedRow())) {
+            if(el.changeDoneState(getIDOfSelectedRow())) {
                 erinnerungenAusDBLaden();
                 this.setStatus("Erinnerung bearbeitet.");
                 return;
