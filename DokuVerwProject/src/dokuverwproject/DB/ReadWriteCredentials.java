@@ -15,74 +15,82 @@ import java.io.Serializable;
  *
  * @author Giuseppe
  */
-public class ReadWriteCredentials implements Serializable{
-    String filename = "Dategt_DB_Cred.bin";
-    
-    /**
-     * Datenverbindung
-     */
+public class ReadWriteCredentials implements Serializable {
+    // Datenverbindung
     private String host = "";
     private String port = "";
     private String nameDatenbank = "";
     private String benutzername = "";
     private String passwort = "";
     
-    /**
-     * Speicherort
-     */
+    //Speicherort
     private String pfadSpeicher = "";
+    String filename = "Dategt_DB_Cred.bin";
 
-    public ReadWriteCredentials(String host, String port, String nameDatenbank, String benutzername, String passwort) { //Daten speichern
-        this.host = host;
-        this.port = port;
-        this.nameDatenbank = nameDatenbank;
-        this.benutzername = benutzername;
-        this.passwort = passwort;
-    }
-    
+    /**
+     * Konstruktor, um lokale Daten auszulesen
+     */
     public ReadWriteCredentials() { //Daten auslesen
     }
     
+    /**
+     * Konstruktor, um Daten lokal zu speichern
+     * 
+     * @param host
+     * @param port
+     * @param nameDB
+     * @param username
+     * @param password 
+     */
+    public ReadWriteCredentials(String host, String port, String nameDB, String username, String password) {
+        this.host = host;
+        this.port = port;
+        this.nameDatenbank = nameDB;
+        this.benutzername = username;
+        this.passwort = password;
+    }
     
+    /**
+     * Methode speichert die im Kontruktor 2 übergebenen Datein lokal ab
+     * 
+     * @return - true = gepsichert; false = fehler
+     */
     public boolean saveData() {
         try{
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filename));
             os.writeObject(this);
             os.close();
-            
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        
         return false;
     }
     
+    /**
+     * Methode lädt lokal gespeicherte Daten
+     * 
+     * @return - true = gepsichert; false = fehler
+     */
     public boolean loadData() {
         try{
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(filename));
             ReadWriteCredentials ld = (ReadWriteCredentials) is.readObject();
             is.close();
-            
             this.setHost(ld.getHost());
             this.setPort(ld.getPort());
             this.setNameDatenbank(ld.getNameDatenbank());
             this.setBenutzername(ld.getBenutzername());
             this.setPasswort(ld.getPasswort());
-
             this.setPfadSpeicher(ld.getPfadSpeicher());
-            
             return true;
         } catch(Exception e) {
             System.out.println(e.toString());
         }
-        
         return false;
     }
     
-    /**
-     * Datenverbindung
-     */
+    // Getter und Setter
     
     public String getHost() {
         return host;
@@ -123,10 +131,7 @@ public class ReadWriteCredentials implements Serializable{
     public void setPasswort(String passwort) {
         this.passwort = passwort;
     }
-
-    /**
-     * Speicherort
-     */
+    
     public String getPfadSpeicher() {
         return pfadSpeicher;
     }
