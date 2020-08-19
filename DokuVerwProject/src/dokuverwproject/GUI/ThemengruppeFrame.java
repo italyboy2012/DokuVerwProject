@@ -201,7 +201,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }
 
     public void dateiLoeschen(String selectedRowPath){
-        new DateiLöschenFrame(this, this.tg, this.no, this.el, selectedRowPath);
+        new DateiUVerzeichnnisLöschenFrame(this, this.tg, this.no, this.el, selectedRowPath);
     }
     
     public void dateiOderErinnerungLoeschen() {
