@@ -22,7 +22,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Giuseppe & Falk
  */
-
 public class ErinnerungenListe {
     private long size = 0; // Anzahl der gefundenen Erinnerungen
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame

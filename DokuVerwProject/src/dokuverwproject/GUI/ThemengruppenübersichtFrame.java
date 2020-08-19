@@ -103,7 +103,7 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
-            if(!no.themengruppenNotizenLoeschen(selectedRowId)){
+            if(!no.deleteTGNotes(selectedRowId)){
                 NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;

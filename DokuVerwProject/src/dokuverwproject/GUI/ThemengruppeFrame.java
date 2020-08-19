@@ -18,22 +18,22 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe & Falk
- * ChangeLog:
- * Falk @ 04.08.2020
- * Hinzufügen einer Notizinstanz no
- * Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
- *      versucht die entsprechende Notiz über notizAusDBLaden zu laden
- * Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
- *      der markierten Datei an die Methode notizInDBSchreiben übergibt
- * Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
- *
- * Falk @ 05.08.2020
- * Methode DateiLoeschen verschiebt markierte Datei in den Papierkorb und löscht dazugehörige Erinnerungen und Notizen.
- * Außerdem löscht Sie den Text aus dem Notizfeld
- * Einführung der Methode leereSperreTextfeld1. Diese leert und sperrt jTextArea1
- * Der Löschenbutton löscht jetzt auch markierte Erinnerungen
- * Außerdem wird beim klicken eine Tabelle die Markierung der jeweils anderen aufgehoben.
+ * @author Giuseppe &   Falk
+ ChangeLog:
+ Falk @ 04.08.2020
+ Hinzufügen einer Notizinstanz no
+ Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
+      versucht die entsprechende Notiz über loadNote zu laden
+ Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
+      der markierten Datei an die Methode saveNote übergibt
+ Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
+
+ Falk @ 05.08.2020
+ Methode DateiLoeschen verschiebt markierte Datei in den Papierkorb und löscht dazugehörige Erinnerungen und Notizen.
+ Außerdem löscht Sie den Text aus dem Notizfeld
+ Einführung der Methode leereSperreTextfeld1. Diese leert und sperrt jTextArea1
+ Der Löschenbutton löscht jetzt auch markierte Erinnerungen
+ Außerdem wird beim klicken eine Tabelle die Markierung der jeweils anderen aufgehoben.
  */
 public class ThemengruppeFrame extends javax.swing.JFrame {
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
@@ -181,7 +181,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         toggleEditableTable(false);
         String notizText = jTextArea1.getText();
         String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        if(!no.notizInDBSchreiben(notizText, this.selectedRowId ,pfad)){
+        if(!no.saveNote(notizText, this.selectedRowId ,pfad)){
             NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
         }
         toggleEditableTable(true);
@@ -194,7 +194,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void ladeNotiz(){
         String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
         long themengruppenID = tg.getId();
-        String ausgabe = no.notizAusDBLaden(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
+        String ausgabe = no.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
         setCharCountNote(jTextArea1.getText().length());
         entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
