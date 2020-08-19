@@ -22,20 +22,11 @@ import javax.swing.JInternalFrame;
 public class Common {
     private static ArrayList<JFrame> externalFrames = new ArrayList<JFrame>(); // Liste aller offener externen Fenster
     
-//    // DB Connection am Anfang und dauerhaft aufbauen
-//    public static Connection con = null; //DB Connection für Programm
-//    public static void establishSQLConnection() throws Exception {
-//        DBConn dbc = new DBConn();
-//        con = dbc.getConnection();
-//    }
-//    
-//    
-    
     /**
      * Zentralisiert das ihr übergebene externe Frame und setzt das Frame-Icon auf den übergebenen Pfad.
      * 
-     * @param frame
-     * @param iconFileName 
+     * @param frame - externe Frame
+     * @param iconFileName - fileName des Icons
      */
     public static void initExternalFrame (javax.swing.JFrame frame, String iconFileName) {
         //zentralisieren
@@ -63,11 +54,6 @@ public class Common {
      * @param iconFileName - Pfad des Icons des internalFrame
      */
     public static void initInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, String iconFileName) {
-        //zentralisieren
-        //Dimension desktopSize = dp.getSize();
-        //Dimension jInternalFrameSize = frame.getSize();
-        //frame.setLocation((desktopSize.width - jInternalFrameSize.width)/2, (desktopSize.height- jInternalFrameSize.height)/2);
-        
         //icon setzen
         try {
             String filePathCompatibleWithJarFile = "/dokuverwproject/IMG/" + iconFileName;
@@ -76,12 +62,19 @@ public class Common {
             e.printStackTrace();
         }
         
-        
         //internal Frame dem DesktopPane hinzufügen und anzeigen
         dp.add(frame);
         frame.setVisible(true);
     }
     
+    /**
+     * Methode reposizioniert ein ihr übergebenes internes Fenster anhand der ihr übergebenen Parameter
+     * 
+     * @param frame - internes Frame, welches umposizioniert werden muss
+     * @param dp - DesktopPane, auf welches das interne Frame gerendert wird
+     * @param achtel - Anteil an einem Achten (x/8) - wenn z.B. 2 übergeben wird, dann wird die Breite auf 2/8 des dp gesetzt
+     * @param rechts - boolean; true = Frame oben rechts positionieren; false = Frame oben links positionieren
+     */
     public static void resizeAndRepositionInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, int achtel, boolean rechts) {
         //Frames Größe setzen
         int width = (dp.getWidth()) / 8 * achtel;
@@ -128,7 +121,7 @@ public class Common {
     /**
      * Methode schließt alle offenen internen Fenster des DesktopPane.
      * 
-     * @param dp
+     * @param dp - DesktopPane, auf welchem die internen Frames gerendert wurden
      */
     public static void closeInternalFrames(javax.swing.JDesktopPane dp) {
         try {
