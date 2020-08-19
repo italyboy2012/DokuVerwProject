@@ -16,29 +16,55 @@ import java.io.File;
  * @author Giuseppe
  */
 public class DateiSuchenFrame extends javax.swing.JFrame {
-    private ThemengruppeFrame tgf = null;
-    private Themengruppe tg = null;
+    private ThemengruppeFrame tpf = null;
+    private Themengruppe tp = null;
     private File f = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiSuchenFrame(ThemengruppeFrame tgf, Themengruppe tg) {
-        this.tgf = tgf;
-        this.tg = tg;
+    public DateiSuchenFrame(ThemengruppeFrame tpf, Themengruppe tp) {
+        this.tpf = tpf;
+        this.tp = tp;
         
         initComponents();
         initExternalFrame(this, "search.png");
         
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
-                fensterSchliessen();
+                closewindow();
             }
         });
         
-        this.setThemengruppenTitel(this.tg.toString());
+        this.setTopicTitle(this.tp.toString());
         this.setVisible(true);
     }
+
+    /**
+     * Methode liest das Textfeld aus und gibt dies an die Funktion zum erstellen der Ergebnistabelle weiter.
+     */
+    public void search() {
+        tp.indexSearchedFiles(jTextField1.getText());
+    }
+
+    /**
+     * setzt die Suche zurück, setzt die Ansicht zurück und schließt das Fenster
+     */
+    public void closewindow() {
+        tpf.resetDateiSuchenFrame();
+        tpf.ansichtAktualisieren();
+        this.dispose();
+    }
+
+    /**
+     * saönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfg
+     * @param tgt
+     */
+    public void setTopicTitle(String tgt) {
+        jLabel2.setText(tgt);
+
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,27 +156,13 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         // TODO add your handling code here:
-        suchen();
+        search();
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    public void suchen() {
-        tg.indexSearchedFiles(jTextField1.getText());
-    }
-    
-    public void fensterSchliessen() {
-        tgf.resetDateiSuchenFrame();
-        tgf.ansichtAktualisieren();
-        this.dispose();
-    }
-    
-    public void setThemengruppenTitel(String tgt) {
-        jLabel2.setText(tgt);
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
