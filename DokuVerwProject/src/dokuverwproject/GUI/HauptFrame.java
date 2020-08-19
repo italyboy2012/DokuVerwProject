@@ -7,6 +7,8 @@ package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.Benutzer;
 import static dokuverwproject.commons.Common.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
 
 /**
@@ -15,6 +17,9 @@ import javax.swing.JFrame;
  */
 public class HauptFrame extends javax.swing.JFrame {
     private Benutzer user;
+    //Referenz zu den internen Frames, damit jeweils nur maximal eins geöffnet werden kann
+    private ThemengruppenübersichtFrame tf = null;
+    private ErinnerungsuebersichtFrame ef = null;
 
     /**
      * Creates new form MainMenu
@@ -24,8 +29,25 @@ public class HauptFrame extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "edit-folder.png");
         this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+        
         jLabel5.setText(user.toString());
         jLabel6.setText(getInternalIP());
+        
+        //Make dragging a little faster but perhaps uglier.
+        //jDesktopPane1.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+        
+        //resize internal Frames on FrameResize
+        this.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                if(tf != null) {
+                    resizeAndRepositionInternalFrame(tf, jDesktopPane1, 5, false);
+                }
+                if(ef != null) {
+                    resizeAndRepositionInternalFrame(ef, jDesktopPane1, 3, true);
+                }
+            }
+        });
+    
         setVisible(true);
     }
     
@@ -42,15 +64,41 @@ public class HauptFrame extends javax.swing.JFrame {
     }
     
     private void themengruppenFrameOeffnen() {
-        ThemengruppenübersichtFrame tf = new ThemengruppenübersichtFrame();
-        initInternalFrame(tf, jDesktopPane1, "folder.png");
+        if(tf == null) {
+            tf = new ThemengruppenübersichtFrame(this);
+            initInternalFrame(tf, jDesktopPane1, "folder.png");
+        } else {
+            try {
+                tf.setSelected(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        resizeAndRepositionInternalFrame(tf, jDesktopPane1, 5, false);
     }
     
     private void erinnerungenFrameOeffnen() {
-        ErinnerungsuebersichtFrame ef = new ErinnerungsuebersichtFrame();
-        initInternalFrame(ef, jDesktopPane1, "hourglass.png");
+        if(ef == null) {
+            ef = new ErinnerungsuebersichtFrame(this);
+            initInternalFrame(ef, jDesktopPane1, "hourglass.png");
+        } else {
+            try {
+                ef.setSelected(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        resizeAndRepositionInternalFrame(ef, jDesktopPane1, 3, true);
     }
 
+    public void resetReferenceToThemengruppenFrame() {
+        this.tf = null;
+    }
+    
+    public void resetReferenceToErinnerungsuebersichtFrame() {
+        this.ef = null;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,9 +129,13 @@ public class HauptFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DATEGT - Dokumentenverwaltung");
-        setMinimumSize(new java.awt.Dimension(1000, 600));
+        setMaximumSize(null);
+        setMinimumSize(new java.awt.Dimension(1300, 700));
+        setPreferredSize(new java.awt.Dimension(1300, 700));
 
         jDesktopPane1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.light"));
+        jDesktopPane1.setMaximumSize(null);
+        jDesktopPane1.setMinimumSize(new java.awt.Dimension(1160, 538));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 0, 51));
@@ -139,7 +191,7 @@ public class HauptFrame extends javax.swing.JFrame {
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addContainerGap(697, Short.MAX_VALUE)
+                .addContainerGap(877, Short.MAX_VALUE)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,7 +206,7 @@ public class HauptFrame extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 341, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 451, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -164,14 +216,14 @@ public class HauptFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jDesktopPane1)
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jDesktopPane1))
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Fenster");

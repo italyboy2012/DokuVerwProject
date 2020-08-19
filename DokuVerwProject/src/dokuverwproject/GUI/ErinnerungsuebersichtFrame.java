@@ -6,7 +6,12 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ErinnerungenListe;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -28,12 +33,24 @@ import javax.swing.table.DefaultTableModel;
  *
  */
 public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
+    private HauptFrame hf = null; //Referenz zum hf, damit beim Schließen dieses Frames (eüf) die Referenz des hf zu eüf gelöscht wird
     private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
     
-    public ErinnerungsuebersichtFrame() {
+    public ErinnerungsuebersichtFrame(HauptFrame hf) {
         initComponents();
+        
+        this.hf = hf;
         el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
+        
         erinnerungenAusDBLaden();
+        
+        
+        addInternalFrameListener(new InternalFrameAdapter(){
+            public void internalFrameClosing(InternalFrameEvent e) {
+                hf.resetReferenceToErinnerungsuebersichtFrame();
+            }
+        });
+        
     }
 
     /**

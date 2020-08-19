@@ -8,6 +8,11 @@ package dokuverwproject.GUI;
 import dokuverwproject.DB.ErinnerungenListe;
 import dokuverwproject.DB.Notiz;
 import dokuverwproject.DB.ThemengruppenListe;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
  * anpassen der Methode deleteSelectedRow, damit ich Erinnerungen und Notizen der Themengruppe gelöscht werden
  */
 public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
+    private HauptFrame hf = null; //Referenz zum hf, damit beim Schließen dieses Frames (tgüf) die Referenz des hf zu tgüf gelöscht wird
     private ThemengruppenListe tgl = null; // Logik dieser Klasse
     private Notiz no = null;
     private ErinnerungenListe el = null;
@@ -29,12 +35,22 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
      * Außerdem wird eine Methode aufgerufen, welche die Logikklasse zum
      * Laden der Themengruppen aufruft.
      */
-    public ThemengruppenübersichtFrame() {
+    public ThemengruppenübersichtFrame(HauptFrame hf) {
         initComponents();
-        tgl = new ThemengruppenListe((DefaultTableModel)jTable1.getModel());
-        el = new ErinnerungenListe();
-        no = new Notiz();
+        
+        this.hf = hf;
+        this.tgl = new ThemengruppenListe((DefaultTableModel)jTable1.getModel());
+        this.el = new ErinnerungenListe();
+        this.no = new Notiz();
+        
         themengruppenAusDBLaden();
+        
+        addInternalFrameListener(new InternalFrameAdapter(){
+            public void internalFrameClosing(InternalFrameEvent e) {
+                hf.resetReferenceToThemengruppenFrame();
+            }
+        });
+        
     }
     
     /**

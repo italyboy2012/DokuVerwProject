@@ -76,9 +76,25 @@ public class Common {
             e.printStackTrace();
         }
         
+        
         //internal Frame dem DesktopPane hinzufügen und anzeigen
         dp.add(frame);
         frame.setVisible(true);
+    }
+    
+    public static void resizeAndRepositionInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, int achtel, boolean rechts) {
+        //Frames Größe setzen
+        int width = (dp.getWidth()) / 8 * achtel;
+        int heigth = dp.getHeight();
+        frame.setSize(width, heigth);
+        
+        //Frames Position setzen
+        int x = 0; //horizontal
+        int y = 0; //vertikal
+        if(rechts) {
+            x = (int) dp.getWidth() - width;
+        }
+        frame.setLocation(x, y);
     }
     
     /**
