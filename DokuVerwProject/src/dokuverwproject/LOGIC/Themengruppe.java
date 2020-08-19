@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Giuseppe & Falk
+ *
  */
 public class Themengruppe {
     private long id = 0;

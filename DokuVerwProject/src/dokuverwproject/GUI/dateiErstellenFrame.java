@@ -13,19 +13,19 @@ import java.io.File;
  *
  * @author Giuseppe
  */
-public class DateiErstellenFrame extends javax.swing.JFrame {
+public class dateiErstellenFrame extends javax.swing.JFrame {
     private String currentNavPath = "";
-    private ThemengruppeFrame tgf = null;
-    private Themengruppe tg = null;
+    private ThemengruppeFrame tpf = null;
+    private Themengruppe tp = null;
     private File f = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tg) {
+    public dateiErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tp) {
         this.currentNavPath = cuttentNavPath;
-        this.tgf = tgf;
-        this.tg = tg;
+        this.tpf = tgf;
+        this.tp = tp;
         
         this.f = new File(this.currentNavPath);
         if(!f.exists()) return;
@@ -36,6 +36,28 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         jLabel2.setText(f.getPath());
         this.setVisible(true);
     }
+
+    /**
+     * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
+     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
+     * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
+     * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
+     */
+    public void save() {
+        String name = jTextField1.getText();
+
+        if(!name.equals("") && !name.equals(null)) {
+            if(!tp.dateiErstellen(name, currentNavPath)) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            } else {
+                tpf.ansichtAktualisieren();
+            }
+            this.dispose();
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,30 +156,10 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        speichern();
+        save();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    /**
-     * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
-     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
-     * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
-     * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
-     */
-    public void speichern() {
-        String name = jTextField1.getText();
-        
-        if(!name.equals("") && !name.equals(null)) {
-            if(!tg.createFile(name, currentNavPath)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
-            } else {
-                tgf.ansichtAktualisieren();
-            }
-            this.dispose();
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
-        }
-    }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
