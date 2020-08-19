@@ -16,28 +16,57 @@ import java.io.File;
  * @author Giuseppe
  */
 public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
-    private ThemengruppeFrame tgf = null;
-    private Themengruppe tg = null;
-    private Notiz no = null;
-    private ErinnerungenListe el = null;
-    private File f = null;
+    private ThemengruppeFrame tpf = null;
+    private Themengruppe tp = null;
+    private Notiz note = null;
+    private ErinnerungenListe reminders = null;
+    private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiUVerzeichnnisLöschenFrame(ThemengruppeFrame tgf, Themengruppe tg, Notiz no, ErinnerungenListe el, String selectedRowPath) {
-        this.tgf = tgf;
-        this.tg = tg;
-        this.no = no;
-        this.el = el;
-        this.f = new File(selectedRowPath);
+    public DateiUVerzeichnnisLöschenFrame(ThemengruppeFrame tpf, Themengruppe tp, Notiz note, ErinnerungenListe reminders, String selectedRowPath) {
+        this.tpf = tpf;
+        this.tp = tp;
+        this.note = note;
+        this.reminders = reminders;
+        this.file = new File(selectedRowPath);
         
         initComponents();
         initExternalFrame(this, "trash.png");
         
-        jLabel2.setText(f.getPath());
+        jLabel2.setText(file.getPath());
         this.setVisible(true);
     }
+
+    /**
+     * löscht die übergebene Datei
+     */
+    public void remove() {
+        if(!file.exists()) {
+            new NotifyFrame("Fehler", "Die angegebene Datei wurde nicht gefunden. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            return;
+        }
+
+        String path = this.file.getAbsolutePath();
+
+        if(this.note.deleteNote(path)){
+            if(this.reminders.deleteFileReminders(path)) {
+                if(!tp.dateiLoeschen(path)) {
+                    new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+                } else {
+                    tpf.ansichtAktualisieren();
+                    this.dispose();
+                }
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
+            }
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
+        }
+
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -181,7 +210,7 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        loeschen();
+        remove();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -189,30 +218,7 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    public void loeschen() {
-        if(!f.exists()) {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Die angegebene Datei wurde nicht gefunden. Evtl. kann ein Aktualisieren der Übersicht helfen.");
-            return;
-        }
-        
-        String pfad = this.f.getAbsolutePath();
-        
-        if(this.no.deleteNote(pfad)){
-            if(this.el.deleteFileReminders(pfad)) {
-                if(!tg.dateiLoeschen(pfad)) {
-                    NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
-                } else {
-                    tgf.ansichtAktualisieren();
-                    this.dispose();
-                }
-            } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
-            }
-        } else { 
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
-        }
-        
-    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

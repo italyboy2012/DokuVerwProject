@@ -112,7 +112,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         }
 
         //leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
-        if(dsf != null) dsf.setThemengruppenTitel(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
+        if(dsf != null) dsf.setTopicTitle(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
                                                                   // dann dort den Titel der Themengruppe anzeigen,
                                                                   // damit der user weiß, dass dieses SuchenFrame
                                                                   // in dieser Themengruppe sucht.
@@ -792,7 +792,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        DateiErstellenFrame dhf = new DateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        dateiErstellenFrame dhf = new dateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
