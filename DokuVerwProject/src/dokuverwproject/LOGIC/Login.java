@@ -5,10 +5,8 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DB.DBConn;
+import dokuverwproject.DB.LoginDB;
 import dokuverwproject.GUI.HauptFrame;
-import dokuverwproject.GUI.NotifyFrame;
-import java.sql.*;
 
 /**
  *
@@ -16,54 +14,26 @@ import java.sql.*;
  */
 public class Login {
     private String username = "";
-    private String passwort = "";
+    private String password = "";
 
     public Login(String un, String pw) {
         this.username = un;
-        this.passwort = pw;
+        this.password = pw;
     }
-    
-//    public boolean login() {
-//        if(!username.equals("") && !username.equals(null) && !passwort.equals("") && !passwort.equals(null)) {
-//            if(username.equals("test") && passwort.equals("1234")) {
-//                // Hier würde man in der DB schauen, ob der Nutzer existiert und wenn ja, würde man seine Daten laden
-//                HauptFrame mm = new HauptFrame(new Benutzer(0, "Nachname", "Vorname"));
-//                return true;
-//            }
-//            return false;
-//        }
-//        return false;
-//    }
-    
+
+    /**
+     * Methode ruft login() in LoginDB mit den ihr übergebenen Credentials auf.
+     * 
+     * @return - true = Benutzer existerit; false = Benutzer existiert nicht
+     */
     public boolean login() {
-        if(!username.equals("") && !username.equals(null) && !passwort.equals("") && !passwort.equals(null)) {
-            try {
-                DBConn dbc = new DBConn();
-                Connection con = dbc.getConnection();
-                if(con != null) {
-                    PreparedStatement ps = null;
-                    String query = "SELECT * FROM `nutzer` WHERE `username` = ? AND `passwort` = ?";
-                    ps = con.prepareStatement(query);
-                    ps.setString(1, username);
-                    ps.setString(2, passwort);
-                    ResultSet rs = ps.executeQuery();
-                    if(rs.next()) {
-                        if(rs.getString("username").equals(username) && rs.getString("passwort").equals(passwort)) {
-                            HauptFrame mm = new HauptFrame(new Benutzer(rs.getLong(1), rs.getString(4), rs.getString(5)));
-                            return true;
-                        }
-                    } else {
-                        NotifyFrame nf = new NotifyFrame("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");
-                    }
-                } else {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+        if(!username.equals("") && !username.equals(null) && !username.equals("") && !password.equals(null)) {
+            Benutzer b = new LoginDB().login(username, password);
+            
+            if(b != null) {
+                HauptFrame mm = new HauptFrame(b);
+                return true;
             }
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte geben Sie eine vollständige Nutzerkennung ein!");
         }
         return false;
     }

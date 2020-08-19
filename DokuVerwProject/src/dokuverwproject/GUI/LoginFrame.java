@@ -226,8 +226,7 @@ public class LoginFrame extends javax.swing.JFrame {
         if (evt.getKeyCode()==evt.VK_ENTER) login();
     }//GEN-LAST:event_jTextField1KeyPressed
 
-    private void login()
-    {
+    private void login() {
         String username = jTextField1.getText();
         String password = jPasswordField1.getText();
         

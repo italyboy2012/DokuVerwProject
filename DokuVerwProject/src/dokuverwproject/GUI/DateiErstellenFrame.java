@@ -14,7 +14,7 @@ import java.io.File;
  * @author Giuseppe
  */
 public class DateiErstellenFrame extends javax.swing.JFrame {
-    private String cuttentNavPath = "";
+    private String currentNavPath = "";
     private ThemengruppeFrame tgf = null;
     private Themengruppe tg = null;
     private File f = null;
@@ -23,11 +23,11 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
      * Creates new form ThemengruppeBearbeitenFrame
      */
     public DateiErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tg) {
-        this.cuttentNavPath = cuttentNavPath;
+        this.currentNavPath = cuttentNavPath;
         this.tgf = tgf;
         this.tg = tg;
         
-        this.f = new File(this.cuttentNavPath);
+        this.f = new File(this.currentNavPath);
         if(!f.exists()) return;
         
         initComponents();
@@ -147,7 +147,7 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         String name = jTextField1.getText();
         
         if(!name.equals("") && !name.equals(null)) {
-            if(!tg.dateiErstellen(name, cuttentNavPath)) {
+            if(!tg.dateiErstellen(name, currentNavPath)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgf.ansichtAktualisieren();
