@@ -25,11 +25,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Giuseppe & Falk
- * ChangeLog
- * Falk @ 05.08.2020
- * Funktion dateiLoeschen:
- *      verschiebt übergebene Datei in den Papierkorb
- *      löscht Notizen und Erinnerungen, die mit der Datei verknüpft sind.
+ *
  */
 public class Themengruppe {
     private long id = 0;
