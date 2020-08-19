@@ -124,7 +124,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     }
 
     public void errorDateiwaehlen(){
-        new NotifyFrame("Fehler", "Bitte wähle eine Datei aus der linken Tabelle aus");
+        new NotifyFrame("Fehler", "Bitte wählen Sie eine Datei aus der linken Tabelle aus.");
     }
 
     public void ladeThemengruppe(String pfad){
@@ -240,7 +240,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
             }
         } else {
-            errorDateiwaehlen();
+            new NotifyFrame("Fehler", "Bitte wählen Sie einen Datensatz aus der rechten Tabelle aus.");
         }
     }
     
