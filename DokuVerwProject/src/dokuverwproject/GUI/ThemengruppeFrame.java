@@ -792,7 +792,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        dateiErstellenFrame dhf = new dateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        DateiErstellenFrame dhf = new DateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
