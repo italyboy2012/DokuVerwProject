@@ -149,7 +149,7 @@ public class ErinnerungenListe {
             this.setGroesse(0);
             model.setRowCount(0);
             int counter = 0;
-            Object[] row = null;
+            Object[] row = new Object[4];
             
             Statement stmt = null;
             String query = "";
@@ -158,10 +158,8 @@ public class ErinnerungenListe {
             
             if(tgID == -1) {
                 query = "SELECT * FROM `erinnerungen` ORDER BY `faellig` ASC";
-                row = new Object[3];
             } else {
                 query = "SELECT * FROM `erinnerungen` where `themengruppenID` = " + tgID + " ORDER BY `faellig` ASC";
-                row = new Object[4]; 
             }
             
             try {
@@ -181,7 +179,7 @@ public class ErinnerungenListe {
                     SimpleDateFormat sdfDate = new SimpleDateFormat("E, dd.MM.yyyy");
                     sdfDate.setTimeZone(TimeZone.getTimeZone("MEZ"));
                     Date current_date = new Date(System.currentTimeMillis());
-                    Date testDate = new Date(System.currentTimeMillis());
+                    //Date testDate = new Date(System.currentTimeMillis());
 
                     //SimpleDateFormat sdfTime = new SimpleDateFormat("kk:mm");
                     //sdfTime.setTimeZone(TimeZone.getTimeZone("MEZ"));
@@ -189,11 +187,13 @@ public class ErinnerungenListe {
                     //String s_stamp = sdfDate.format(stamp) + " " + sdfTime.format(stamp) + " Uhr";
                     String s_stamp = sdfDate.format(faellig);
 
-                    if(tgID == -1) { // Wenn für Hauptframe geladen wird
-                        row[0] = id;
-                        row[1] = titel;
-                        row[2] = s_stamp;
-                    } else { // wenn für Themengruppen-Frame geladen wird
+//                    if(tgID == -1) { // Wenn für Hauptframe geladen wird
+//                        row[0] = id;
+//                        row[1] = id;
+//                        row[2] = titel;
+//                        row[3] = s_stamp;
+//                    } else {
+                        // wenn für Themengruppen-Frame geladen wird
                         // mehr infos laden --> "Nr.", "Symbol", "Titel", "Fällig" --> Symbol für Fälligkeitsanzeige
                         row[0] = id;
                         
@@ -211,12 +211,12 @@ public class ErinnerungenListe {
                             img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/working.png")));
                         }
                         
-                        img = resizeImageIcon(img, hoehe,hoehe);
+                        img = resizeImageIcon(img, hoehe, hoehe);
                         
                         row[1] = img;
                         row[2] = titel;
                         row[3] = s_stamp;
-                    }
+//                    }
                     if (row[0].equals(erID)){
                         ausgabe = counter;
                     }

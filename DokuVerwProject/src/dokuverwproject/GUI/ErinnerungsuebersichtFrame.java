@@ -6,6 +6,7 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ErinnerungenListe;
+import javax.swing.ImageIcon;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -57,7 +58,8 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
      */
     public void erinnerungenAusDBLaden(){
         setStatus("Laden...");
-        if(el.erinnerungenLaden(-1,0,-1)!=-2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
+        int hoehe = jTable1.getRowHeight() - jTable1.getRowHeight()/10;
+        if(el.erinnerungenLaden(-1, hoehe, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
             setStatus(el.getGroesse() + " Erinnerungen geladen");
         } else {
             setStatus("Fehler");
@@ -69,7 +71,15 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
      * gibt den Befehl zum löschen der Erinnerung hinter der markierten Zeile an die Klasse ErinnerungenListe weiter
      */
     public void loescheErinnerung(){
-        el.erinnerungLoeschen(getIDOfSelectedRow());
+        if(jTable1.getSelectedRow() != -1) {
+            if(!el.erinnerungLoeschen(getIDOfSelectedRow())) {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
+            }
+            erinnerungenAusDBLaden();
+            return;
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
         return;
     }
 
@@ -106,12 +116,18 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
      * gibt den Befehl zum Ändern des Erledigt-Status der markierten Erinnerung an die Klasse ErinnerungenListe weiter
      */
     public void aendereErledigtStatus(){
-        if(el.aendereErledigtStatus(getIDOfSelectedRow())) {
-            this.setStatus("Erinnerung bearbeitet.");
+        if(jTable1.getSelectedRow() != -1) {
+            if(el.aendereErledigtStatus(getIDOfSelectedRow())) {
+                erinnerungenAusDBLaden();
+                this.setStatus("Erinnerung bearbeitet.");
+                return;
+            } else {
+                NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+                return;
+            }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
-        return;
     }
 
     /**
@@ -199,18 +215,28 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Nr.", "Titel", "Fälligkeit"
+                "Nr.", "Status", "Titel", "Fällig"
             }
         ) {
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0: return Long.class;
+                    case 1: return ImageIcon.class;
+                    default: return String.class;
+                }
+            }
+
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
+
         });
-        jTable1.setMaximumSize(null);
         jTable1.setRowHeight(27);
         jTable1.setRowMargin(0);
         jTable1.getTableHeader().setReorderingAllowed(false);
@@ -303,7 +329,6 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         loescheErinnerung();
-        erinnerungenAusDBLaden();
         // Erinnerung Löschen
     }//GEN-LAST:event_jButton3ActionPerformed
 
