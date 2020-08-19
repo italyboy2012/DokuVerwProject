@@ -101,8 +101,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
 
         try {
+            int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
             if (erID >= 0) {
-                int erinnerungZeile = el.erinnerungenLaden(selectedRowId, hoehe, erID);
                 jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
             } else {
                 leereSperreTextfeld1();
@@ -200,16 +200,8 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
-    public void dateiLoeschen(String pfad){
-        if(no.notizLoeschen(pfad)){
-            if(el.erinnerungLoeschen(pfad)) {
-                tg.dateiLoeschen(pfad);
-            } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
-            }
-        } else { 
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
-        }
+    public void dateiLoeschen(String selectedRowPath){
+        new DateiLöschenFrame(this, this.tg, this.no, this.el, selectedRowPath);
     }
     
     public void dateiOderErinnerungLoeschen() {
@@ -407,7 +399,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/cancel.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/trash.png"))); // NOI18N
         jButton3.setToolTipText("löschen");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

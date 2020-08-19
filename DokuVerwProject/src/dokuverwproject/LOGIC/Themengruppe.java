@@ -290,22 +290,16 @@ public class Themengruppe {
         return false;
     }
     
-    public void dateiLoeschen(String dateiPfad) {
+    public boolean dateiLoeschen(String dateiPfad) {
         File f = new File(dateiPfad);
-        Desktop desktop = Desktop.getDesktop();
         
         if(!f.exists()) {
             NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
-            return;
+            return false;
         } else {
-            try {
-                //desktop.moveToTrash(f);
-                //
-                //// --------- Notiz_NICHTBENUTZT für datei noch mit löschen.
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if(f.delete()) return true;
         }
+        return false;
     }
     
     /**
