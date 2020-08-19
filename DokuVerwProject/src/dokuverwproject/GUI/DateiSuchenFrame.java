@@ -138,7 +138,7 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     public void suchen() {
-        tg.gesuchteDateienIndexieren(jTextField1.getText());
+        tg.indexSearchedFiles(jTextField1.getText());
     }
     
     public void fensterSchliessen() {

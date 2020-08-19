@@ -5,6 +5,7 @@
  */
 package dokuverwproject.DB;
 import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.LOGIC.MediaPlayer;
 import java.awt.Image;
 
 import java.sql.Connection;
@@ -166,7 +167,7 @@ public class ErinnerungenListe {
                         img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/cross.png")));
                     } else if (inDays(current_date,dueTo,4)){
                         img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/pin.png")));
-                        //new Thread(new com.dberm22.utils.MediaPlayer(ErinnerungenListe.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
+                        //new Thread(new MediaPlayer(ErinnerungenListe.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
                     } else {
                         img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/working.png")));
                     }

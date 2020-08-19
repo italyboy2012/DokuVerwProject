@@ -130,7 +130,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void ladeThemengruppe(String pfad){
         textField1.setText("Laden...");
         if(tg.loadFromDB()) {
-            int markierteZeile = tg.dateienIndexieren(pfad);
+            int markierteZeile = tg.indexFiles(pfad);
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
             jLabel1.setText(tg.toString()); //Titelleiste mit Themengruppenwerten setzen
             this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
@@ -253,7 +253,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         int response = fc.showOpenDialog(this);
         if(response == JFileChooser.APPROVE_OPTION) {
             // Datei/Verzeichnis verschieben
-            if(!tg.dateiHinzufuegen(fc.getSelectedFile())) {
+            if(!tg.addFile(fc.getSelectedFile())) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
                 return;
             }

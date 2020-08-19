@@ -6,7 +6,7 @@
 package dokuverwproject.DB;
 
 import dokuverwproject.GUI.NotifyFrame;
-import dokuverwproject.LOGIC.Benutzer;
+import dokuverwproject.DTO.Benutzer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

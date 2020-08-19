@@ -148,7 +148,7 @@ public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
         String titel = jTextField1.getText();
         
         if(!titel.equals("") && !titel.equals(null)) {
-            if(!tg.dateiUmbenennen(titel, selectedRowPath)) {
+            if(!tg.renameFile(titel, selectedRowPath)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Umbennen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgf.ansichtAktualisieren();

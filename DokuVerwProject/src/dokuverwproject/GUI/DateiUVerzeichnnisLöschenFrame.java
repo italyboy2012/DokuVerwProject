@@ -199,7 +199,7 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
         
         if(this.no.deleteNote(pfad)){
             if(this.el.deleteFileReminders(pfad)) {
-                if(!tg.dateiLoeschen(pfad)) {
+                if(!tg.deleteFile(pfad)) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
                 } else {
                     tgf.ansichtAktualisieren();

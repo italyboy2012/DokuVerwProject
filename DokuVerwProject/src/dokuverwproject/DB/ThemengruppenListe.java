@@ -83,6 +83,52 @@ public class ThemengruppenListe {
         }
         return false;
     }
+    
+    /**
+     * Läd die Themengruppen aus der Datenbank, zu der die ID passt
+     * 
+     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
+     */
+    public boolean loadFromDB(int id) {
+        if(id != 0) {
+            try {
+                DBConn dbc = new DBConn();
+                Connection con = dbc.getConnection();
+                if(con != null) {
+                    PreparedStatement ps = null;
+                    String query = "SELECT * FROM `themengruppen` WHERE `id` = ?";
+                    ps = con.prepareStatement(query);
+                    ps.setLong(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    if(rs.next()) {
+                        if(rs.getLong(1) == id) {
+                            this.title = rs.getString(2);
+                            this.path = rs.getString(3);
+                            if(pfadsNavIndex == 0) {
+                                this.pfadNav = new String(this.path); // Pfad für Navigation
+                                //Der Pfad wird nur dann auf das Hauptverzeichnis der Themengruppe gesetzt,
+                                //wenn keine Unterordner geöffnet sind.
+                                //Sind unterordner geöffnet, wird deren aktueller Pfad
+                                //so nicht überschrieben.
+                            }
+                            this.creationTimeStamp = rs.getTimestamp(4);
+                            return true;
+                        }
+                    } else {
+                        NotifyFrame nf = new NotifyFrame("Fehler", "Die gefundene Themengruppen-ID stimmt nicht mit der intern übergebenen ID überein.");
+                    }
+                } else {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            }
+        } else {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
+        }
+        return false;
+    }
 
     /**
      *  Erstellt eine Themengruppe mit den ihr übergebenen Attributen

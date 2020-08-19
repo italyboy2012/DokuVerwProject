@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Benutzer;
+import dokuverwproject.DTO.Benutzer;
 import static dokuverwproject.commons.Common.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;

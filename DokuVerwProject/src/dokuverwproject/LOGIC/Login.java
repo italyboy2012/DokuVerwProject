@@ -5,6 +5,7 @@
  */
 package dokuverwproject.LOGIC;
 
+import dokuverwproject.DTO.Benutzer;
 import dokuverwproject.DB.LoginDB;
 import dokuverwproject.GUI.HauptFrame;
 
