@@ -5,27 +5,27 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Themengruppe;
-import static dokuverwproject.commons.Common.initExternalFrame;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import java.io.File;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
  * @author Giuseppe
  */
-public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
+public class RenameFileGUI extends javax.swing.JFrame {
     private String selectedRowPath = "";
-    private ThemengruppeFrame tpf = null;
-    private Themengruppe tp = null;
+    private TopicGroupGUI tgGUI = null;
+    private TopicGroupLOGIC tgLOGIC = null;
     private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiUVerzeichnisUmbenennenFrame(String selectedRowPath, ThemengruppeFrame tpf, Themengruppe tp) {
+    public RenameFileGUI(String selectedRowPath, TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC) {
         this.selectedRowPath = selectedRowPath;
-        this.tpf = tpf;
-        this.tp = tp;
+        this.tgGUI = tgGUI;
+        this.tgLOGIC = tgLOGIC;
         
         this.file = new File(this.selectedRowPath);
         if(!file.exists()) return;
@@ -40,7 +40,7 @@ public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
     
     /**
      * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
-     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
+     * der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
      * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
      * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
      */
@@ -48,16 +48,17 @@ public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
         String title = jTextField1.getText();
 
         if(!title.equals("") && !title.equals(null)) {
-            if(!tp.dateiUmbenennen(title, selectedRowPath)) {
+            if(!tgLOGIC.renameFile(title, selectedRowPath)) {
                 new NotifyFrame("Fehler", "Fehler beim Umbennen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
-                tpf.ansichtAktualisieren();
+                tgGUI.ansichtAktualisieren();
             }
             this.dispose();
         } else {
            new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
         }
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -152,14 +153,10 @@ public class DateiUVerzeichnisUmbenennenFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         save();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

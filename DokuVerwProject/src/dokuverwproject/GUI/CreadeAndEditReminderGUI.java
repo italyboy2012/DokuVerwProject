@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ErinnerungenListe;
+import dokuverwproject.DB.ReminderDB;
 import static dokuverwproject.commons.Common.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -14,16 +14,12 @@ import java.text.SimpleDateFormat;
 /**
  *
  * @author Falk
- * Changelog
- * Falk @ 05.08.2020
- * anpassung der gesammten Klasse, damit erkannt wird, ob die Erinnerung bereits existiert
- * und nur geändert werden soll, oder komplett neu erstellt werden soll.
  */
-public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
-    private ThemengruppeFrame tgf = null; // Referenz, um Tabellenanzeige zu aktualisieren
+public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
+    private TopicGroupGUI tgGUI = null; // Referenz, um Tabellenanzeige zu aktualisieren
     private ErinnerungsuebersichtFrame euf = null; // Gui der Erinnerungsübersicht, um die Anzeige zu aktualisieren
     
-    private ErinnerungenListe el = null; // DB-Logik der Erinnerungen
+    private ReminderDB el = null; // DB-Logik der Erinnerungen
     
     private long themengruppenID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
     private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
@@ -37,11 +33,11 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
      * @param themengruppenID ID der Themengruppe
      * @param dateiPfad Pfad der Datei, für die diese Erinnerung erstellt wird
      */
-    public ErinnerungErstellenUBearbeitenFrame(ThemengruppeFrame tgf, long themengruppenID, String dateiPfad) {
-        this.tgf = tgf;
+    public CreadeAndEditReminderGUI(TopicGroupGUI tgf, long themengruppenID, String dateiPfad) {
+        this.tgGUI = tgf;
         this.themengruppenID = themengruppenID;
         this.file = dateiPfad;
-        el = new ErinnerungenListe();
+        el = new ReminderDB();
         initExternalFrame(this, "hourglass.png");
         initComponents();
         jDateChooser1.setDate(new Timestamp(System.currentTimeMillis())); // Datumsanzeige auf aktuelles Datum setzen
@@ -54,9 +50,9 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
      * @param euf Frame der Erinnerungsübersicht aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public ErinnerungErstellenUBearbeitenFrame(ErinnerungsuebersichtFrame euf, long id) {
+    public CreadeAndEditReminderGUI(ErinnerungsuebersichtFrame euf, long id) {
         this.id = id;
-        el = new ErinnerungenListe();
+        el = new ReminderDB();
         this.euf = euf;
         initComponents();
 
@@ -79,10 +75,10 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
      * @param tgf Frame der Themengruppe aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public ErinnerungErstellenUBearbeitenFrame(ThemengruppeFrame tgf, long id) {
+    public CreadeAndEditReminderGUI(TopicGroupGUI tgf, long id) {
         this.id = id;
-        el = new ErinnerungenListe();
-        this.tgf = tgf;
+        el = new ReminderDB();
+        this.tgGUI = tgf;
         //this.setTitle("Erinnerung ändern");
 //        this.buttonText = "Speichern";
         initComponents();
@@ -118,7 +114,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
                 if(!el.createReminder(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 } else {
-                    tgf.ansichtAktualisieren();
+                    tgGUI.ansichtAktualisieren();
                     this.dispose();
                 }
             } else {
@@ -129,7 +125,7 @@ public class ErinnerungErstellenUBearbeitenFrame extends javax.swing.JFrame {
             this.dispose();
         }
         if(euf != null) euf.erinnerungenAusDBLaden();
-        if(tgf != null) tgf.ansichtAktualisieren();
+        if(tgGUI != null) tgGUI.ansichtAktualisieren();
     }
 
     @SuppressWarnings("unchecked")

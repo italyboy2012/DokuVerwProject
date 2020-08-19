@@ -5,6 +5,7 @@
  */
 package dokuverwproject.DB;
 
+import dokuverwproject.DTO.TopicGroupDTO;
 import dokuverwproject.GUI.NotifyFrame;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -15,15 +16,18 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Giuseppe
  */
-public class ThemengruppenListe {
+public class TopicGroupDB {
     private long size = 0; // Anzahl der geladenen TG
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ThemengruppenübersichtFrame
+    
+    public TopicGroupDB() {
+    }
     
     /**
      * 
      * @param model - Tabellenmodell der Tabelle eines Frames, um die Daten in ihr rendern zu können
      */
-    public ThemengruppenListe(DefaultTableModel model) {
+    public TopicGroupDB(DefaultTableModel model) {
         this.model = model;
     }
     
@@ -87,9 +91,9 @@ public class ThemengruppenListe {
     /**
      * Läd die Themengruppen aus der Datenbank, zu der die ID passt
      * 
-     * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
+     * @return - gibt ein TopicGroupDTO zurück; alls null = keine TG gefunden
      */
-    public boolean loadFromDB(int id) {
+    public TopicGroupDTO loadFromDB(long id) {
         if(id != 0) {
             try {
                 DBConn dbc = new DBConn();
@@ -102,17 +106,7 @@ public class ThemengruppenListe {
                     ResultSet rs = ps.executeQuery();
                     if(rs.next()) {
                         if(rs.getLong(1) == id) {
-                            this.title = rs.getString(2);
-                            this.path = rs.getString(3);
-                            if(pfadsNavIndex == 0) {
-                                this.pfadNav = new String(this.path); // Pfad für Navigation
-                                //Der Pfad wird nur dann auf das Hauptverzeichnis der Themengruppe gesetzt,
-                                //wenn keine Unterordner geöffnet sind.
-                                //Sind unterordner geöffnet, wird deren aktueller Pfad
-                                //so nicht überschrieben.
-                            }
-                            this.creationTimeStamp = rs.getTimestamp(4);
-                            return true;
+                            return new TopicGroupDTO(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4));
                         }
                     } else {
                         NotifyFrame nf = new NotifyFrame("Fehler", "Die gefundene Themengruppen-ID stimmt nicht mit der intern übergebenen ID überein.");
@@ -127,7 +121,7 @@ public class ThemengruppenListe {
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
         }
-        return false;
+        return null;
     }
 
     /**

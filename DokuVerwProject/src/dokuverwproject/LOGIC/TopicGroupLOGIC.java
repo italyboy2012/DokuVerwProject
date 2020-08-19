@@ -5,16 +5,14 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DB.DBConn;
-import dokuverwproject.DB.ErinnerungenListe;
-import dokuverwproject.DB.Notiz;
+import dokuverwproject.DB.ReminderDB;
+import dokuverwproject.DB.NoteDB;
+import dokuverwproject.DB.TopicGroupDB;
+import dokuverwproject.DTO.TopicGroupDTO;
 import dokuverwproject.GUI.NotifyFrame;
-import dokuverwproject.GUI.ThemengruppeFrame;
+import dokuverwproject.GUI.TopicGroupGUI;
 import java.awt.Desktop;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -27,67 +25,53 @@ import javax.swing.table.DefaultTableModel;
  * @author Giuseppe & Falk
  *
  */
-public class Themengruppe {
+public class TopicGroupLOGIC {
     private long id = 0;
     private String title = "";
     private String path = "";
     private Timestamp creationTimeStamp = null;
     
-    private javax.swing.JTable table = null; // Zugriff auf Tabelle in ThemengruppeFrame
-    private ThemengruppeFrame tgf = null; // Zugriff auf GUI dieser Logik
+    private javax.swing.JTable table = null; // Zugriff auf Tabelle in TopicGroupGUI
+    private TopicGroupGUI tgf = null; // Zugriff auf GUI dieser Logik
     
-    private Notiz note = new Notiz(); //Zugriff auf DB-Schicht der Notizen
-    private ErinnerungenListe reminder = new ErinnerungenListe(); //Zugriff auf DB-Schicht der Erinnerungen
+    private NoteDB note = new NoteDB(); //Zugriff auf DB-Schicht der Notizen
+    private ReminderDB reminder = new ReminderDB(); //Zugriff auf DB-Schicht der Erinnerungen
     
     // FÜR DIE NAVIGATION
-    private javax.swing.JTextField displayPath = null; //Pfadanzeige auf Frame für Themengruppe
+    private javax.swing.JTextField displayPath = null; //Pfadanzeige auf Frame für TopicGroupLOGIC
     private String pfadNav = ""; // aktueller Pfad der Navigation
-    private ArrayList<String> pfadsNav = new ArrayList<String>(); // Liste aller aufgerufenen Unterpfade innerhalb einer Themengruppe
+    private ArrayList<String> pfadsNav = new ArrayList<String>(); // Liste aller aufgerufenen Unterpfade innerhalb einer TopicGroupLOGIC
     private int pfadsNavIndex = 0; // Speichert die Tiefe, also wie oft ein Unterordner aufgerufen wurde
     
-    public Themengruppe(long id, javax.swing.JTable table, javax.swing.JTextField displayPath, ThemengruppeFrame tgf) {
+    public TopicGroupLOGIC(long id, javax.swing.JTable table, javax.swing.JTextField displayPath, TopicGroupGUI tgf) {
         this.id = id;
         this.table = table;
         this.displayPath = displayPath;
         this.tgf = tgf;
     }
 
-    
+    /**
+     * Methode greift auf die DB-Schicht der TG zu und lädt die Themengruppe,
+     * zu der die tgID gehört, mittels eines Data-Transfer-Objects
+     * 
+     * @return - true = geladen; false = fehler
+     */
     public boolean loadFromDB() {
         if(id != 0) {
-            try {
-                DBConn dbc = new DBConn();
-                Connection con = dbc.getConnection();
-                if(con != null) {
-                    PreparedStatement ps = null;
-                    String query = "SELECT * FROM `themengruppen` WHERE `id` = ?";
-                    ps = con.prepareStatement(query);
-                    ps.setLong(1, id);
-                    ResultSet rs = ps.executeQuery();
-                    if(rs.next()) {
-                        if(rs.getLong(1) == id) {
-                            this.title = rs.getString(2);
-                            this.path = rs.getString(3);
-                            if(pfadsNavIndex == 0) {
-                                this.pfadNav = new String(this.path); // Pfad für Navigation
-                                //Der Pfad wird nur dann auf das Hauptverzeichnis der Themengruppe gesetzt,
-                                //wenn keine Unterordner geöffnet sind.
-                                //Sind unterordner geöffnet, wird deren aktueller Pfad
-                                //so nicht überschrieben.
-                            }
-                            this.creationTimeStamp = rs.getTimestamp(4);
-                            return true;
-                        }
-                    } else {
-                        NotifyFrame nf = new NotifyFrame("Fehler", "Die gefundene Themengruppen-ID stimmt nicht mit der intern übergebenen ID überein.");
-                    }
-                } else {
-                    throw new Exception();
-                }
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            TopicGroupDTO tgDTO = new TopicGroupDB().loadFromDB(id);
+            if(tgDTO == null) return false;
+            
+            this.title = tgDTO.getTitle();
+            this.path = tgDTO.getTitle();
+            if(pfadsNavIndex == 0) {
+                this.pfadNav = new String(this.path); // Pfad für Navigation
+                //Der Pfad wird nur dann auf das Hauptverzeichnis der TopicGroupLOGIC gesetzt,
+                //wenn keine Unterordner geöffnet sind.
+                //Sind unterordner geöffnet, wird deren aktueller Pfad
+                //so nicht überschrieben.
             }
+            this.creationTimeStamp = tgDTO.getCreationTimeStamp();
+            return true;
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
         }
@@ -190,7 +174,7 @@ public class Themengruppe {
             indexFiles("");
         } else {
             try {
-                //new Thread(new MediaPlayer(ErinnerungenListe.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
+                //new Thread(new MediaPlayer(ReminderDB.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -237,7 +221,7 @@ public class Themengruppe {
      * Mehtode erstellt ein neues Verzeichnis.
      * 
      * @param name - Name des Verzeichnisses
-     * @param cuttentNavPath - aktuell angezeigter Pfad in der Themengruppe
+     * @param cuttentNavPath - aktuell angezeigter Pfad in der TopicGroupLOGIC
      * 
      * @return - true = erstellt; false = nicht erstellt
      */
@@ -275,7 +259,7 @@ public class Themengruppe {
      * Methode erstellt eine Datei
      * 
      * @param name - Name der Datei
-     * @param cuttentNavPath - aktuell angezeigter Pfad in der Themengruppe
+     * @param cuttentNavPath - aktuell angezeigter Pfad in der TopicGroupLOGIC
      * 
      * @return - true = erstellt; false = nicht erstellt
      */

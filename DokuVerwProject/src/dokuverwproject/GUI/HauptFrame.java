@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DTO.Benutzer;
+import dokuverwproject.DTO.UserDTO;
 import static dokuverwproject.commons.Common.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -16,7 +16,7 @@ import javax.swing.JFrame;
  * @author Giuseppe
  */
 public class HauptFrame extends javax.swing.JFrame {
-    private Benutzer user;
+    private UserDTO user;
     //Referenz zu den internen Frames, damit jeweils nur maximal eins geöffnet werden kann
     private ThemengruppenübersichtFrame tf = null;
     private ErinnerungsuebersichtFrame ef = null;
@@ -24,7 +24,7 @@ public class HauptFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainMenu
      */
-    public HauptFrame(Benutzer u) {
+    public HauptFrame(UserDTO u) {
         this.user = u;
         initComponents();
         initExternalFrame(this, "edit-folder.png");

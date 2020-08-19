@@ -5,9 +5,9 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ErinnerungenListe;
-import dokuverwproject.DB.Notiz;
-import dokuverwproject.LOGIC.Themengruppe;
+import dokuverwproject.DB.ReminderDB;
+import dokuverwproject.DB.NoteDB;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import static dokuverwproject.commons.Common.*;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -18,12 +18,12 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe &   Falk
+ * @author Giuseppe &     Falk
  ChangeLog:
  Falk @ 04.08.2020
  Hinzufügen einer Notizinstanz no
  Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
-      versucht die entsprechende Notiz über loadNote zu laden
+      versucht die entsprechende NoteDB über loadNote zu laden
  Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
       der markierten Datei an die Methode saveNote übergibt
  Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
@@ -35,35 +35,35 @@ import javax.swing.table.DefaultTableModel;
  Der Löschenbutton löscht jetzt auch markierte Erinnerungen
  Außerdem wird beim klicken eine Tabelle die Markierung der jeweils anderen aufgehoben.
  */
-public class ThemengruppeFrame extends javax.swing.JFrame {
-    private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
+public class TopicGroupGUI extends javax.swing.JFrame {
+    private ReminderDB el = null; // MySQL-Logik der Erinnerungen
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
-    private Themengruppe tg = null; //Logik von ThemengruppeFrame
-    private Notiz no = null; //Logik von Notiz
+    private TopicGroupLOGIC tg = null; //Logik von TopicGroupGUI
+    private NoteDB no = null; //Logik von NoteDB
     
     private final int NOTE_MAX_LENGTH = 60000;
     
-    private DateiSuchenFrame dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro Themengruppe genutzt werden kann,
+    private SearchFileGUI dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro TopicGroupLOGIC genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
 
 
     /**
-     * Der Konstruktor bekommt die ID der ausgewählten Themengruppe und eine Referenz zur
-     * Tabelle des Frames übergeben.
-     * Die ID wird der Logikklasse Themengruppe übergeben.
-     * Diese lädt alle Daten der Themengruppe aus der DB und zeigt alle indexierten Dateien an.
+     * Der Konstruktor bekommt die ID der ausgewählten TopicGroupLOGIC und eine Referenz zur
+ Tabelle des Frames übergeben.
+     * Die ID wird der Logikklasse TopicGroupLOGIC übergeben.
+ Diese lädt alle Daten der TopicGroupLOGIC aus der DB und zeigt alle indexierten Dateien an.
      *
      * @param selectedRowId
      */
-    public ThemengruppeFrame(long selectedRowId,String pfad, long erID) {
+    public TopicGroupGUI(long selectedRowId,String pfad, long erID) {
         this.selectedRowId = selectedRowId;
         
         initComponents();
         initExternalFrame(this, "open.png");
         
-        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
-        el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
-        no = new Notiz();
+        tg = new TopicGroupLOGIC(this.selectedRowId, jTable1, this.jTextField2, this);
+        el = new ReminderDB((DefaultTableModel) jTable2.getModel());
+        no = new NoteDB();
         
         this.addWindowListener(new WindowAdapter() { // Schließt beim Schließen des Frames das SuchenFrame mit
             public void windowClosing(WindowEvent event) {
@@ -72,27 +72,27 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         });
         
         this.setVisible(true);
-        ansichtAktualisieren(pfad,erID);
+        ansichtAktualisieren(pfad, erID);
        // leereSperreTextfeld1();
     }
 
 
-//    public ThemengruppeFrame(long selectedRowId, String path, long id) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
+//    public TopicGroupGUI(long selectedRowId, String path, long id) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
 //        this.selectedRowId = selectedRowId;
 //
 //        initComponents();
 //        initExternalFrame(this, "open.png");
 //
-//        tg = new Themengruppe(this.selectedRowId, jTable1, this.jTextField2, this);
-//        el = new ErinnerungenListe((DefaultTableModel) jTable2.getModel());
-//        no = new Notiz();
+//        tg = new TopicGroupLOGIC(this.selectedRowId, jTable1, this.jTextField2, this);
+//        el = new ReminderDB((DefaultTableModel) jTable2.getModel());
+//        no = new NoteDB();
 //        this.setVisible(true);
 //        ansichtAktualisieren();
 //    }
     
     /**
-     * Methode lädt Details der Themengruppe und indexiert anschließend alle Dateien des OS innerhalb dieser Themengruppe.
-     * Dafür werden MEthoden der Logikklasse Themengruppe verwendet.
+     * Methode lädt Details der TopicGroupLOGIC und indexiert anschließend alle Dateien des OS innerhalb dieser TopicGroupLOGIC.
+     * Dafür werden MEthoden der Logikklasse TopicGroupLOGIC verwendet.
      */
     public void ansichtAktualisieren(String pfad, long erID) {
         jTable1.clearSelection();
@@ -111,11 +111,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
             System.out.println("keine Erinnerung ausgewählt");
         }
 
-        //leereSperreTextfeld1(); // Notiz aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
+        //leereSperreTextfeld1(); // NoteDB aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
         if(dsf != null) dsf.setTopicTitle(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
-                                                                  // dann dort den Titel der Themengruppe anzeigen,
+                                                                  // dann dort den Titel der TopicGroupLOGIC anzeigen,
                                                                   // damit der user weiß, dass dieses SuchenFrame
-                                                                  // in dieser Themengruppe sucht.
+                                                                  // in dieser TopicGroupLOGIC sucht.
                                                                   // Beim Aktualisieren wird hier der aktuelle Name
                                                                   // aus der DB geladen und angezeigt.
     }
@@ -158,7 +158,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
     public void erinnerungErstellen() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, selectedRowId, selectedRowPath); //ID der Themengruppe und Pfad der Datei
+            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, selectedRowId, selectedRowPath); //ID der TopicGroupLOGIC und Pfad der Datei
         } else {
             errorDateiwaehlen();
         }
@@ -197,11 +197,11 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         String ausgabe = no.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
         setCharCountNote(jTextArea1.getText().length());
-        entsperreTextField1(); //auch wenn keine Notiz enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
+        entsperreTextField1(); //auch wenn keine NoteDB enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
     public void dateiLoeschen(String selectedRowPath){
-        new DateiUVerzeichnnisLöschenFrame(this, this.tg, this.no, this.el, selectedRowPath);
+        new DeleteFile(this, this.tg, this.no, this.el, selectedRowPath);
     }
     
     public void dateiOderErinnerungLoeschen() {
@@ -225,7 +225,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     public void erinnerungBearbeiten() {
         if(jTable2.getSelectedRow() != -1) {
-            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
+            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
@@ -792,7 +792,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        DateiErstellenFrame dhf = new DateiErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        CreateFileGUI dhf = new CreateFileGUI(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -808,7 +808,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            DateiUVerzeichnisUmbenennenFrame duf = new DateiUVerzeichnisUmbenennenFrame(selectedRowPath, this, tg);
+            RenameFileGUI duf = new RenameFileGUI(selectedRowPath, this, tg);
         } else {
             errorDateiwaehlen();
         }
@@ -821,7 +821,7 @@ public class ThemengruppeFrame extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
-        if(dsf == null) dsf = new DateiSuchenFrame(this, tg);
+        if(dsf == null) dsf = new SearchFileGUI(this, tg);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed

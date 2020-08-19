@@ -83,12 +83,8 @@ public class DBConn {
             Statement s = con.createStatement();
             int Result = s.executeUpdate("CREATE DATABASE IF NOT EXISTS "+ nameDatenbank + " CHARACTER SET utf8mb4");
             return true;
-            //CREATE DATABASE [IF NOT EXISTS] database_name
-            //[CHARACTER SET charset_name]
-            //[COLLATE collation_name]
         } catch (Exception e) {
             e.printStackTrace();
-            //NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen/Prüfen der Datenbank.");
         }
         return false;
     }

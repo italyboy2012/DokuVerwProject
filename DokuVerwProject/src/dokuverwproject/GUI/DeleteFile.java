@@ -5,31 +5,31 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ErinnerungenListe;
-import dokuverwproject.DB.Notiz;
-import dokuverwproject.LOGIC.Themengruppe;
-import static dokuverwproject.commons.Common.initExternalFrame;
+import dokuverwproject.DB.ReminderDB;
+import dokuverwproject.DB.NoteDB;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import java.io.File;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
  * @author Giuseppe
  */
-public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
-    private ThemengruppeFrame tpf = null;
-    private Themengruppe tp = null;
-    private Notiz note = null;
-    private ErinnerungenListe reminders = null;
+public class DeleteFile extends javax.swing.JFrame {
+    private TopicGroupGUI tgGUI = null;
+    private TopicGroupLOGIC tgLOGIC = null;
+    private NoteDB noteDB = null;
+    private ReminderDB reminderDB = null;
     private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiUVerzeichnnisLöschenFrame(ThemengruppeFrame tpf, Themengruppe tp, Notiz note, ErinnerungenListe reminders, String selectedRowPath) {
-        this.tpf = tpf;
-        this.tp = tp;
-        this.note = note;
-        this.reminders = reminders;
+    public DeleteFile(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC, NoteDB noteDB, ReminderDB reminderDB, String selectedRowPath) {
+        this.tgGUI = tgGUI;
+        this.tgLOGIC = tgLOGIC;
+        this.noteDB = noteDB;
+        this.reminderDB = reminderDB;
         this.file = new File(selectedRowPath);
         
         initComponents();
@@ -50,12 +50,12 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
 
         String path = this.file.getAbsolutePath();
 
-        if(this.note.deleteNote(path)){
-            if(this.reminders.deleteFileReminders(path)) {
-                if(!tp.dateiLoeschen(path)) {
+        if(this.noteDB.deleteNote(path)){
+            if(this.reminderDB.deleteFileReminders(path)) {
+                if(!tgLOGIC.deleteFile(path)) {
                     new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
                 } else {
-                    tpf.ansichtAktualisieren();
+                    tgGUI.ansichtAktualisieren();
                     this.dispose();
                 }
             } else {
@@ -66,7 +66,6 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
         }
 
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,19 +206,14 @@ public class DateiUVerzeichnnisLöschenFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         remove();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

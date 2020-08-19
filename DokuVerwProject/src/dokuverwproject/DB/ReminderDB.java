@@ -5,7 +5,6 @@
  */
 package dokuverwproject.DB;
 import dokuverwproject.GUI.NotifyFrame;
-import dokuverwproject.LOGIC.MediaPlayer;
 import java.awt.Image;
 
 import java.sql.Connection;
@@ -23,11 +22,11 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Giuseppe & Falk
  */
-public class ErinnerungenListe {
+public class ReminderDB {
     private long size = 0; // Anzahl der gefundenen Erinnerungen
     private DefaultTableModel model = null; // Zugriff auf Tabelle in ErinngerungenFrame
 
-    public ErinnerungenListe() {
+    public ReminderDB() {
     }
 
     /**
@@ -35,7 +34,7 @@ public class ErinnerungenListe {
      * 
      * @param model 
      */
-    public ErinnerungenListe(DefaultTableModel model) {
+    public ReminderDB(DefaultTableModel model) {
         this.model = model;
     }
     
@@ -162,14 +161,14 @@ public class ErinnerungenListe {
 
                     ImageIcon img = null;
                     if(done) {
-                        img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/tick.png")));
+                        img = (ImageIcon) new ImageIcon((ReminderDB.class.getResource("/dokuverwproject/IMG/tick.png")));
                     } else if (dueTo.before(current_date)) {
-                        img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/cross.png")));
+                        img = (ImageIcon) new ImageIcon((ReminderDB.class.getResource("/dokuverwproject/IMG/cross.png")));
                     } else if (inDays(current_date,dueTo,4)){
-                        img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/pin.png")));
-                        //new Thread(new MediaPlayer(ErinnerungenListe.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
+                        img = (ImageIcon) new ImageIcon((ReminderDB.class.getResource("/dokuverwproject/IMG/pin.png")));
+                        //new Thread(new MediaPlayer(ReminderDB.class.getResource("/dokuverwproject/IMG/butcher.wav").getFile())).start();
                     } else {
-                        img = (ImageIcon) new ImageIcon((ErinnerungenListe.class.getResource("/dokuverwproject/IMG/working.png")));
+                        img = (ImageIcon) new ImageIcon((ReminderDB.class.getResource("/dokuverwproject/IMG/working.png")));
                     }
                     img = resizeImageIcon(img, height, height);
 

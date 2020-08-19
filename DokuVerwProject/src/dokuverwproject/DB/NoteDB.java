@@ -15,18 +15,18 @@ import java.sql.Statement;
  * 
  * @author Falk
  */
-public class Notiz {
+public class NoteDB {
     
-    public Notiz() {
+    public NoteDB() {
     }
 
     /**
-     * Prüft ob eine Notiz für eine Datei schon existiert und läd diese.
+     * Prüft ob eine NoteDB für eine Datei schon existiert und läd diese.
      * Falls diese noch nicht besteht, wird diese erstellt.
      * 
-     * @param path - Pfad der Datei für die die Notiz gespeichert werden soll.
-     * @param tgID - Themengruppen ID, der Datei, für die die Notiz erstellt werden soll.
-     * @return - gibt den inhalt der Notiz zurück
+     * @param path - Pfad der Datei für die die NoteDB gespeichert werden soll.
+     * @param tgID - Themengruppen ID, der Datei, für die die NoteDB erstellt werden soll.
+     * @return - gibt den inhalt der NoteDB zurück
      */
     public String loadNote(String path, long tgID){
         String returnValue = ""; // initialisierung und definition des Ausgabeparameters
@@ -52,7 +52,7 @@ public class Notiz {
                     // auslesen und zurückgeben des Notizeninhaltes
                     returnValue = abfrage.getString(1);
                     return returnValue;
-                } else { // falls keine Notiz für die Datei existiert wird hier eine neue leere erstellt
+                } else { // falls keine NoteDB für die Datei existiert wird hier eine neue leere erstellt
                     query = "INSERT INTO `notizen`(`id`, `inhalt`, `dateiPfad`, `themengruppenID`, `created_TMSTMP`) VALUES (NuLL , '',? ,?,CURRENT_TIMESTAMP)";
                     ps = con.prepareStatement(query);
                     ps.setString(1, path);
@@ -70,11 +70,11 @@ public class Notiz {
     }
 
     /**
-     * Speichert den Text in die Notiz mit dem Pfad
+     * Speichert den Text in die NoteDB mit dem Pfad
      * 
      * @param text - zu speichernder Text
-     * @param path - Pfad der Datei, für die die Notiz gespeichert werden soll
-     * @param tgID - ThemengruppenID, damit die Notiz der richtigen Themengruppe geladen wird
+     * @param path - Pfad der Datei, für die die NoteDB gespeichert werden soll
+     * @param tgID - ThemengruppenID, damit die NoteDB der richtigen Themengruppe geladen wird
      * @return - gibt Rückmeldung, ob die Methode erfolgreich durchlaufen wurde
      */
     public boolean saveNote(String text,long tgID, String path) {
@@ -122,7 +122,7 @@ public class Notiz {
     }
 
     /**
-     * Wenn eine Datei gelöscht wird, löscht diese Methode die dazugehörige Notiz
+     * Wenn eine Datei gelöscht wird, löscht diese Methode die dazugehörige NoteDB
      * 
      * @param path - Pfad der gelöschten Datei
      * @return - gibt zurück, ob die Methode erfolgreich durchlaufen wurde
@@ -147,7 +147,7 @@ public class Notiz {
     
     /**
      * Wenn ein File umbenannt wird, dann setzt diese Methode die Referenzen
-     * der dazugehörenden Notiz in der DB auf das neue File.
+     * der dazugehörenden NoteDB in der DB auf das neue File.
      * 
      * @param oldPath
      * @param newPath

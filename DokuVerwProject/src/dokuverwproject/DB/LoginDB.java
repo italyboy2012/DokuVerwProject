@@ -6,7 +6,7 @@
 package dokuverwproject.DB;
 
 import dokuverwproject.GUI.NotifyFrame;
-import dokuverwproject.DTO.Benutzer;
+import dokuverwproject.DTO.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,10 +22,10 @@ public class LoginDB {
      * 
      * @param username
      * @param password
-     * @return - Benutzer != null, falls Benutzer existerit
-     *         - Benutzer == null, falls Benutzer nicht existiert
+     * @return - UserDTO != null, falls UserDTO existerit
+         - UserDTO == null, falls UserDTO nicht existiert
      */
-    public Benutzer login(String username, String password) {
+    public UserDTO login(String username, String password) {
         try {
             DBConn dbc = new DBConn();
             Connection con = dbc.getConnection();
@@ -38,7 +38,7 @@ public class LoginDB {
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
                     if(rs.getString("username").equals(username) && rs.getString("passwort").equals(password)) {
-                        return new Benutzer(rs.getLong(1), rs.getString(4), rs.getString(5));
+                        return new UserDTO(rs.getLong(1), rs.getString(4), rs.getString(5));
                     }
                 } else {
                     NotifyFrame nf = new NotifyFrame("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");

@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Themengruppe;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,17 +15,17 @@ import java.io.File;
  *
  * @author Giuseppe
  */
-public class DateiSuchenFrame extends javax.swing.JFrame {
-    private ThemengruppeFrame tpf = null;
-    private Themengruppe tp = null;
-    private File f = null;
+public class SearchFileGUI extends javax.swing.JFrame {
+    private TopicGroupGUI tgGUI = null;
+    private TopicGroupLOGIC tpLOGIC = null;
+    private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiSuchenFrame(ThemengruppeFrame tpf, Themengruppe tp) {
-        this.tpf = tpf;
-        this.tp = tp;
+    public SearchFileGUI(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC) {
+        this.tgGUI = tgGUI;
+        this.tpLOGIC = tgLOGIC;
         
         initComponents();
         initExternalFrame(this, "search.png");
@@ -36,7 +36,7 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
             }
         });
         
-        this.setTopicTitle(this.tp.toString());
+        this.setTopicTitle(this.tpLOGIC.toString());
         this.setVisible(true);
     }
 
@@ -44,27 +44,28 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
      * Methode liest das Textfeld aus und gibt dies an die Funktion zum erstellen der Ergebnistabelle weiter.
      */
     public void search() {
-        tp.indexSearchedFiles(jTextField1.getText());
+        tpLOGIC.indexSearchedFiles(jTextField1.getText());
     }
 
     /**
      * setzt die Suche zurück, setzt die Ansicht zurück und schließt das Fenster
      */
     public void closewindow() {
-        tpf.resetDateiSuchenFrame();
-        tpf.ansichtAktualisieren();
+        tgGUI.resetDateiSuchenFrame();
+        tgGUI.ansichtAktualisieren();
         this.dispose();
     }
 
     /**
-     * saönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfgsaönlognöaongöoaerngöjaenrglkebrgbergbaeöjgböajbfg
-     * @param tgt
+     * Methode setzt den ihr übergenenen Themengruppen-Titel
+     * in das jLabel2.
+     * 
+     * @param tgT - Titel der Themengruppe
      */
-    public void setTopicTitle(String tgt) {
-        jLabel2.setText(tgt);
+    public void setTopicTitle(String tgT) {
+        jLabel2.setText(tgT);
 
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,11 +159,8 @@ public class DateiSuchenFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         search();
     }//GEN-LAST:event_jTextField1KeyReleased
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

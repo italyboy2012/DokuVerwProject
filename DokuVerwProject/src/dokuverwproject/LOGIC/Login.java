@@ -5,7 +5,7 @@
  */
 package dokuverwproject.LOGIC;
 
-import dokuverwproject.DTO.Benutzer;
+import dokuverwproject.DTO.UserDTO;
 import dokuverwproject.DB.LoginDB;
 import dokuverwproject.GUI.HauptFrame;
 
@@ -25,11 +25,11 @@ public class Login {
     /**
      * Methode ruft login() in LoginDB mit den ihr übergebenen Credentials auf.
      * 
-     * @return - true = Benutzer existerit; false = Benutzer existiert nicht
+     * @return - true = UserDTO existerit; false = UserDTO existiert nicht
      */
     public boolean login() {
         if(!username.equals("") && !username.equals(null) && !username.equals("") && !password.equals(null)) {
-            Benutzer b = new LoginDB().login(username, password);
+            UserDTO b = new LoginDB().login(username, password);
             
             if(b != null) {
                 HauptFrame mm = new HauptFrame(b);

@@ -9,12 +9,12 @@ package dokuverwproject.DTO;
  *
  * @author Giuseppe
  */
-public class Benutzer {
+public class UserDTO {
     private long id = 0;
     private String name = "";
     private String vorname = "";
     
-    public Benutzer (long id, String n, String pn) {
+    public UserDTO (long id, String n, String pn) {
         this.id = id;
         this.name = n;
         this.vorname = pn;

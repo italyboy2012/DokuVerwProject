@@ -5,9 +5,9 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ErinnerungenListe;
-import dokuverwproject.DB.Notiz;
-import dokuverwproject.DB.ThemengruppenListe;
+import dokuverwproject.DB.ReminderDB;
+import dokuverwproject.DB.NoteDB;
+import dokuverwproject.DB.TopicGroupDB;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -24,9 +24,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     private HauptFrame hf = null; //Referenz zum hf, damit beim Schließen dieses Frames (tgüf) die Referenz des hf zu tgüf gelöscht wird
-    private ThemengruppenListe tgl = null; // Logik dieser Klasse
-    private Notiz no = null;
-    private ErinnerungenListe el = null;
+    private TopicGroupDB tgl = null; // Logik dieser Klasse
+    private NoteDB no = null;
+    private ReminderDB el = null;
 
     /**
      * Konstruktor übergibt der Logikklasse das TableModel,
@@ -39,9 +39,9 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         initComponents();
         
         this.hf = hf;
-        this.tgl = new ThemengruppenListe((DefaultTableModel)jTable1.getModel());
-        this.el = new ErinnerungenListe();
-        this.no = new Notiz();
+        this.tgl = new TopicGroupDB((DefaultTableModel)jTable1.getModel());
+        this.el = new ReminderDB();
+        this.no = new NoteDB();
         
         themengruppenAusDBLaden();
         
@@ -76,14 +76,14 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
     
     /**
      * Methode öffnet den ausgewählten Datensatz aus der Tabelle.
-     * Für den Datensatz wird eine neue Instanz der Klasse ThemengruppeFrame erstellt.
-     * Ihr wird die ID der Themengruppe übergeben. Die restlichen Daten
-     * der Themengruppe werden in Echtzeit aus der Datenbank gezogen.
+     * Für den Datensatz wird eine neue Instanz der Klasse TopicGroupGUI erstellt.
+ Ihr wird die ID der Themengruppe übergeben. Die restlichen Daten
+ der Themengruppe werden in Echtzeit aus der Datenbank gezogen.
      */
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            ThemengruppeFrame tgf = new ThemengruppeFrame(selectedRowId,"",-1);
+            TopicGroupGUI tgf = new TopicGroupGUI(selectedRowId,"",-1);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }

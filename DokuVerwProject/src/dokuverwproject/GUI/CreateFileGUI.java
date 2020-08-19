@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Themengruppe;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import java.io.File;
 
@@ -13,16 +13,16 @@ import java.io.File;
  *
  * @author Giuseppe
  */
-public class DateiErstellenFrame extends javax.swing.JFrame {
+public class CreateFileGUI extends javax.swing.JFrame {
     private String currentNavPath = "";
-    private ThemengruppeFrame tpf = null;
-    private Themengruppe tp = null;
+    private TopicGroupGUI tpf = null;
+    private TopicGroupLOGIC tp = null;
     private File f = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DateiErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tp) {
+    public CreateFileGUI(String cuttentNavPath, TopicGroupGUI tgf, TopicGroupLOGIC tp) {
         this.currentNavPath = cuttentNavPath;
         this.tpf = tgf;
         this.tp = tp;
@@ -39,7 +39,7 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
 
     /**
      * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
-     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
+ der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
      * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
      * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
      */
@@ -47,7 +47,7 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         String name = jTextField1.getText();
 
         if(!name.equals("") && !name.equals(null)) {
-            if(!tp.dateiErstellen(name, currentNavPath)) {
+            if(!tp.createFile(name, currentNavPath)) {
                 NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tpf.ansichtAktualisieren();
@@ -57,7 +57,6 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
             NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,8 +157,6 @@ public class DateiErstellenFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         save();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

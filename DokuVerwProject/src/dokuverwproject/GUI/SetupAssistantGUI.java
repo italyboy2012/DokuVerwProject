@@ -7,20 +7,22 @@ package dokuverwproject.GUI;
 
 import dokuverwproject.DB.DBConn;
 import dokuverwproject.DB.ReadWriteCredentials;
-import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import static dokuverwproject.commons.Common.initExternalFrame;
+
+
+äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää
 
 /**
  *
  * @author Giuseppe
  */
-public class EinrichtungsassistentFrame extends javax.swing.JFrame {
-    //private String[] tables = {"erinnerungen", "notizen", "nutzer", "themengruppen"}; //Array mit den zu prüfenden Tabellen
+public class SetupAssistantGUI extends javax.swing.JFrame {
     private String[][] tables = { //2d Array mit Tabellennamen und SQL-Code, um sie einzurichten
         {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) AUTO_INCREMENT = 30001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
         {"notizen", "CREATE TABLE `notizen` (`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`inhalt` text NOT NULL,`dateiPfad` text NOT NULL,`themengruppenID` bigint(11) NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()) AUTO_INCREMENT = 60001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
@@ -40,12 +42,249 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
     /**
      * Creates new form EinrichtungGui
      */
-    public EinrichtungsassistentFrame() {
+    public SetupAssistantGUI() {
         initComponents();
         
         initExternalFrame(this, "edit-folder.png");
         
         this.setVisible(true);
+    }
+    
+    public boolean testDBConnection() {
+        enableBereichDatenbankstruktur(false);
+        jTextField6.setText("Bitte warten...");
+        jTextField6.setBackground(new Color(240,240,240));
+
+        this.db_host = jTextField1.getText();
+        this.db_port = jTextField12.getText();
+        this.db_name = jTextField10.getText();
+        this.db_username = jTextField4.getText();
+        this.db_password = jPasswordField1.getText();
+        
+        if(!db_host.equals("") && !db_host.equals(null) && !db_name.equals("") && !db_name.equals(null)) {
+            DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+            
+            if(!db.createDBIfNotExists()) { //prüft und erstellt ggf. eine DB
+                enableBereichDatenbankstruktur(false);
+                jTextField6.setText("Fehler beim Erstellen/Prüfen der Datenbank!");
+                jTextField6.setBackground(new Color(255,204,204));
+                
+                jTextField7.setText("Nicht mit der Datenbank verbunden.");
+                jTextField7.setBackground(new Color(240,240,240));
+                return false;
+            }
+
+            Connection con = db.getConnection();
+
+            if(con != null) {
+                enableBereichDatenbankstruktur(true);
+                jTextField6.setText("Verbindung zur Datenbank hergestellt!");
+                jTextField6.setBackground(new Color(204,255,204));
+                
+                jTextField7.setText("Mit Datenbank verbunden!");
+                jTextField7.setBackground(new Color(240,240,240));
+                
+                return true;
+            } else {
+                enableBereichDatenbankstruktur(false);
+                jTextField6.setText("Fehler beim Verbinden mit der Datenbank!");
+                jTextField6.setBackground(new Color(255,204,204));
+                
+                jTextField7.setText("Nicht mit der Datenbank verbunden.");
+                jTextField7.setBackground(new Color(240,240,240));
+            }
+        } else {
+            enableBereichDatenbankstruktur(false);
+            jTextField6.setText("Bitte alle nötigen Felder ausfüllen!");
+            jTextField6.setBackground(new Color(255,204,204));
+            
+            jTextField7.setText("Nicht mit der Datenbank verbunden.");
+            jTextField7.setBackground(new Color(240,240,240));
+        }
+        return false;
+    }
+
+    public void checkDatenbankstruktur(){
+        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
+        
+        int anzahlGefudenerTabellenInDB = 0; // Anzahl der in der DB gefundenen Tabellen
+        
+        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+        Connection con = db.getConnection();
+        
+        Statement stmt = null;
+        
+        try{
+            DatabaseMetaData dbm = con.getMetaData();
+            
+            for (int i = 0; i < tables.length; i++) {
+                ResultSet table = dbm.getTables(null, null, tables[i][0], null);
+                if (table.next()) { //if table exists
+                    anzahlGefudenerTabellenInDB ++;
+                }
+            }
+            
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            jTextField7.setText(e.toString());
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+        
+        if(anzahlGefudenerTabellenInDB == tables.length) {
+            jTextField7.setText("Datenbankstruktur überprüft und in Ordnung!");
+            jTextField7.setBackground(new Color(204,255,204));
+            
+            enableAccountBereich(true);
+            enableBereichSpeichern(true);
+            jTabbedPane1.setSelectedIndex(1);
+        } else {
+            jTextField7.setText("Datenbankstruktur fehlerhaft! Bitte 'anlegen' zur Reparatur klicken.");
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+    }
+   
+    public void createDatabaseStructure() {
+        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
+        
+        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+        Connection con = db.getConnection();
+        
+        Statement stmt = null;
+        
+        try{
+            DatabaseMetaData dbm = con.getMetaData();
+            
+            for (int i = 0; i < tables.length; i++) {
+                ResultSet tableAccounts = dbm.getTables(null, null, tables[i][0], null);
+                if (!tableAccounts.next()) { //if table does not exist
+                    try{
+                        stmt = con.createStatement();
+                        stmt.executeUpdate(tables[i][1]); //Tabelle erstellen
+                        stmt.close();
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        jTextField7.setText(e.toString());
+                        jTextField7.setBackground(new Color(255,204,204));
+                        return;
+                    }
+                }
+            }
+            
+            jTextField7.setText("Datenbankstruktur angelegt!");
+            jTextField7.setBackground(new Color(204,255,204));
+            
+            enableAccountBereich(true);
+            enableBereichSpeichern(true);
+            jTabbedPane1.setSelectedIndex(1);
+        } catch(Exception e) {
+            System.out.println(e.toString());
+            jTextField7.setText(e.toString());
+            jTextField7.setBackground(new Color(255,204,204));
+        }
+    }
+   
+    public void createRootUser() {
+        String usr_username = jTextField3.getText();
+        String usr_password = jPasswordField4.getText();
+        String usr_passwrdRpt = jPasswordField3.getText();
+        String user_lastname = jTextField11.getText();
+        String user_prename = jTextField13.getText();
+        
+        if(!usr_username.equals("") && !usr_username.equals(null) && !usr_password.equals("") && !usr_password.equals(null) && !usr_passwrdRpt.equals("") && !usr_passwrdRpt.equals(null) && !user_lastname.equals("") && !user_lastname.equals(null) && !user_prename.equals("") && !user_prename.equals(null)) {
+            if(usr_password.equals(usr_passwrdRpt)) {
+                try{
+                    DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+                    Connection con = db.getConnection();
+                    
+                    PreparedStatement ps = null;
+                    String queryCheckAccount = "SELECT * FROM `nutzer` WHERE `username` = ?";
+                    ps = con.prepareStatement(queryCheckAccount);
+                    ps.setString(1, usr_username);
+                    ResultSet rs = ps.executeQuery();
+                    
+                    if(!rs.isBeforeFirst()){ // keine Einträge mit dem selben Benutzernamen
+                        ps = null;
+                        String addUserQuery = "INSERT INTO `nutzer` (`id`, `username`, `passwort`, `name`, `vorname`, `created_TMSTMP`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
+
+                        ps = con.prepareStatement(addUserQuery);
+                        ps.setString(1, usr_username);
+                        ps.setString(2, usr_password);
+                        ps.setString(3, user_lastname);
+                        ps.setString(4, user_prename);
+                        
+                        ps.execute();
+                        
+                        jTextField8.setText("Benutzer erstellt!");
+                        jTextField8.setBackground(new Color(204,255,204));
+                        
+                        enableBereichSpeichern(true);
+                        jTabbedPane1.setSelectedIndex(2);
+                        
+                        return;
+                        
+                    } else {
+                        jTextField8.setText("Benutzername bereits vorhanden!");
+                        jTextField8.setBackground(new Color(255,204,204));
+                    }
+                    ps.close();
+                } catch(Exception e) {
+                    System.out.println(e.toString());
+                    jTextField8.setText("Fehler beim Erstellen des Accounts!");
+                    jTextField8.setBackground(new Color(255,204,204));
+                }
+                
+            } else {
+                jTextField8.setText("Passwörter stimmen nicht überein!");
+                jTextField8.setBackground(new Color(255,204,204));
+            }
+            
+        } else {
+            jTextField8.setText("Bitte alle Pflichtangaben ausfüllen!");
+            jTextField8.setBackground(new Color(255,204,204));
+        }
+       
+    }
+    
+    public void saveAndClose() {
+        ReadWriteCredentials rwc = new ReadWriteCredentials(db_host, db_port, db_name, db_username, db_password);
+        
+        if(!rwc.saveData()) {
+            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");
+            return;
+        }
+        
+        new LoginFrame();
+        this.dispose();
+    }
+    
+    public void enableBereichDatenbankstruktur(boolean enable) {
+        jPanel6.setEnabled(enable);
+        jLabel9.setEnabled(enable);
+        jTextField7.setEnabled(enable);
+        jButton2.setEnabled(enable);
+        jButton3.setEnabled(enable);
+    }
+   
+    public void enableAccountBereich(boolean enable) {
+        jPanel12.setEnabled(enable);
+        jLabel15.setEnabled(enable);
+        jLabel16.setEnabled(enable);
+        jLabel17.setEnabled(enable);
+        jLabel19.setEnabled(enable);
+        jLabel20.setEnabled(enable);
+        jLabel21.setEnabled(enable);
+        jTextField12.setEnabled(enable);
+        jTextField13.setEnabled(enable);
+        jTextField11.setEnabled(enable);
+        jTextField3.setEnabled(enable);
+        jPasswordField4.setEnabled(enable);
+        jPasswordField3.setEnabled(enable);
+        jButton8.setEnabled(enable);
+    }
+    
+    public void enableBereichSpeichern(boolean enable) {
+        jPanel10.setEnabled(enable);
+        jButton6.setEnabled(enable);
     }
 
     /**
@@ -553,277 +792,25 @@ public class EinrichtungsassistentFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
         saveAndClose();
     }//GEN-LAST:event_jButton6ActionPerformed
-
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
         createRootUser();
     }//GEN-LAST:event_jButton8ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
         checkDatenbankstruktur();
     }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         createDatabaseStructure();
     }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         testDBConnection();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField13ActionPerformed
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    public boolean testDBConnection() {
-        enableBereichDatenbankstruktur(false);
-        jTextField6.setText("Bitte warten...");
-        jTextField6.setBackground(new Color(240,240,240));
-
-        this.db_host = jTextField1.getText();
-        this.db_port = jTextField12.getText();
-        this.db_name = jTextField10.getText();
-        this.db_username = jTextField4.getText();
-        this.db_password = jPasswordField1.getText();
-        
-        if(!db_host.equals("") && !db_host.equals(null) && !db_name.equals("") && !db_name.equals(null)) {
-            DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
-            
-            if(!db.createDBIfNotExists()) { //prüft und erstellt ggf. eine DB
-                enableBereichDatenbankstruktur(false);
-                jTextField6.setText("Fehler beim Erstellen/Prüfen der Datenbank!");
-                jTextField6.setBackground(new Color(255,204,204));
-                
-                jTextField7.setText("Nicht mit der Datenbank verbunden.");
-                jTextField7.setBackground(new Color(240,240,240));
-                return false;
-            }
-
-            Connection con = db.getConnection();
-
-            if(con != null) {
-                enableBereichDatenbankstruktur(true);
-                jTextField6.setText("Verbindung zur Datenbank hergestellt!");
-                jTextField6.setBackground(new Color(204,255,204));
-                
-                jTextField7.setText("Mit Datenbank verbunden!");
-                jTextField7.setBackground(new Color(240,240,240));
-                
-                return true;
-            } else {
-                enableBereichDatenbankstruktur(false);
-                jTextField6.setText("Fehler beim Verbinden mit der Datenbank!");
-                jTextField6.setBackground(new Color(255,204,204));
-                
-                jTextField7.setText("Nicht mit der Datenbank verbunden.");
-                jTextField7.setBackground(new Color(240,240,240));
-            }
-        } else {
-            enableBereichDatenbankstruktur(false);
-            jTextField6.setText("Bitte alle nötigen Felder ausfüllen!");
-            jTextField6.setBackground(new Color(255,204,204));
-            
-            jTextField7.setText("Nicht mit der Datenbank verbunden.");
-            jTextField7.setBackground(new Color(240,240,240));
-        }
-        return false;
-    }
-
-    public void checkDatenbankstruktur(){
-        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
-        
-        int anzahlGefudenerTabellenInDB = 0; // Anzahl der in der DB gefundenen Tabellen
-        
-        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
-        Connection con = db.getConnection();
-        
-        Statement stmt = null;
-        
-        try{
-            DatabaseMetaData dbm = con.getMetaData();
-            
-            for (int i = 0; i < tables.length; i++) {
-                ResultSet table = dbm.getTables(null, null, tables[i][0], null);
-                if (table.next()) { //if table exists
-                    anzahlGefudenerTabellenInDB ++;
-                }
-            }
-            
-        } catch(Exception e) {
-            System.out.println(e.toString());
-            jTextField7.setText(e.toString());
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-        
-        if(anzahlGefudenerTabellenInDB == tables.length) {
-            jTextField7.setText("Datenbankstruktur überprüft und in Ordnung!");
-            jTextField7.setBackground(new Color(204,255,204));
-            
-            enableAccountBereich(true);
-            enableBereichSpeichern(true);
-            jTabbedPane1.setSelectedIndex(1);
-        } else {
-            jTextField7.setText("Datenbankstruktur fehlerhaft! Bitte 'anlegen' zur Reparatur klicken.");
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-    }
-   
-    public void createDatabaseStructure() {
-        if(!testDBConnection()) return; // Wenn keine DB-Verbindung, dann abbrechen
-        
-        DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
-        Connection con = db.getConnection();
-        
-        Statement stmt = null;
-        
-        try{
-            DatabaseMetaData dbm = con.getMetaData();
-            
-            for (int i = 0; i < tables.length; i++) {
-                ResultSet tableAccounts = dbm.getTables(null, null, tables[i][0], null);
-                if (!tableAccounts.next()) { //if table does not exist
-                    try{
-                        stmt = con.createStatement();
-                        stmt.executeUpdate(tables[i][1]); //Tabelle erstellen
-                        stmt.close();
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                        jTextField7.setText(e.toString());
-                        jTextField7.setBackground(new Color(255,204,204));
-                        return;
-                    }
-                }
-            }
-            
-            jTextField7.setText("Datenbankstruktur angelegt!");
-            jTextField7.setBackground(new Color(204,255,204));
-            
-            enableAccountBereich(true);
-            enableBereichSpeichern(true);
-            jTabbedPane1.setSelectedIndex(1);
-        } catch(Exception e) {
-            System.out.println(e.toString());
-            jTextField7.setText(e.toString());
-            jTextField7.setBackground(new Color(255,204,204));
-        }
-    }
-   
-    public void createRootUser() {
-        String usr_username = jTextField3.getText();
-        String usr_password = jPasswordField4.getText();
-        String usr_passwrdRpt = jPasswordField3.getText();
-        String user_lastname = jTextField11.getText();
-        String user_prename = jTextField13.getText();
-        
-        if(!usr_username.equals("") && !usr_username.equals(null) && !usr_password.equals("") && !usr_password.equals(null) && !usr_passwrdRpt.equals("") && !usr_passwrdRpt.equals(null) && !user_lastname.equals("") && !user_lastname.equals(null) && !user_prename.equals("") && !user_prename.equals(null)) {
-            if(usr_password.equals(usr_passwrdRpt)) {
-                try{
-                    DBConn db = new DBConn(db_host, db_port, db_name, db_username, db_password);
-                    Connection con = db.getConnection();
-                    
-                    PreparedStatement ps = null;
-                    String queryCheckAccount = "SELECT * FROM `nutzer` WHERE `username` = ?";
-                    ps = con.prepareStatement(queryCheckAccount);
-                    ps.setString(1, usr_username);
-                    ResultSet rs = ps.executeQuery();
-                    
-                    if(!rs.isBeforeFirst()){ // keine Einträge mit dem selben Benutzernamen
-                        ps = null;
-                        String addUserQuery = "INSERT INTO `nutzer` (`id`, `username`, `passwort`, `name`, `vorname`, `created_TMSTMP`) VALUES (NULL, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
-
-                        ps = con.prepareStatement(addUserQuery);
-                        ps.setString(1, usr_username);
-                        ps.setString(2, usr_password);
-                        ps.setString(3, user_lastname);
-                        ps.setString(4, user_prename);
-                        
-                        ps.execute();
-                        
-                        jTextField8.setText("Benutzer erstellt!");
-                        jTextField8.setBackground(new Color(204,255,204));
-                        
-                        enableBereichSpeichern(true);
-                        jTabbedPane1.setSelectedIndex(2);
-                        
-                        return;
-                        
-                    } else {
-                        jTextField8.setText("Benutzername bereits vorhanden!");
-                        jTextField8.setBackground(new Color(255,204,204));
-                    }
-                    ps.close();
-                } catch(Exception e) {
-                    System.out.println(e.toString());
-                    jTextField8.setText("Fehler beim Erstellen des Accounts!");
-                    jTextField8.setBackground(new Color(255,204,204));
-                }
-                
-            } else {
-                jTextField8.setText("Passwörter stimmen nicht überein!");
-                jTextField8.setBackground(new Color(255,204,204));
-            }
-            
-        } else {
-            jTextField8.setText("Bitte alle Pflichtangaben ausfüllen!");
-            jTextField8.setBackground(new Color(255,204,204));
-        }
-       
-    }
-    
-    public void saveAndClose() {
-        ReadWriteCredentials rwc = new ReadWriteCredentials(db_host, db_port, db_name, db_username, db_password);
-        
-        if(!rwc.saveData()) {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");
-            return;
-        }
-        
-        new LoginFrame();
-        this.dispose();
-    }
-    
-    public void enableBereichDatenbankstruktur(boolean enable) {
-        jPanel6.setEnabled(enable);
-        jLabel9.setEnabled(enable);
-        jTextField7.setEnabled(enable);
-        jButton2.setEnabled(enable);
-        jButton3.setEnabled(enable);
-    }
-   
-    public void enableAccountBereich(boolean enable) {
-        jPanel12.setEnabled(enable);
-        jLabel15.setEnabled(enable);
-        jLabel16.setEnabled(enable);
-        jLabel17.setEnabled(enable);
-        jLabel19.setEnabled(enable);
-        jLabel20.setEnabled(enable);
-        jLabel21.setEnabled(enable);
-        jTextField12.setEnabled(enable);
-        jTextField13.setEnabled(enable);
-        jTextField11.setEnabled(enable);
-        jTextField3.setEnabled(enable);
-        jPasswordField4.setEnabled(enable);
-        jPasswordField3.setEnabled(enable);
-        jButton8.setEnabled(enable);
-    }
-    
-    public void enableBereichSpeichern(boolean enable) {
-        jPanel10.setEnabled(enable);
-        jButton6.setEnabled(enable);
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

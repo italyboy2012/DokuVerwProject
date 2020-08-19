@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ErinnerungenListe;
+import dokuverwproject.DB.ReminderDB;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -34,13 +34,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     private HauptFrame hf = null; //Referenz zum hf, damit beim Schließen dieses Frames (eüf) die Referenz des hf zu eüf gelöscht wird
-    private ErinnerungenListe el = null; // MySQL-Logik der Erinnerungen
+    private ReminderDB el = null; // MySQL-Logik der Erinnerungen
     
     public ErinnerungsuebersichtFrame(HauptFrame hf) {
         initComponents();
         
         this.hf = hf;
-        el = new ErinnerungenListe((DefaultTableModel) jTable1.getModel());
+        el = new ReminderDB((DefaultTableModel) jTable1.getModel());
         
         erinnerungenAusDBLaden();
         
@@ -71,7 +71,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     }
 
     /**
-     * gibt den Befehl zum Laden aller Erinnerungen an die Klasse ErinnerungenListe weiter
+     * gibt den Befehl zum Laden aller Erinnerungen an die Klasse ReminderDB weiter
      */
     public void erinnerungenAusDBLaden(){
         setStatus("Laden...");
@@ -85,7 +85,7 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     }
 
     /**
-     * gibt den Befehl zum löschen der Erinnerung hinter der markierten Zeile an die Klasse ErinnerungenListe weiter
+     * gibt den Befehl zum löschen der Erinnerung hinter der markierten Zeile an die Klasse ReminderDB weiter
      */
     public void loescheErinnerung(){
         if(jTable1.getSelectedRow() != -1) {
@@ -109,9 +109,9 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
             long themengruppenID = el.getTGID(erinnerungsID);
             String pfad = el.loadText(getIDOfSelectedRow(), "pfad");
             long erID = getIDOfSelectedRow();
-            ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, pfad,erID);
+            TopicGroupGUI tgf = new TopicGroupGUI(themengruppenID, pfad,erID);
             //---------------- Änderung: Datei und Erinnerung im Frame highlighten
-            //ThemengruppeFrame tgf = new ThemengruppeFrame(themengruppenID, erinnerungsID);
+            //ThemengruppeFrame tgf = new TopicGroupGUI(themengruppenID, erinnerungsID);
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
@@ -119,18 +119,18 @@ public class ErinnerungsuebersichtFrame extends javax.swing.JInternalFrame {
     }
 
     /**
-     * öffnet einen ErinnerungErstellenUBearbeitenFrame für die markierte Erinnerung
+     * öffnet einen CreadeAndEditReminderGUI für die markierte Erinnerung
      */
     public void erinnerungBearbeiten() {
         if(jTable1.getSelectedRow() != -1) {
-            ErinnerungErstellenUBearbeitenFrame eef = new ErinnerungErstellenUBearbeitenFrame(this, getIDOfSelectedRow()); //ID der Erinnerung
+            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
         } else {
             NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
 
     /**
-     * gibt den Befehl zum Ändern des Erledigt-Status der markierten Erinnerung an die Klasse ErinnerungenListe weiter
+     * gibt den Befehl zum Ändern des Erledigt-Status der markierten Erinnerung an die Klasse ReminderDB weiter
      */
     public void aendereErledigtStatus(){
         if(jTable1.getSelectedRow() != -1) {

@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Themengruppe;
+import dokuverwproject.LOGIC.TopicGroupLOGIC;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import java.io.File;
 
@@ -15,14 +15,14 @@ import java.io.File;
  */
 public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
     private String cuttentNavPath = "";
-    private ThemengruppeFrame tgf = null;
-    private Themengruppe tg = null;
+    private TopicGroupGUI tgf = null;
+    private TopicGroupLOGIC tg = null;
     private File f = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public VerzeichnisErstellenFrame(String cuttentNavPath, ThemengruppeFrame tgf, Themengruppe tg) {
+    public VerzeichnisErstellenFrame(String cuttentNavPath, TopicGroupGUI tgf, TopicGroupLOGIC tg) {
         this.cuttentNavPath = cuttentNavPath;
         this.tgf = tgf;
         this.tg = tg;
@@ -139,7 +139,7 @@ public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
 
     /**
      * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
-     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
+ der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
      * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
      * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
      */

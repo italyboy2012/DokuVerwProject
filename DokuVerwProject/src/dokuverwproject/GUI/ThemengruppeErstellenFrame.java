@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ThemengruppenListe;
+import dokuverwproject.DB.TopicGroupDB;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import javax.swing.JFileChooser;
 
@@ -14,13 +14,13 @@ import javax.swing.JFileChooser;
  * @author Giuseppe
  */
 public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
-    private ThemengruppenListe tgl = null;
+    private TopicGroupDB tgl = null;
     private ThemengruppenübersichtFrame tgüf = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public ThemengruppeErstellenFrame(ThemengruppenListe tgl, ThemengruppenübersichtFrame tguf) {
+    public ThemengruppeErstellenFrame(TopicGroupDB tgl, ThemengruppenübersichtFrame tguf) {
         this.tgl = tgl;
         this.tgüf = tguf;
         

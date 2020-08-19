@@ -6,7 +6,7 @@
 package dokuverwproject;
 
 import dokuverwproject.DB.ReadWriteCredentials;
-import dokuverwproject.GUI.EinrichtungsassistentFrame;
+import dokuverwproject.GUI.SetupAssistantGUI;
 import dokuverwproject.GUI.LoginFrame;
 
 /**
@@ -42,7 +42,7 @@ public class Main {
                 ReadWriteCredentials rwc = new ReadWriteCredentials();
         
                 if(!rwc.loadData()) {
-                    new EinrichtungsassistentFrame();
+                    new SetupAssistantGUI();
                     return;
                 }
                     

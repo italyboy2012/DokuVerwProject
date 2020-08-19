@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ThemengruppenListe;
+import dokuverwproject.DB.TopicGroupDB;
 import static dokuverwproject.commons.Common.initExternalFrame;
 import javax.swing.JFileChooser;
 
@@ -17,13 +17,13 @@ public class ThemengruppeBearbeitenFrame extends javax.swing.JFrame {
     private long selectedRowId = 0;
     private String titel = "";
     private String pfad = "";
-    private ThemengruppenListe tgl = null;
+    private TopicGroupDB tgl = null;
     private ThemengruppenübersichtFrame tgüf = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public ThemengruppeBearbeitenFrame(long selectedRowId, String titel, String pfad, ThemengruppenListe tgl, ThemengruppenübersichtFrame tgüf) {
+    public ThemengruppeBearbeitenFrame(long selectedRowId, String titel, String pfad, TopicGroupDB tgl, ThemengruppenübersichtFrame tgüf) {
         this.selectedRowId = selectedRowId;
         this.titel = titel;
         this.pfad = pfad;
@@ -174,7 +174,7 @@ public class ThemengruppeBearbeitenFrame extends javax.swing.JFrame {
 
     /**
      * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
-     * der Logikklasse ThemengruppenListe, welche die Themengruppe bearbeitet.
+ der Logikklasse TopicGroupDB, welche die Themengruppe bearbeitet.
      * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
      * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
      */
