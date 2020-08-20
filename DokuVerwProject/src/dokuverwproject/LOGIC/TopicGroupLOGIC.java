@@ -9,7 +9,7 @@ import dokuverwproject.DB.ReminderDB;
 import dokuverwproject.DB.NoteDB;
 import dokuverwproject.DB.TopicGroupDB;
 import dokuverwproject.DTO.TopicGroupDTO;
-import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.NotifyFrameGUI;
 import dokuverwproject.GUI.TopicGroupGUI;
 import java.awt.Desktop;
 import java.io.File;
@@ -62,7 +62,7 @@ public class TopicGroupLOGIC {
             if(tgDTO == null) return false;
             
             this.title = tgDTO.getTitle();
-            this.path = tgDTO.getTitle();
+            this.path = tgDTO.getPath();
             if(pfadsNavIndex == 0) {
                 this.pfadNav = new String(this.path); // Pfad für Navigation
                 //Der Pfad wird nur dann auf das Hauptverzeichnis der TopicGroupLOGIC gesetzt,
@@ -73,7 +73,7 @@ public class TopicGroupLOGIC {
             this.creationTimeStamp = tgDTO.getCreationTimeStamp();
             return true;
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
         }
         return false;
     }
@@ -195,7 +195,7 @@ public class TopicGroupLOGIC {
                 File file = new File(filePath);
                 
                 if(!file.exists()) {
-                    NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
                     return;
                 }
                 
@@ -213,7 +213,7 @@ public class TopicGroupLOGIC {
                 System.out.println(e.toString());
             }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -289,7 +289,7 @@ public class TopicGroupLOGIC {
         File f = new File(path);
         
         if(!f.exists()) {
-            new NotifyFrame("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+            new NotifyFrameGUI("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
             return false;
         } else {
             if(f.delete()) return true;
@@ -320,10 +320,10 @@ public class TopicGroupLOGIC {
         if(f.renameTo(f2)) {
             // Referent Notizen und Erinnerungen in DB neu setzen
             if(!note.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Notizen
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
             }
             if(!reminder.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Erinnerungen
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
             }
             return true;
         }

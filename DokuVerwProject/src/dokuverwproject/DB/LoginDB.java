@@ -5,7 +5,7 @@
  */
 package dokuverwproject.DB;
 
-import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.NotifyFrameGUI;
 import dokuverwproject.DTO.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,14 +41,14 @@ public class LoginDB {
                         return new UserDTO(rs.getLong(1), rs.getString(4), rs.getString(5));
                     }
                 } else {
-                    NotifyFrame nf = new NotifyFrame("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");
+                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");
                 }
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return null;
     }

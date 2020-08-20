@@ -6,32 +6,21 @@
 package dokuverwproject.GUI;
 
 import static dokuverwproject.commons.Common.*;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
 /**
  *
  * @author Giuseppe
  */
-public class NotifyFrame extends javax.swing.JFrame {
+public class NotifyFrameGUI extends javax.swing.JFrame {
 
-    public NotifyFrame(String titel, String text) {
+    public NotifyFrameGUI(String titel, String text) {
         initComponents();
         initExternalFrame(this, "help.png");
         
         jLabel2.setText(titel);
         jTextArea1.setText(text);
         
-//        try {
-//            //Clip clip = AudioSystem.getClip();
-//            //clip.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/dokuverwproject/SOUNDS/NotifyMessaging.wav")));
-//            //clip.start();
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-        
         this.setVisible(true);
-        
     }
 
     /**
@@ -126,12 +115,10 @@ public class NotifyFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

@@ -6,10 +6,9 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ReminderDB;
-import static dokuverwproject.commons.Common.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
+import static dokuverwproject.commons.Common.*;
 
 /**
  *
@@ -17,50 +16,50 @@ import java.text.SimpleDateFormat;
  */
 public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
     private TopicGroupGUI tgGUI = null; // Referenz, um Tabellenanzeige zu aktualisieren
-    private ErinnerungsuebersichtFrame euf = null; // Gui der Erinnerungsübersicht, um die Anzeige zu aktualisieren
+    private ReminderOverviewGUI roGUI = null; // Gui der Erinnerungsübersicht, um die Anzeige zu aktualisieren
     
-    private ReminderDB el = null; // DB-Logik der Erinnerungen
+    private ReminderDB rDB = null; // DB-Logik der Erinnerungen
     
-    private long themengruppenID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
-    private String file =""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
+    private long tgID = 0; // ID der Themengruppe, zu der die dAtei gehört, zu der wir eine Erinnerung erstellen
+    private String filePath = ""; // puffer für Übergabe des Pfades der in Themengruppe markierten Datei
     private long id = 0;
     private String buttonText = "erstellen";
 
-
     /**
      * Fenster zum Erstellen einer neuen Erinnerung
-     * @param tgf Frame der Themengruppe, aus dem die Erinnerung erstellt werden soll
-     * @param themengruppenID ID der Themengruppe
-     * @param dateiPfad Pfad der Datei, für die diese Erinnerung erstellt wird
+     * 
+     * @param tgGUI Frame der Themengruppe, aus dem die Erinnerung erstellt werden soll
+     * @param tgID ID der Themengruppe
+     * @param filePath Pfad der Datei, für die diese Erinnerung erstellt wird
      */
-    public CreadeAndEditReminderGUI(TopicGroupGUI tgf, long themengruppenID, String dateiPfad) {
-        this.tgGUI = tgf;
-        this.themengruppenID = themengruppenID;
-        this.file = dateiPfad;
-        el = new ReminderDB();
+    public CreadeAndEditReminderGUI(TopicGroupGUI tgGUI, long tgID, String filePath) {
+        this.tgGUI = tgGUI;
+        this.tgID = tgID;
+        this.filePath = filePath;
+        rDB = new ReminderDB();
         initExternalFrame(this, "hourglass.png");
         initComponents();
         jDateChooser1.setDate(new Timestamp(System.currentTimeMillis())); // Datumsanzeige auf aktuelles Datum setzen
         this.setVisible(true);
-
     }
 
     /**
      * Fenster zum Bearbeiten einer bestehenden Erinnerung
-     * @param euf Frame der Erinnerungsübersicht aus dem die Erinnerung erstellt wird.
+     * 
+     * @param roGUI Frame der Erinnerungsübersicht aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public CreadeAndEditReminderGUI(ErinnerungsuebersichtFrame euf, long id) {
+    public CreadeAndEditReminderGUI(ReminderOverviewGUI roGUI, long id) {
         this.id = id;
-        el = new ReminderDB();
-        this.euf = euf;
+        rDB = new ReminderDB();
+        this.roGUI = roGUI;
         initComponents();
 
         initExternalFrame(this, "hourglass.png");
         
-        jDateChooser1.setDate(el.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
-        jTextField1.setText(el.loadText(id,"titel"));
-        jTextArea1.setText(el.loadText(id,"inhalt"));
+        jDateChooser1.setDate(rDB.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
+        jTextField1.setText(rDB.loadText(id,"titel"));
+        jTextArea1.setText(rDB.loadText(id,"inhalt"));
         this.setVisible(true);
         
         this.buttonText = "Speichern";
@@ -72,32 +71,31 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
 
     /**
      * Fenster zum Bearbeiten einer bestehenden Erinnerung
-     * @param tgf Frame der Themengruppe aus dem die Erinnerung erstellt wird.
+     * 
+     * @param tgGUI Frame der Themengruppe aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public CreadeAndEditReminderGUI(TopicGroupGUI tgf, long id) {
+    public CreadeAndEditReminderGUI(TopicGroupGUI tgGUI, long id) {
         this.id = id;
-        el = new ReminderDB();
-        this.tgGUI = tgf;
-        //this.setTitle("Erinnerung ändern");
-//        this.buttonText = "Speichern";
+        rDB = new ReminderDB();
+        this.tgGUI = tgGUI;
         initComponents();
         setTitle("Erinnerung bearbeiten");
         jLabel1.setText("Erinnerung bearbeiten");
         jButton1.setText("speichern");
         initExternalFrame(this, "hourglass.png");
         
-        jDateChooser1.setDate(el.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
-        jTextField1.setText(el.loadText(id,"titel"));
-        jTextArea1.setText(el.loadText(id,"inhalt"));
+        jDateChooser1.setDate(rDB.loadDate(id,"faellig")); // Datumsanzeige auf aktuelles Datum setzen
+        jTextField1.setText(rDB.loadText(id,"titel"));
+        jTextArea1.setText(rDB.loadText(id,"inhalt"));
         this.setVisible(true);
         
     }
 
     /**
-     * Liest die einzelnen Felder des Fensters aus, und gibt diese Daten zum Speichern an die Klasse ErinnerungsListe weiter
+     * Liest die einzelnen Felder des Fensters aus, und gibt diese Daten zum Speichern an die Klasse ReminderDB weiter
      */
-    public void speichern() {
+    public void save() {
         String titel = jTextField1.getText();
         String inhalt = jTextArea1.getText();
         String faelligkeitsDatum = "";
@@ -108,24 +106,24 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
             System.out.println(e.toString());
             e.printStackTrace();
         }
-        String datei = file;
-        if (this.themengruppenID != 0 && this.id == 0) {
+        String datei = filePath;
+        if (this.tgID != 0 && this.id == 0) {
             if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
-                if(!el.createReminder(titel, inhalt, faelligkeitsDatum, themengruppenID, datei)) {
-                    NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
+                if(!rDB.createReminder(titel, inhalt, faelligkeitsDatum, tgID, datei)) {
+                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 } else {
-                    tgGUI.ansichtAktualisieren();
+                    tgGUI.refreshView();
                     this.dispose();
                 }
             } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
             }
-        } else if(this.themengruppenID == 0 && this.id != 0) {
-            el.editReminder(this.id, titel, inhalt, faelligkeitsDatum);
+        } else if(this.tgID == 0 && this.id != 0) {
+            rDB.editReminder(this.id, titel, inhalt, faelligkeitsDatum);
             this.dispose();
         }
-        if(euf != null) euf.erinnerungenAusDBLaden();
-        if(tgGUI != null) tgGUI.ansichtAktualisieren();
+        if(roGUI != null) roGUI.loadRemindersFromDB();
+        if(tgGUI != null) tgGUI.refreshView();
     }
 
     @SuppressWarnings("unchecked")
@@ -237,10 +235,8 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        speichern();
+        save();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private com.toedter.calendar.JDateChooser jDateChooser1;

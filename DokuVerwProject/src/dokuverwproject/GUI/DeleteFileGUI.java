@@ -15,7 +15,7 @@ import static dokuverwproject.commons.Common.initExternalFrame;
  *
  * @author Giuseppe
  */
-public class DeleteFile extends javax.swing.JFrame {
+public class DeleteFileGUI extends javax.swing.JFrame {
     private TopicGroupGUI tgGUI = null;
     private TopicGroupLOGIC tgLOGIC = null;
     private NoteDB noteDB = null;
@@ -25,7 +25,7 @@ public class DeleteFile extends javax.swing.JFrame {
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DeleteFile(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC, NoteDB noteDB, ReminderDB reminderDB, String selectedRowPath) {
+    public DeleteFileGUI(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC, NoteDB noteDB, ReminderDB reminderDB, String selectedRowPath) {
         this.tgGUI = tgGUI;
         this.tgLOGIC = tgLOGIC;
         this.noteDB = noteDB;
@@ -44,7 +44,7 @@ public class DeleteFile extends javax.swing.JFrame {
      */
     public void remove() {
         if(!file.exists()) {
-            new NotifyFrame("Fehler", "Die angegebene Datei wurde nicht gefunden. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            new NotifyFrameGUI("Fehler", "Die angegebene Datei wurde nicht gefunden. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             return;
         }
 
@@ -53,16 +53,16 @@ public class DeleteFile extends javax.swing.JFrame {
         if(this.noteDB.deleteNote(path)){
             if(this.reminderDB.deleteFileReminders(path)) {
                 if(!tgLOGIC.deleteFile(path)) {
-                    new NotifyFrame("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+                    new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
                 } else {
-                    tgGUI.ansichtAktualisieren();
+                    tgGUI.refreshView();
                     this.dispose();
                 }
             } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
             }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
         }
 
     }

@@ -6,37 +6,58 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.TopicGroupLOGIC;
-import static dokuverwproject.commons.Common.initExternalFrame;
 import java.io.File;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
  * @author Giuseppe
  */
-public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
+public class CreateDirGUI extends javax.swing.JFrame {
     private String cuttentNavPath = "";
-    private TopicGroupGUI tgf = null;
-    private TopicGroupLOGIC tg = null;
-    private File f = null;
+    private TopicGroupGUI tgGUI = null;
+    private TopicGroupLOGIC tgLOGIC = null;
+    private File file =  null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public VerzeichnisErstellenFrame(String cuttentNavPath, TopicGroupGUI tgf, TopicGroupLOGIC tg) {
+    public CreateDirGUI(String cuttentNavPath, TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC) {
         this.cuttentNavPath = cuttentNavPath;
-        this.tgf = tgf;
-        this.tg = tg;
+        this.tgGUI = tgGUI;
+        this.tgLOGIC = tgLOGIC;
         
-        this.f = new File(this.cuttentNavPath);
-        if(!f.exists()) return;
+        this.file = new File(this.cuttentNavPath);
+        if(!file.exists()) return;
         
         initComponents();
         initExternalFrame(this, "add.png");
         
-        jLabel2.setText(f.getPath());
+        jLabel2.setText(file.getPath());
         this.setVisible(true);
     }
-
+    
+    /**
+     * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
+     * der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
+     * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
+     * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
+     */
+    public void save() {
+        String name = jTextField1.getText();
+        
+        if(!name.equals("") && !name.equals(null)) {
+            if(!tgLOGIC.createDir(name, cuttentNavPath)) {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            } else {
+                tgGUI.refreshView();
+            }
+            this.dispose();
+        } else {
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -131,33 +152,10 @@ public class VerzeichnisErstellenFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        speichern();
+        save();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
- der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
-     * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
-     * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
-     */
-    public void speichern() {
-        String name = jTextField1.getText();
-        
-        if(!name.equals("") && !name.equals(null)) {
-            if(!tg.createDir(name, cuttentNavPath)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
-            } else {
-                tgf.ansichtAktualisieren();
-            }
-            this.dispose();
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
-        }
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

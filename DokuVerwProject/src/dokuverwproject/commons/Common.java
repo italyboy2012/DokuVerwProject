@@ -5,7 +5,7 @@
  */
 package dokuverwproject.commons;
 
-import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.NotifyFrameGUI;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.net.InetAddress;
@@ -133,7 +133,7 @@ public class Common {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim schließen der internen Fenster. Bitte manuell schließen.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim schließen der internen Fenster. Bitte manuell schließen.");
         }
     }
     

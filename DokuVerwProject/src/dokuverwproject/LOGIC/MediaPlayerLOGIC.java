@@ -17,7 +17,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 @source: https://github.com/dberm22/DBoard/blob/master/src/com/dberm22/utils/MediaPlayer.java
  */
 
-public class MediaPlayer implements Runnable{
+public class MediaPlayerLOGIC implements Runnable{
 
     private String filename;
 
@@ -30,11 +30,11 @@ public class MediaPlayer implements Runnable{
     private volatile boolean isPlayingFlag = false;
     private volatile float volume_dB = 0.0f;
 
-    public MediaPlayer()
+    public MediaPlayerLOGIC()
     {
     }
 
-    public MediaPlayer(String filename)
+    public MediaPlayerLOGIC(String filename)
     {
         this.filename = filename;
     }

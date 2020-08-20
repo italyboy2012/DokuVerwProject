@@ -6,142 +6,133 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.ReminderDB;
-import dokuverwproject.DB.NoteDB;
-import dokuverwproject.DB.TopicGroupDB;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import javax.swing.ImageIcon;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Giuseppe & Falk
- *
- * Changelog: Falk @ 04.08.2020
- * anpassen der Methode deleteSelectedRow, damit ich Erinnerungen und Notizen der Themengruppe gelöscht werden
+ * @author Giuseppe &  Falk
  */
-public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
-    private HauptFrame hf = null; //Referenz zum hf, damit beim Schließen dieses Frames (tgüf) die Referenz des hf zu tgüf gelöscht wird
-    private TopicGroupDB tgl = null; // Logik dieser Klasse
-    private NoteDB no = null;
-    private ReminderDB el = null;
-
-    /**
-     * Konstruktor übergibt der Logikklasse das TableModel,
-     * damit diese die Daten in die Tabelle laden und anzeigen kann.
-     * 
-     * Außerdem wird eine Methode aufgerufen, welche die Logikklasse zum
-     * Laden der Themengruppen aufruft.
-     */
-    public ThemengruppenübersichtFrame(HauptFrame hf) {
+public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
+    private MainFrameGUI mfGUI = null; //Referenz zum hf, damit beim Schließen dieses Frames (eüf) die Referenz des hf zu eüf gelöscht wird
+    private ReminderDB reminderDB = null; // MySQL-Logik der Erinnerungen
+    
+    public ReminderOverviewGUI(MainFrameGUI mfGUI) {
         initComponents();
         
-        this.hf = hf;
-        this.tgl = new TopicGroupDB((DefaultTableModel)jTable1.getModel());
-        this.el = new ReminderDB();
-        this.no = new NoteDB();
+        this.mfGUI = mfGUI;
+        reminderDB = new ReminderDB((DefaultTableModel) jTable1.getModel());
         
-        themengruppenAusDBLaden();
+        loadRemindersFromDB();
         
         addInternalFrameListener(new InternalFrameAdapter(){
             public void internalFrameClosing(InternalFrameEvent e) {
-                hf.resetReferenceToThemengruppenFrame();
+                mfGUI.resetReferenceToReminderOverviewGUI();
             }
         });
         
     }
-    
+
     /**
-     * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
-     * @param status 
+     * gibt den Befehl zum Laden aller Erinnerungen an die Klasse ReminderDB weiter
      */
-    public void setStaturs(String status) {
-        textField1.setText(status);
-    }
-    
-    /**
-     * Methode ruft eine Methode der Logikklasse auf,
-     * welche die Themengruppen aus der DB lädt und anzeigt.
-     */
-    public void themengruppenAusDBLaden() {
-        setStaturs("Laden...");
-        if(tgl.loadFromDB()) {
-            setStaturs(tgl.getSize() + " Themengruppen geladen");
+    public void loadRemindersFromDB(){
+        setStatus("Laden...");
+        int height = jTable1.getRowHeight() - jTable1.getRowHeight()/10;
+        if(reminderDB.loadReminders(-1, height, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
+            setStatus(reminderDB.getSize() + " Erinnerungen geladen");
         } else {
-            setStaturs("Fehler");
+            setStatus("Fehler");
+        }
+        return;
+    }
+
+    /**
+     * gibt den Befehl zum löschen der Erinnerung hinter der markierten Zeile an die Klasse ReminderDB weiter
+     */
+    public void deleteReminder(){
+        if(jTable1.getSelectedRow() != -1) {
+            if(!reminderDB.deleteReminder(getIDOfSelectedRow())) {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
+            }
+            loadRemindersFromDB();
+            return;
+        } else {
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+        return;
+    }
+
+    /**
+     * öffnet einen CreadeAndEditReminderGUI für die markierte Erinnerung
+     */
+    public void editReminder() {
+        if(jTable1.getSelectedRow() != -1) {
+            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
+        } else {
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+    }
+
+    /**
+     * gibt den Befehl zum Ändern des Erledigt-Status der markierten Erinnerung an die Klasse ReminderDB weiter
+     */
+    public void toggleDoneState(){
+        if(jTable1.getSelectedRow() != -1) {
+            if(reminderDB.changeDoneState(getIDOfSelectedRow())) {
+                loadRemindersFromDB();
+                this.setStatus("Erinnerung bearbeitet.");
+                return;
+            } else {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+                return;
+            }
+        } else {
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
     /**
-     * Methode öffnet den ausgewählten Datensatz aus der Tabelle.
-     * Für den Datensatz wird eine neue Instanz der Klasse TopicGroupGUI erstellt.
- Ihr wird die ID der Themengruppe übergeben. Die restlichen Daten
- der Themengruppe werden in Echtzeit aus der Datenbank gezogen.
+     * Läd die ID und ThemengruppenID der Erinnerung der markierten Zeile und öffnet einen ThemengruppenFrame mit den geladenen Informationen
      */
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
-            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            TopicGroupGUI tgf = new TopicGroupGUI(selectedRowId,"",-1);
+            long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
+            long themengruppenID = reminderDB.getTGID(erinnerungsID);
+            String pfad = reminderDB.loadText(getIDOfSelectedRow(), "pfad");
+            long erID = getIDOfSelectedRow();
+            TopicGroupGUI tgf = new TopicGroupGUI(themengruppenID, pfad,erID);
+            //---------------- Änderung: Datei und Erinnerung im Frame highlighten
+            //ThemengruppeFrame tgf = new TopicGroupGUI(themengruppenID, erinnerungsID);
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
-    }
-    
-    /**
-     * Methode löscht den ausgewählten Datensatz aus der Tabelle.
-     * Die ID der ausgewählten Themengruppe wird der Logikklasse übergeben,
-     * welche den Datensatz dann löscht.
-     */
-    public void deleteSelectedRow() {
-        if(jTable1.getSelectedRow() != -1) {
-            setStaturs("Löschen...");
-            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            if(!el.deleteTGReminders(selectedRowId)){
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
-                return;
-            }
-            if(!no.deleteTGNotes(selectedRowId)){
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
-                return;
-            }
-            if(!tgl.deleteTG(selectedRowId)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
-                return;
-            }
-            themengruppenAusDBLaden();
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
-        }
-    }
-    
-    /**
-     * Methode bearbeitet den ausgewählten Datensatz aus der Tabelle.
-     * Es wird ein neues Fenster geöffnet und diesem wird die Logikklasse und diese Klasse übergeben.
-     * Über die Referenz zur Logikklasse kann dieser Datensatz gelöscht werden.
-     * Über die Referenz zu dieser Klasse kann die tabellarische Ansicht gelöscht werden.
-     */
-    public void editSelectedRow() {
-        if(jTable1.getSelectedRow() != -1) {
-            setStaturs("Warten auf Eingabe...");
-            long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            String titel = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
-            String pfad = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
-            ThemengruppeBearbeitenFrame tgb = new ThemengruppeBearbeitenFrame(selectedRowId, titel, pfad, tgl, this);
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
-        }
-    }
-    
-    public void themengruppeErstellen() {
-        setStaturs("Warten auf Eingabe...");
-        ThemengruppeErstellenFrame tgef = new ThemengruppeErstellenFrame(tgl, this);
+        return;
     }
 
+    // Getter und Setter
+    
+     /**
+     * gibt ID der aktuell markierten Zeile zurück
+     * 
+     * @return gibt ID der aktuell markierten Zeile zurück
+     */
+    public long getIDOfSelectedRow(){
+        long id = (long) jTable1.getValueAt(jTable1.getSelectedRow(),0);
+        return id;
+    }
+    
+    /**
+     * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
+     * 
+     * @param status 
+     */
+    public void setStatus(String status) {
+        textField1.setText(status);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,9 +159,10 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Themengruppen");
+        setTitle("Erinnerungen");
         setMaximumSize(null);
-        setMinimumSize(new java.awt.Dimension(600, 350));
+        setMinimumSize(new java.awt.Dimension(495, 350));
+        setPreferredSize(new java.awt.Dimension(495, 576));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -199,10 +191,10 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel7.setText("Themengruppen");
+        jLabel7.setText("Erinnerungen");
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/add.png"))); // NOI18N
-        jButton2.setToolTipText("neu");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/to-do-list.png"))); // NOI18N
+        jButton2.setToolTipText("erledigt/offen setzen");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -226,23 +218,27 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Nr.", "Titel", "Pfad", "Anlagedatum"
+                "Nr.", "Status", "Titel", "Fällig"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0: return Long.class;
+                    case 1: return ImageIcon.class;
+                    default: return String.class;
+                }
+            }
+
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
+
         });
         jTable1.setRowHeight(27);
         jTable1.setRowMargin(0);
@@ -253,20 +249,6 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
-            jTable1.getColumnModel().getColumn(1).setMinWidth(250);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(200);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(200);
-        }
-
-        textField1.setEditable(false);
-        textField1.setText("textField1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -291,9 +273,8 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,62 +291,55 @@ public class ThemengruppenübersichtFrame extends javax.swing.JInternalFrame {
                         .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        textField1.setEditable(false);
+        textField1.setText("textField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addGap(0, 0, 0)
+                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        editSelectedRow();
+        // Erinnerung bearbeiten
+        editReminder();
     }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-        themengruppenAusDBLaden();
+        loadRemindersFromDB();
+        // ansicht Aktualisieren.
     }//GEN-LAST:event_jButton9ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        deleteSelectedRow();
+        deleteReminder();
+        // Erinnerung Löschen
     }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        themengruppeErstellen();
+        // Erinnerung auf erledigt
+        toggleDoneState();
     }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
         openSelectedRow();
+        // Datei öffnen
     }//GEN-LAST:event_jButton5ActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
         if (evt.getClickCount() == 2) {
             openSelectedRow();
         }
     }//GEN-LAST:event_jTable1MouseClicked
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

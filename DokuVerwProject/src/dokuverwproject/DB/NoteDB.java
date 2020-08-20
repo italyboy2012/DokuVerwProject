@@ -5,7 +5,7 @@
  */
 package dokuverwproject.DB;
 
-import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.NotifyFrameGUI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,7 +63,7 @@ public class NoteDB {
                 return returnValue;
             } catch(Exception e){
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim lesen der Notizen.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim lesen der Notizen.");
             }
         }
         return returnValue;
@@ -92,7 +92,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -116,7 +116,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -140,7 +140,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -167,7 +167,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }

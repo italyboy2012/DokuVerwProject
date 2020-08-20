@@ -6,10 +6,10 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.TopicGroupLOGIC;
-import static dokuverwproject.commons.Common.initExternalFrame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
@@ -52,7 +52,7 @@ public class SearchFileGUI extends javax.swing.JFrame {
      */
     public void closewindow() {
         tgGUI.resetDateiSuchenFrame();
-        tgGUI.ansichtAktualisieren();
+        tgGUI.refreshView();
         this.dispose();
     }
 
@@ -154,7 +154,6 @@ public class SearchFileGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         // TODO add your handling code here:
         search();

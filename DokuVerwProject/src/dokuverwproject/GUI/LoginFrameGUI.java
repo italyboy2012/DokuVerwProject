@@ -5,49 +5,42 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.LOGIC.Login;
-
+import dokuverwproject.LOGIC.LoginLOGIC;
 import static dokuverwproject.commons.Common.*;
 
 /**
  *
  * @author Giuseppe & Falk
- * 23.07. : Auslagerung der Loginroutine in Methode login();
- *          Actionlistener für login mit EnterTaste aus Passwortfeld
  */
-public class LoginFrame extends javax.swing.JFrame {
+public class LoginFrameGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form LoginFrame
      */
-    public LoginFrame() {
+    public LoginFrameGUI() {
         initComponents();
         initExternalFrame(this, "edit-folder.png");
         this.setVisible(true);
     }
 
     /**
-     * ließt das Textfeld für Benutzernamen und Passwort aus und meldet den Nutzer an
+     * ließt das Textfeld für Benutzernamen und Passwort aus und leitet den Login-Auftrag an
+     * LoginLogic weiter.
      */
-
     private void login() {
         String username = jTextField1.getText();
         String password = jPasswordField1.getText();
 
         jPasswordField1.setText("");
 
-        Login l = new Login (username, password);
+        LoginLOGIC l = new LoginLOGIC (username, password);
 
         if(l.login()) {
             this.dispose();
             return;
         }
     }
-
-
-
-
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,7 +208,7 @@ public class LoginFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -229,27 +222,17 @@ public class LoginFrame extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         login();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jPasswordField1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jPasswordField1AncestorAdded
-        // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1AncestorAdded
-
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode()==evt.VK_ENTER) login();
     }//GEN-LAST:event_jPasswordField1KeyPressed
-
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode()==evt.VK_ENTER) login();
     }//GEN-LAST:event_jTextField1KeyPressed
-
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

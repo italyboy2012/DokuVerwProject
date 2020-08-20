@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package dokuverwproject.DB;
-import dokuverwproject.GUI.NotifyFrame;
+import dokuverwproject.GUI.NotifyFrameGUI;
 import java.awt.Image;
 
 import java.sql.Connection;
@@ -98,12 +98,12 @@ public class ReminderDB {
                 
                 return true;
             } catch (Exception e) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Erinnerung in der DB.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Erinnerung in der DB.");
                 System.out.println(e.toString());
                 e.printStackTrace();
             }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return false;
     }
@@ -187,12 +187,12 @@ public class ReminderDB {
                 stmt.close();
                 return returnValue;
             } catch (Exception e) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Laden der Erinnerungenliste.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Laden der Erinnerungenliste.");
                 System.out.println(e.toString());
                 e.printStackTrace();
             }
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Zugriff auf die Datenbank");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank");
         }
         return -2;
     }
@@ -228,7 +228,7 @@ public class ReminderDB {
                 }
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return returnValue;
@@ -264,7 +264,7 @@ public class ReminderDB {
                 return returnValue;
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank Datum.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank Datum.");
             }
         }
         return returnValue;
@@ -291,7 +291,7 @@ public class ReminderDB {
                 return true;
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return false;
@@ -317,7 +317,7 @@ public class ReminderDB {
                 return true;
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return false;
@@ -343,7 +343,7 @@ public class ReminderDB {
                 return true;
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return false;
@@ -371,7 +371,7 @@ public class ReminderDB {
                 }
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return ausgabe;
@@ -403,7 +403,7 @@ public class ReminderDB {
                 return true;
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return false;
@@ -432,7 +432,7 @@ public class ReminderDB {
                 ps.close();
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
             }
         }
         return false;
@@ -460,11 +460,13 @@ public class ReminderDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
 
+    // Getter und Setter
+    
     public long getSize() {
         return this.size;
     }

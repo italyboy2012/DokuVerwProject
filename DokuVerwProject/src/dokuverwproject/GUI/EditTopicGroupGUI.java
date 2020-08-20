@@ -6,30 +6,82 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DB.TopicGroupDB;
-import static dokuverwproject.commons.Common.initExternalFrame;
 import javax.swing.JFileChooser;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
  * @author Giuseppe
  */
-public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
-    private TopicGroupDB tgl = null;
-    private ThemengruppenübersichtFrame tgüf = null;
+public class EditTopicGroupGUI extends javax.swing.JFrame {
+    private long selectedRowId = 0;
+    private String title = "";
+    private String path = "";
+    private TopicGroupDB tgDB = null;
+    private TopicGroupOverviewGUI tgoGUI = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public ThemengruppeErstellenFrame(TopicGroupDB tgl, ThemengruppenübersichtFrame tguf) {
-        this.tgl = tgl;
-        this.tgüf = tguf;
+    public EditTopicGroupGUI(long selectedRowId, String title, String path, TopicGroupDB tgDB, TopicGroupOverviewGUI tgoGUI) {
+        this.selectedRowId = selectedRowId;
+        this.title = title;
+        this.path = path;
+        this.tgDB = tgDB;
+        this.tgoGUI = tgoGUI;
         
         initComponents();
         initExternalFrame(this, "get-ready.png");
         
+        jLabel2.setText(selectedRowId + " - " + this.title);
+        jTextField1.setText(this.title);
+        jTextField2.setText(this.path);
         this.setVisible(true);
     }
 
+    /**
+     * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
+     * der Logikklasse TopicGroupDB, welche die Themengruppe bearbeitet.
+     * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
+     * Ansicht der Klasse TopicGroupOverviewGUI aktualisiert.
+     */
+    public void save() {
+        title = jTextField1.getText();
+        path = jTextField2.getText();
+        
+        if(!title.equals("") && !title.equals(null) && !path.equals("") && !path.equals(null)) {
+            tgoGUI.setStaturs("Bearbeite Datensatz der Themengruppe...");
+            if(!tgDB.editTG(selectedRowId, title, path)) {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Bearbeiten des Datensatzes in der Datenbank.");
+                tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
+            }
+            tgoGUI.setStaturs("Datensatz bearbeitet.");
+            tgoGUI.loadTopicGroupsFromDB();
+            this.dispose();
+        } else {
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+            tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
+        }
+    }
+    
+    /**
+     * Methode öffnen einen FileChooser und erlaubt das auswählen eines Verzeichnisses auf dem OS
+     */
+    public void openPathChooser() {
+        JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new java.io.File(System.getProperty("user.home")));
+        fc.setDialogTitle("Pfad auswählen");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fc.setAcceptAllFileFilterUsed(false);
+        int response = fc.showOpenDialog(this);
+        if(response == JFileChooser.APPROVE_OPTION) {
+            jTextField2.setText(fc.getSelectedFile().toString());
+            // fc.getSelectedFile().toString();
+        } else {
+            System.out.println("Die operation wurde abgebrochen.");
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,6 +93,7 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -49,20 +102,24 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Themengruppe erstellen");
+        setTitle("Themengruppe bearbeiten");
         setAlwaysOnTop(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/get-ready.png"))); // NOI18N
-        jLabel1.setText("Themengruppe erstellen");
+        jLabel1.setText("Themengruppe bearbeiten");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("0000 - Themengruppe");
+        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel3.setText("Titel:");
 
         jLabel4.setText("Pfad:");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dokuverwproject/IMG/save.png"))); // NOI18N
-        jButton1.setText("erstellen");
+        jButton1.setText("speichern");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -91,18 +148,19 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField1))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(jLabel4)
-                            .addGap(560, 560, 560))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jTextField2)
-                            .addGap(0, 0, 0)
-                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap()))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addGap(560, 560, 560))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jTextField2)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
@@ -113,15 +171,17 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
-                .addGap(14, 14, 14)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -146,52 +206,17 @@ public class ThemengruppeErstellenFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        erstellen();
+        save();
     }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         openPathChooser();
     }//GEN-LAST:event_jButton7ActionPerformed
-
-    public void erstellen() {
-        String titel = jTextField1.getText();
-        String pfad = jTextField2.getText();
-        
-        if(!titel.equals("") && !titel.equals(null) && !pfad.equals("") && !pfad.equals(null)) {
-            tgüf.setStaturs("Erstelle Datensatz der Themengruppe...");
-            if(!tgl.createTG(titel, pfad)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
-                tgüf.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
-            }
-            tgüf.setStaturs("Datensatz erstellt.");
-            tgüf.themengruppenAusDBLaden();
-            this.dispose();
-        } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
-            tgüf.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
-        }
-    }
-    
-    public void openPathChooser() {
-        JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new java.io.File(System.getProperty("user.home")));
-        fc.setDialogTitle("Pfad auswählen");
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fc.setAcceptAllFileFilterUsed(false);
-        int response = fc.showOpenDialog(this);
-        if(response == JFileChooser.APPROVE_OPTION) {
-            jTextField2.setText(fc.getSelectedFile().toString());
-            // fc.getSelectedFile().toString();
-        } else {
-            System.out.println("Die Operation wurde abgebrochen.");
-        }
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;

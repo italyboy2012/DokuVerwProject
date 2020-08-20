@@ -7,17 +7,17 @@ package dokuverwproject.LOGIC;
 
 import dokuverwproject.DTO.UserDTO;
 import dokuverwproject.DB.LoginDB;
-import dokuverwproject.GUI.HauptFrame;
+import dokuverwproject.GUI.MainFrameGUI;
 
 /**
  *
  * @author Giuseppe
  */
-public class Login {
+public class LoginLOGIC {
     private String username = "";
     private String password = "";
 
-    public Login(String un, String pw) {
+    public LoginLOGIC(String un, String pw) {
         this.username = un;
         this.password = pw;
     }
@@ -32,7 +32,7 @@ public class Login {
             UserDTO b = new LoginDB().login(username, password);
             
             if(b != null) {
-                HauptFrame mm = new HauptFrame(b);
+                MainFrameGUI mm = new MainFrameGUI(b);
                 return true;
             }
         }

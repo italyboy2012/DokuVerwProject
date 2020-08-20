@@ -6,8 +6,8 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.LOGIC.TopicGroupLOGIC;
-import static dokuverwproject.commons.Common.initExternalFrame;
 import java.io.File;
+import static dokuverwproject.commons.Common.initExternalFrame;
 
 /**
  *
@@ -15,31 +15,31 @@ import java.io.File;
  */
 public class CreateFileGUI extends javax.swing.JFrame {
     private String currentNavPath = "";
-    private TopicGroupGUI tpf = null;
-    private TopicGroupLOGIC tp = null;
-    private File f = null;
+    private TopicGroupGUI tgGUI = null;
+    private TopicGroupLOGIC tgLOGIC = null;
+    private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public CreateFileGUI(String cuttentNavPath, TopicGroupGUI tgf, TopicGroupLOGIC tp) {
+    public CreateFileGUI(String cuttentNavPath, TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC) {
         this.currentNavPath = cuttentNavPath;
-        this.tpf = tgf;
-        this.tp = tp;
+        this.tgGUI = tgGUI;
+        this.tgLOGIC = tgLOGIC;
         
-        this.f = new File(this.currentNavPath);
-        if(!f.exists()) return;
+        this.file = new File(this.currentNavPath);
+        if(!file.exists()) return;
         
         initComponents();
         initExternalFrame(this, "root-directory.png");
         
-        jLabel2.setText(f.getPath());
+        jLabel2.setText(file.getPath());
         this.setVisible(true);
     }
 
     /**
      * Methode liest die eingegeben Werte aus den Textfeldern aus und übergibt diese
- der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
+     * der Logikklasse ThemengruppenListe, welche die TopicGroupLOGIC bearbeitet.
      * Wurde der Datensatz erfolgreich bearbeitet, dann wird die tabellarische
      * Ansicht der Klasse ThemengruppenübersichtFrame aktualisiert.
      */
@@ -47,14 +47,14 @@ public class CreateFileGUI extends javax.swing.JFrame {
         String name = jTextField1.getText();
 
         if(!name.equals("") && !name.equals(null)) {
-            if(!tp.createFile(name, currentNavPath)) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+            if(!tgLOGIC.createFile(name, currentNavPath)) {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Erstellen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
-                tpf.ansichtAktualisieren();
+                tgGUI.refreshView();
             }
             this.dispose();
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
         }
     }
 
@@ -152,7 +152,6 @@ public class CreateFileGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         save();

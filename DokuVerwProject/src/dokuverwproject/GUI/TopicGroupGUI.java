@@ -8,139 +8,113 @@ package dokuverwproject.GUI;
 import dokuverwproject.DB.ReminderDB;
 import dokuverwproject.DB.NoteDB;
 import dokuverwproject.LOGIC.TopicGroupLOGIC;
-import static dokuverwproject.commons.Common.*;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
+import static dokuverwproject.commons.Common.*;
 
 /**
  *
- * @author Giuseppe &     Falk
- ChangeLog:
- Falk @ 04.08.2020
- Hinzufügen einer Notizinstanz no
- Anpassung des jTable1.addMouseListener, dass dieser beim Klick auf eine Zeile
-      versucht die entsprechende NoteDB über loadNote zu laden
- Anpassung der jButton11.addActionListener, dass dieser den Text aus jTextArea1 und den Pfad
-      der markierten Datei an die Methode saveNote übergibt
- Notizfeld ist beim Laden des Fensters gesperrt und wird erst beim markieren einer Zeile freigegeben.
-
- Falk @ 05.08.2020
- Methode DateiLoeschen verschiebt markierte Datei in den Papierkorb und löscht dazugehörige Erinnerungen und Notizen.
- Außerdem löscht Sie den Text aus dem Notizfeld
- Einführung der Methode leereSperreTextfeld1. Diese leert und sperrt jTextArea1
- Der Löschenbutton löscht jetzt auch markierte Erinnerungen
- Außerdem wird beim klicken eine Tabelle die Markierung der jeweils anderen aufgehoben.
+ * @author Giuseppe & Falk
  */
 public class TopicGroupGUI extends javax.swing.JFrame {
-    private ReminderDB el = null; // MySQL-Logik der Erinnerungen
+    private ReminderDB rDB = null; // MySQL-Logik der Erinnerungen
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
-    private TopicGroupLOGIC tg = null; //Logik von TopicGroupGUI
-    private NoteDB no = null; //Logik von NoteDB
+    private TopicGroupLOGIC tgLOGIC = null; //Logik von TopicGroupGUI
+    private NoteDB nDB = null; //Logik von NoteDB
     
     private final int NOTE_MAX_LENGTH = 60000;
     
-    private SearchFileGUI dsf = null; //Fenster zum Suchen; damit max. 1 Fenster pro TopicGroupLOGIC genutzt werden kann,
+    private SearchFileGUI sfGUI = null; //Fenster zum Suchen; damit max. 1 Fenster pro TopicGroupLOGIC genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
-
 
     /**
      * Der Konstruktor bekommt die ID der ausgewählten TopicGroupLOGIC und eine Referenz zur
- Tabelle des Frames übergeben.
-     * Die ID wird der Logikklasse TopicGroupLOGIC übergeben.
- Diese lädt alle Daten der TopicGroupLOGIC aus der DB und zeigt alle indexierten Dateien an.
+     * Tabelle des Frames übergeben. Die ID wird der Logikklasse TopicGroupLOGIC übergeben.
+     * Diese lädt alle Daten der TopicGroupLOGIC aus der DB und zeigt alle indexierten Dateien an.
      *
      * @param selectedRowId
      */
-    public TopicGroupGUI(long selectedRowId,String pfad, long erID) {
+    public TopicGroupGUI(long selectedRowId, String path, long rID) {
         this.selectedRowId = selectedRowId;
         
         initComponents();
         initExternalFrame(this, "open.png");
         
-        tg = new TopicGroupLOGIC(this.selectedRowId, jTable1, this.jTextField2, this);
-        el = new ReminderDB((DefaultTableModel) jTable2.getModel());
-        no = new NoteDB();
+        tgLOGIC = new TopicGroupLOGIC(this.selectedRowId, jTable1, this.jTextField2, this);
+        rDB = new ReminderDB((DefaultTableModel) jTable2.getModel());
+        nDB = new NoteDB();
         
         this.addWindowListener(new WindowAdapter() { // Schließt beim Schließen des Frames das SuchenFrame mit
             public void windowClosing(WindowEvent event) {
-                if(dsf != null) dsf.dispose();
+                if(sfGUI != null) sfGUI.dispose();
             }
         });
         
         this.setVisible(true);
-        ansichtAktualisieren(pfad, erID);
-       // leereSperreTextfeld1();
+        reloadAndRerenderContent(path, rID);
+    }
+    
+    /**
+     * Methode Veranlasst das Neuladen des Inhalts mittels der Methode reloadAndRerenderContent().
+     * Sie ist eine Hilfsmethode, damit beim Aktualisieren keine unnötigen Parameter übergeben werden müssen.
+     */
+    public void refreshView(){
+        reloadAndRerenderContent("", -1);
     }
 
-
-//    public TopicGroupGUI(long selectedRowId, String path, long id) {  // ---------------- Änderung: geöffnet durch Erinnerung; Erinnerung und Datei highlighten
-//        this.selectedRowId = selectedRowId;
-//
-//        initComponents();
-//        initExternalFrame(this, "open.png");
-//
-//        tg = new TopicGroupLOGIC(this.selectedRowId, jTable1, this.jTextField2, this);
-//        el = new ReminderDB((DefaultTableModel) jTable2.getModel());
-//        no = new NoteDB();
-//        this.setVisible(true);
-//        ansichtAktualisieren();
-//    }
-    
     /**
      * Methode lädt Details der TopicGroupLOGIC und indexiert anschließend alle Dateien des OS innerhalb dieser TopicGroupLOGIC.
      * Dafür werden MEthoden der Logikklasse TopicGroupLOGIC verwendet.
      */
-    public void ansichtAktualisieren(String pfad, long erID) {
+    public void reloadAndRerenderContent(String path, long rID) {
         jTable1.clearSelection();
-        ladeThemengruppe(pfad);
+        loadTopicGroup(path);
         jTable2.clearSelection();
         int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
 
         try {
-            int erinnerungZeile = el.loadReminders(selectedRowId, hoehe, erID);
-            if (erID >= 0) {
-                jTable2.setRowSelectionInterval(erinnerungZeile, erinnerungZeile);
+            int reminderRow = rDB.loadReminders(selectedRowId, hoehe, rID);
+            if (rID >= 0) {
+                jTable2.setRowSelectionInterval(reminderRow, reminderRow);
             } else {
-                leereSperreTextfeld1();
+                emptyAndDisableTextField();
             }
         } catch (Exception e){
             System.out.println("keine Erinnerung ausgewählt");
         }
 
         //leereSperreTextfeld1(); // NoteDB aus TextFeld löschen, da nach aktualisieren keine Zeile mehr ausgewählt
-        if(dsf != null) dsf.setTopicTitle(tg.toString()); // Wenn ein SuchenFrame geöffnet ist,
+        if(sfGUI != null) sfGUI.setTopicTitle(tgLOGIC.toString()); // Wenn ein SuchenFrame geöffnet ist,
                                                                   // dann dort den Titel der TopicGroupLOGIC anzeigen,
                                                                   // damit der user weiß, dass dieses SuchenFrame
                                                                   // in dieser TopicGroupLOGIC sucht.
                                                                   // Beim Aktualisieren wird hier der aktuelle Name
                                                                   // aus der DB geladen und angezeigt.
     }
-    public void ansichtAktualisieren(){
-        ansichtAktualisieren("",-1);
-    }
-
-    public void errorDateiwaehlen(){
-        new NotifyFrame("Fehler", "Bitte wählen Sie eine Datei aus der linken Tabelle aus.");
-    }
-
-    public void ladeThemengruppe(String pfad){
+    
+    /**
+     * Lädt eine Themengruppe und die dazugehörigen Erinnerungen aus der DB
+     * 
+     * @param path 
+     */
+    public void loadTopicGroup(String path){
         textField1.setText("Laden...");
-        if(tg.loadFromDB()) {
-            int markierteZeile = tg.indexFiles(pfad);
+        if(tgLOGIC.loadFromDB()) {
+            int selectedRow = tgLOGIC.indexFiles(path);
             textField1.setText("Daten aus Datenbank geladen. Indexiere Dateien...");
-            jLabel1.setText(tg.toString()); //Titelleiste mit Themengruppenwerten setzen
-            this.setTitle(tg.toString()); //Fenstertitel mit Themengruppenwerten setzen
+            jLabel1.setText(tgLOGIC.toString()); //Titelleiste mit Themengruppenwerten setzen
+            this.setTitle(tgLOGIC.toString()); //Fenstertitel mit Themengruppenwerten setzen
 
-            if(markierteZeile!=-2) {
+            if(selectedRow!=-2) {
 
                 textField1.setText("Dateien indexiert und geladen.");
-                if (markierteZeile >= 0){
-                    jTable1.setRowSelectionInterval(markierteZeile,markierteZeile);
-                    ladeNotiz();
+                if (selectedRow >= 0){
+                    jTable1.setRowSelectionInterval(selectedRow,selectedRow);
+                    loadNote();
                 }
                 return;
             } else {
@@ -150,27 +124,32 @@ public class TopicGroupGUI extends javax.swing.JFrame {
             textField1.setText("Fehler beim Laden aus der Datenbank.");
         }
     }
-
-    public void setCharCountNote(int i) {
-        jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
-    }
     
-    public void erinnerungErstellen() {
+    /**
+     * Methode veranlasst das ERstellen einer Erinnerung zur markierten Datei
+     */
+    public void createReminder() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, selectedRowId, selectedRowPath); //ID der TopicGroupLOGIC und Pfad der Datei
         } else {
-            errorDateiwaehlen();
+            errorChooseFileFirst();
         }
     }
 
-    public void leereSperreTextfeld1(){
+    /**
+     * Methode leert und sperrt das Notiz-Textfeldt
+     */
+    public void emptyAndDisableTextField(){
         jTextArea1.setText("");
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new Color(244,247,252));
         setCharCountNote(0);
     }
     
+    /**
+     * Methode entsperrt das Notiz-Textfeldt
+     */
     public void entsperreTextField1() {
         // Text aus DB laden
         jTextArea1.setEditable(true);
@@ -181,8 +160,8 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         toggleEditableTable(false);
         String notizText = jTextArea1.getText();
         String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        if(!no.saveNote(notizText, this.selectedRowId ,pfad)){
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim Speichern der Notiz.");
+        if(!nDB.saveNote(notizText, this.selectedRowId ,pfad)){
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Notiz.");
         }
         toggleEditableTable(true);
     }
@@ -191,35 +170,35 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         jTable1.setRowSelectionAllowed(b);
     }
 
-    public void ladeNotiz(){
+    public void loadNote(){
         String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        long themengruppenID = tg.getId();
-        String ausgabe = no.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
+        long themengruppenID = tgLOGIC.getId();
+        String ausgabe = nDB.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
         jTextArea1.setText(ausgabe);
         setCharCountNote(jTextArea1.getText().length());
         entsperreTextField1(); //auch wenn keine NoteDB enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
     }
 
     public void dateiLoeschen(String selectedRowPath){
-        new DeleteFile(this, this.tg, this.no, this.el, selectedRowPath);
+        new DeleteFileGUI(this, this.tgLOGIC, this.nDB, this.rDB, selectedRowPath);
     }
     
     public void dateiOderErinnerungLoeschen() {
         if(jTable1.getSelectedRow() != -1) { //Datei löschen
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             dateiLoeschen(selectedRowPath);
-            leereSperreTextfeld1();
-            ansichtAktualisieren();
+            emptyAndDisableTextField();
+            refreshView();
             return;
         } else if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
             int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
-            el.deleteReminder(erinnerungenID);
-            el.loadReminders(selectedRowId, hoehe,-1);
-            ansichtAktualisieren();
+            rDB.deleteReminder(erinnerungenID);
+            rDB.loadReminders(selectedRowId, hoehe,-1);
+            refreshView();
             return;
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "wählen Sie bitte etwas zum Löschen aus.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "wählen Sie bitte etwas zum Löschen aus.");
         }
     }
 
@@ -227,20 +206,20 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         if(jTable2.getSelectedRow() != -1) {
             CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
     public void aendereErledigtStatus(){
         if(jTable2.getSelectedRow() != -1) {
-            if(el.changeDoneState((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
-                ansichtAktualisieren();
+            if(rDB.changeDoneState((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
+                refreshView();
                 return;
             } else {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
             }
         } else {
-            new NotifyFrame("Fehler", "Bitte wählen Sie einen Datensatz aus der rechten Tabelle aus.");
+            new NotifyFrameGUI("Fehler", "Bitte wählen Sie einen Datensatz aus der rechten Tabelle aus.");
         }
     }
     
@@ -253,11 +232,11 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         int response = fc.showOpenDialog(this);
         if(response == JFileChooser.APPROVE_OPTION) {
             // Datei/Verzeichnis verschieben
-            if(!tg.addFile(fc.getSelectedFile())) {
-                NotifyFrame nf = new NotifyFrame("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
+            if(!tgLOGIC.addFile(fc.getSelectedFile())) {
+                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
                 return;
             }
-            ansichtAktualisieren();
+            refreshView();
             return;
         } else {
             System.out.println("The operation was cancelled.");
@@ -265,7 +244,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
     }
 
     public void resetDateiSuchenFrame() {
-        this.dsf = null;
+        this.sfGUI = null;
     }
 
     private int getRowOfPath(String pfad){
@@ -281,6 +260,20 @@ public class TopicGroupGUI extends javax.swing.JFrame {
 
     private void markiereZeileInTabelle1(int row){
         jTable1.setRowSelectionInterval(row,row);
+    }
+    
+    /**
+     * Methode zeigt einen Counter oberhalt des Textfelds der Notizen an,
+     * damit der Nutzer weiß, wieviele Zeichen noch eingegeben werdne dürfen
+     * 
+     * @param i - Anzahl der bereits vorhandenen Zeichen
+     */
+    public void setCharCountNote(int i) {
+        jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
+    }
+    
+    public void errorChooseFileFirst(){
+        new NotifyFrameGUI("Fehler", "Bitte wählen Sie eine Datei aus der linken Tabelle aus.");
     }
     
     @SuppressWarnings("unchecked")
@@ -325,6 +318,8 @@ public class TopicGroupGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Themengruppe");
+        setMinimumSize(new java.awt.Dimension(1000, 600));
+        setPreferredSize(new java.awt.Dimension(1000, 600));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("0000 - Themengruppe");
@@ -638,7 +633,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
                         .addGap(4, 4, 4)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                                 .addGap(15, 15, 15))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -710,7 +705,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
@@ -749,16 +744,16 @@ public class TopicGroupGUI extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
-        tg.goBackNAV();
+        tgLOGIC.goBackNAV();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        leereSperreTextfeld1();
+        emptyAndDisableTextField();
         if (evt.getClickCount() == 2) {
-            tg.openSelectedFile(); // Datei oder Verzeichnis öffnen
+            tgLOGIC.openSelectedFile(); // Datei oder Verzeichnis öffnen
         }
         if (jTable1.getSelectedRow() != -1){
-            ladeNotiz(); // Methode entsperrt nach Laden TextFeld wieder
+            loadNote(); // Methode entsperrt nach Laden TextFeld wieder
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -778,26 +773,26 @@ public class TopicGroupGUI extends javax.swing.JFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
-        ansichtAktualisieren();
+        refreshView();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
-            tg.openSelectedFile();
+            tgLOGIC.openSelectedFile();
         } else {
-            errorDateiwaehlen();
+            errorChooseFileFirst();
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        CreateFileGUI dhf = new CreateFileGUI(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        CreateFileGUI dhf = new CreateFileGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        erinnerungErstellen();
+        createReminder();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
@@ -808,20 +803,20 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            RenameFileGUI duf = new RenameFileGUI(selectedRowPath, this, tg);
+            RenameFileGUI duf = new RenameFileGUI(selectedRowPath, this, tgLOGIC);
         } else {
-            errorDateiwaehlen();
+            errorChooseFileFirst();
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
-        VerzeichnisErstellenFrame dhf = new VerzeichnisErstellenFrame(jTextField2.getText(), this, tg); //TextField2 = aktuelles Verzeichnis
+        CreateDirGUI dhf = new CreateDirGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
-        if(dsf == null) dsf = new SearchFileGUI(this, tg);
+        if(sfGUI == null) sfGUI = new SearchFileGUI(this, tgLOGIC);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
@@ -846,9 +841,9 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         jTable1.clearSelection();
         long erID = 0;
         erID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
-        String pfad = el.loadText(erID,"pfad");
+        String pfad = rDB.loadText(erID,"pfad");
         int markierendeZeile = getRowOfPath(pfad);
-        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);ladeNotiz();}
+        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);loadNote();}
     }//GEN-LAST:event_jTable2MouseReleased
 
     private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
@@ -876,7 +871,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         if(length <= NOTE_MAX_LENGTH) {
             schreibeNotiz();
         } else {
-            NotifyFrame nf = new NotifyFrame("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
                     + "\nIhre Änderungen wurdne nicht gespeichert!");
         }
     }//GEN-LAST:event_jTextArea1KeyReleased

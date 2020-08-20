@@ -6,44 +6,41 @@
 package dokuverwproject.GUI;
 
 import dokuverwproject.DTO.UserDTO;
-import static dokuverwproject.commons.Common.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
+import static dokuverwproject.commons.Common.*;
 
 /**
  *
  * @author Giuseppe
  */
-public class HauptFrame extends javax.swing.JFrame {
-    private UserDTO user;
+public class MainFrameGUI extends javax.swing.JFrame {
+    private UserDTO usrDTO;
     //Referenz zu den internen Frames, damit jeweils nur maximal eins geöffnet werden kann
-    private ThemengruppenübersichtFrame tf = null;
-    private ErinnerungsuebersichtFrame ef = null;
+    private TopicGroupOverviewGUI tgoGUI = null;
+    private ReminderOverviewGUI roGUI = null;
 
     /**
      * Creates new form MainMenu
      */
-    public HauptFrame(UserDTO u) {
-        this.user = u;
+    public MainFrameGUI(UserDTO usrDTO) {
+        this.usrDTO = usrDTO;
         initComponents();
         initExternalFrame(this, "edit-folder.png");
         this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         
-        jLabel5.setText(user.toString());
+        jLabel5.setText(usrDTO.toString());
         jLabel6.setText(getInternalIP());
-        
-        //Make dragging a little faster but perhaps uglier.
-        //jDesktopPane1.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
         
         //resize internal Frames on FrameResize
         this.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
-                if(tf != null) {
-                    resizeAndRepositionInternalFrame(tf, jDesktopPane1, 5, false);
+                if(tgoGUI != null) {
+                    resizeAndRepositionInternalFrame(tgoGUI, jDesktopPane1, 5, false);
                 }
-                if(ef != null) {
-                    resizeAndRepositionInternalFrame(ef, jDesktopPane1, 3, true);
+                if(roGUI != null) {
+                    resizeAndRepositionInternalFrame(roGUI, jDesktopPane1, 3, true);
                 }
             }
         });
@@ -51,52 +48,67 @@ public class HauptFrame extends javax.swing.JFrame {
         setVisible(true);
     }
     
+    /**
+     * Methode schließt alle FRames, loggt den User aus und öffnet ein neues Login Frame
+     */
     private void logout() {
         try {
             closeExternalFrames();
-            this.user = null;
+            this.usrDTO = null;
             this.dispose();
-            LoginFrame lf = new LoginFrame();
+            LoginFrameGUI lf = new LoginFrameGUI();
         } catch (Exception ex) {
             System.out.println(ex.toString());
-            NotifyFrame nf = new NotifyFrame("Fehler", "Fehler beim ausloggen. Programm bitte manuell schließen.");
+            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim ausloggen. Programm bitte manuell schließen.");
         }
     }
     
-    private void themengruppenFrameOeffnen() {
-        if(tf == null) {
-            tf = new ThemengruppenübersichtFrame(this);
-            initInternalFrame(tf, jDesktopPane1, "folder.png");
+    /**
+     * Öffnen ein internes TopicGroupOverviewGUI-Frame
+     */
+    private void openTopicGroupOverviewGUI() {
+        if(tgoGUI == null) {
+            tgoGUI = new TopicGroupOverviewGUI(this);
+            initInternalFrame(tgoGUI, jDesktopPane1, "folder.png");
         } else {
             try {
-                tf.setSelected(true);
+                tgoGUI.setSelected(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        resizeAndRepositionInternalFrame(tf, jDesktopPane1, 5, false);
+        resizeAndRepositionInternalFrame(tgoGUI, jDesktopPane1, 5, false);
     }
     
-    private void erinnerungenFrameOeffnen() {
-        if(ef == null) {
-            ef = new ErinnerungsuebersichtFrame(this);
-            initInternalFrame(ef, jDesktopPane1, "hourglass.png");
+    /**
+     * Öffnen ein internes ReminderOverviewGUI-Frame
+     */
+    private void openReminderOverviewGUI() {
+        if(roGUI == null) {
+            roGUI = new ReminderOverviewGUI(this);
+            initInternalFrame(roGUI, jDesktopPane1, "hourglass.png");
         } else {
             try {
-                ef.setSelected(true);
+                roGUI.setSelected(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        resizeAndRepositionInternalFrame(ef, jDesktopPane1, 3, true);
+        resizeAndRepositionInternalFrame(roGUI, jDesktopPane1, 3, true);
     }
 
-    public void resetReferenceToThemengruppenFrame() {
-        this.tf = null;
+    /**
+     * Resettet die Referenz zum TopicGroupOverviewGUI-Frame
+     */
+    public void resetReferenceToTopicGroupOverviewGUI() {
+        this.tgoGUI = null;
     }
     
-    public void resetReferenceToErinnerungsuebersichtFrame() {
-        this.ef = null;
+    /**
+     * Resettet die Referenz zum ReminderOverviewGUI-Frame
+     */
+    public void resetReferenceToReminderOverviewGUI() {
+        this.roGUI = null;
     }
     
     /**
@@ -129,9 +141,7 @@ public class HauptFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DATEGT - Dokumentenverwaltung");
-        setMaximumSize(null);
         setMinimumSize(new java.awt.Dimension(1300, 700));
-        setPreferredSize(new java.awt.Dimension(1300, 700));
 
         jDesktopPane1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.light"));
         jDesktopPane1.setMaximumSize(null);
@@ -296,30 +306,21 @@ public class HauptFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
         logout();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        themengruppenFrameOeffnen();
+        openTopicGroupOverviewGUI();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         closeInternalFrames(jDesktopPane1);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
-
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-        erinnerungenFrameOeffnen();
+        openReminderOverviewGUI();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;

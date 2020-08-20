@@ -7,7 +7,7 @@ package dokuverwproject;
 
 import dokuverwproject.DB.ReadWriteCredentials;
 import dokuverwproject.GUI.SetupAssistantGUI;
-import dokuverwproject.GUI.LoginFrame;
+import dokuverwproject.GUI.LoginFrameGUI;
 
 /**
  *
@@ -26,13 +26,13 @@ public class Main {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrameGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrameGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrameGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrameGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display LoginForm */
@@ -46,7 +46,7 @@ public class Main {
                     return;
                 }
                     
-                new LoginFrame();
+                new LoginFrameGUI();
                 
             }
         });

@@ -49,13 +49,13 @@ public class RenameFileGUI extends javax.swing.JFrame {
 
         if(!title.equals("") && !title.equals(null)) {
             if(!tgLOGIC.renameFile(title, selectedRowPath)) {
-                new NotifyFrame("Fehler", "Fehler beim Umbennen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Umbennen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
-                tgGUI.ansichtAktualisieren();
+                tgGUI.refreshView();
             }
             this.dispose();
         } else {
-           new NotifyFrame("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+           new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
         }
     }
     
