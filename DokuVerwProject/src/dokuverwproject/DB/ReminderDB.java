@@ -61,7 +61,7 @@ public class ReminderDB {
      * @param range - übergebene Distanz in Tagen
      * @return - boolean: differenz Überfälligkeitsdatum kleiner als übergene Distanz?
      */
-    private boolean inDays(Date current_date, Date faellig,int range){ 
+    private boolean inDays(Date current_date, Date faellig, int range){ 
         long diffInMillies = Math.abs(faellig.getTime() - current_date.getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
@@ -78,7 +78,7 @@ public class ReminderDB {
      * @param filePath
      * @return
      */
-    public Boolean createReminder(String title, String content, String date, long tgID, String filePath) {
+    public boolean createReminder(String title, String content, String date, long tgID, String filePath) {
         ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         if ( con != null){
