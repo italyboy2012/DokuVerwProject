@@ -38,17 +38,17 @@ public class CreateTopicGroupGUI extends javax.swing.JFrame {
         String pfad = jTextField2.getText();
         
         if(!titel.equals("") && !titel.equals(null) && !pfad.equals("") && !pfad.equals(null)) {
-            tgoGUI.setStaturs("Erstelle Datensatz der Themengruppe...");
+            tgoGUI.setState("Erstelle Datensatz der Themengruppe...");
             if(!tgDB.createTG(titel, pfad)) {
                 new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
-                tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
+                tgoGUI.setState("Fehler. Bitte Ansicht aktualisieren.");
             }
-            tgoGUI.setStaturs("Datensatz erstellt.");
+            tgoGUI.setState("Datensatz erstellt.");
             tgoGUI.loadTopicGroupsFromDB();
             this.dispose();
         } else {
             new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
-            tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
+            tgoGUI.setState("Fehler. Bitte Ansicht aktualisieren.");
         }
     }
     

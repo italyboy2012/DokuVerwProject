@@ -17,13 +17,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
     private MainFrameGUI mfGUI = null; //Referenz zum hf, damit beim Schließen dieses Frames (eüf) die Referenz des hf zu eüf gelöscht wird
-    private ReminderDB reminderDB = null; // MySQL-Logik der Erinnerungen
+    private ReminderDB rDB = null; // MySQL-Logik der Erinnerungen
     
     public ReminderOverviewGUI(MainFrameGUI mfGUI) {
         initComponents();
         
         this.mfGUI = mfGUI;
-        reminderDB = new ReminderDB((DefaultTableModel) jTable1.getModel());
+        rDB = new ReminderDB((DefaultTableModel) jTable1.getModel());
         
         loadRemindersFromDB();
         
@@ -41,8 +41,8 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
     public void loadRemindersFromDB(){
         setStatus("Laden...");
         int height = jTable1.getRowHeight() - jTable1.getRowHeight()/10;
-        if(reminderDB.loadReminders(-1, height, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
-            setStatus(reminderDB.getSize() + " Erinnerungen geladen");
+        if(rDB.loadReminders(-1, height, -1) != -2) { //-1, um alle Erinnerungen laden, 2. parameter in diesem Fall egal(dient zur skallierung der Icons in ThemengruppenFrame, 3. Parameter -1, da nach keiner Erinnerung geuscht wird
+            setStatus(rDB.getSize() + " Erinnerungen geladen");
         } else {
             setStatus("Fehler");
         }
@@ -54,7 +54,7 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void deleteReminder(){
         if(jTable1.getSelectedRow() != -1) {
-            if(!reminderDB.deleteReminder(getIDOfSelectedRow())) {
+            if(!rDB.deleteReminder(getIDOfSelectedRow())) {
                 new NotifyFrameGUI("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
             }
             loadRemindersFromDB();
@@ -66,11 +66,11 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
     }
 
     /**
-     * öffnet einen CreadeAndEditReminderGUI für die markierte Erinnerung
+     * öffnet einen CreateAndEditReminderGUI für die markierte Erinnerung
      */
     public void editReminder() {
         if(jTable1.getSelectedRow() != -1) {
-            new CreadeAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
+            new CreateAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
         } else {
             new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
@@ -81,7 +81,7 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void toggleDoneState(){
         if(jTable1.getSelectedRow() != -1) {
-            if(reminderDB.toggleDoneState(getIDOfSelectedRow())) {
+            if(rDB.toggleDoneState(getIDOfSelectedRow())) {
                 loadRemindersFromDB();
                 this.setStatus("Erinnerung bearbeitet.");
                 return;
@@ -100,8 +100,8 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long erinnerungsID = getIDOfSelectedRow(); // eigene Methode, nicht die Standard-Methode der Table
-            long themengruppenID = reminderDB.getTGID(erinnerungsID);
-            String pfad = reminderDB.loadText(getIDOfSelectedRow(), "pfad");
+            long themengruppenID = rDB.getTGID(erinnerungsID);
+            String pfad = rDB.loadText(getIDOfSelectedRow(), "pfad");
             long erID = getIDOfSelectedRow();
             TopicGroupGUI tgf = new TopicGroupGUI(themengruppenID, pfad,erID);
         } else {

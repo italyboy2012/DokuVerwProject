@@ -14,7 +14,7 @@ import static dokuverwproject.commons.Common.*;
  *
  * @author Falk
  */
-public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
+public class CreateAndEditReminderGUI extends javax.swing.JFrame {
     private TopicGroupGUI tgGUI = null; // Referenz, um Tabellenanzeige zu aktualisieren
     private ReminderOverviewGUI roGUI = null; // Gui der Erinnerungsübersicht, um die Anzeige zu aktualisieren
     
@@ -32,7 +32,7 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
      * @param tgID ID der Themengruppe
      * @param filePath Pfad der Datei, für die diese Erinnerung erstellt wird
      */
-    public CreadeAndEditReminderGUI(TopicGroupGUI tgGUI, long tgID, String filePath) {
+    public CreateAndEditReminderGUI(TopicGroupGUI tgGUI, long tgID, String filePath) {
         this.tgGUI = tgGUI;
         this.tgID = tgID;
         this.filePath = filePath;
@@ -49,7 +49,7 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
      * @param roGUI Frame der Erinnerungsübersicht aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public CreadeAndEditReminderGUI(ReminderOverviewGUI roGUI, long id) {
+    public CreateAndEditReminderGUI(ReminderOverviewGUI roGUI, long id) {
         this.id = id;
         rDB = new ReminderDB();
         this.roGUI = roGUI;
@@ -75,7 +75,7 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
      * @param tgGUI Frame der Themengruppe aus dem die Erinnerung erstellt wird.
      * @param id ID der zu ändernder Erinnerung
      */
-    public CreadeAndEditReminderGUI(TopicGroupGUI tgGUI, long id) {
+    public CreateAndEditReminderGUI(TopicGroupGUI tgGUI, long id) {
         this.id = id;
         rDB = new ReminderDB();
         this.tgGUI = tgGUI;

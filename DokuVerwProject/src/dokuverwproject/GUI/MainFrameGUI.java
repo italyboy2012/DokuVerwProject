@@ -16,7 +16,7 @@ import static dokuverwproject.commons.Common.*;
  * @author Giuseppe
  */
 public class MainFrameGUI extends javax.swing.JFrame {
-    private UserDTO usrDTO;
+    private UserDTO usrDTO = null;
     //Referenz zu den internen Frames, damit jeweils nur maximal eins geöffnet werden kann
     private TopicGroupOverviewGUI tgoGUI = null;
     private ReminderOverviewGUI roGUI = null;

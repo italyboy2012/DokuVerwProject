@@ -16,9 +16,6 @@ import java.sql.Statement;
  * @author Falk
  */
 public class NoteDB {
-    
-    public NoteDB() {
-    }
 
     /**
      * Prüft ob eine NoteDB für eine Datei schon existiert und läd diese.

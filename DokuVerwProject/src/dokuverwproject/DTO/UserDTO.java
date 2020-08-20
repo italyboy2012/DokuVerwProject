@@ -12,17 +12,17 @@ package dokuverwproject.DTO;
 public class UserDTO {
     private long id = 0;
     private String name = "";
-    private String vorname = "";
+    private String prename = "";
     
-    public UserDTO (long id, String n, String pn) {
+    public UserDTO (long id, String name, String prename) {
         this.id = id;
-        this.name = n;
-        this.vorname = pn;
+        this.name = name;
+        this.prename = prename;
     }
     
     @Override
     public String toString() {
-        return "[" + id + "] : " + name + ", " + vorname;
+        return "[" + id + "] : " + name + ", " + prename;
     }
 
     // Getter
@@ -35,8 +35,8 @@ public class UserDTO {
         return name;
     }
 
-    public String getVorname() {
-        return vorname;
+    public String getPrename() {
+        return prename;
     }
     
 }

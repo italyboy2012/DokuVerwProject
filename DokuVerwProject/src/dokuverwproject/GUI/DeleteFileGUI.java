@@ -18,18 +18,18 @@ import static dokuverwproject.commons.Common.initExternalFrame;
 public class DeleteFileGUI extends javax.swing.JFrame {
     private TopicGroupGUI tgGUI = null;
     private TopicGroupLOGIC tgLOGIC = null;
-    private NoteDB noteDB = null;
-    private ReminderDB reminderDB = null;
+    private NoteDB nDB = null;
+    private ReminderDB rDB = null;
     private File file = null;
     
     /**
      * Creates new form ThemengruppeBearbeitenFrame
      */
-    public DeleteFileGUI(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC, NoteDB noteDB, ReminderDB reminderDB, String selectedRowPath) {
+    public DeleteFileGUI(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC, NoteDB nDB, ReminderDB rDB, String selectedRowPath) {
         this.tgGUI = tgGUI;
         this.tgLOGIC = tgLOGIC;
-        this.noteDB = noteDB;
-        this.reminderDB = reminderDB;
+        this.nDB = nDB;
+        this.rDB = rDB;
         this.file = new File(selectedRowPath);
         
         initComponents();
@@ -50,8 +50,8 @@ public class DeleteFileGUI extends javax.swing.JFrame {
 
         String path = this.file.getAbsolutePath();
 
-        if(this.noteDB.deleteNote(path)){
-            if(this.reminderDB.deleteFileReminders(path)) {
+        if(this.nDB.deleteNote(path)){
+            if(this.rDB.deleteFileReminders(path)) {
                 if(!tgLOGIC.deleteFile(path)) {
                     new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Datei. Evtl. kann ein Aktualisieren der Übersicht helfen.");
                 } else {

@@ -13,11 +13,11 @@ import static dokuverwproject.commons.Common.*;
  */
 public class NotifyFrameGUI extends javax.swing.JFrame {
 
-    public NotifyFrameGUI(String titel, String text) {
+    public NotifyFrameGUI(String title, String text) {
         initComponents();
         initExternalFrame(this, "help.png");
         
-        jLabel2.setText(titel);
+        jLabel2.setText(title);
         jTextArea1.setText(text);
         
         this.setVisible(true);

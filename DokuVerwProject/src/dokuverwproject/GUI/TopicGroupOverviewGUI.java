@@ -29,10 +29,10 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      * Außerdem wird eine Methode aufgerufen, welche die Logikklasse zum
      * Laden der Themengruppen aufruft.
      */
-    public TopicGroupOverviewGUI(MainFrameGUI mf) {
+    public TopicGroupOverviewGUI(MainFrameGUI mfGUI) {
         initComponents();
         
-        this.mfGUI = mf;
+        this.mfGUI = mfGUI;
         this.tgDB = new TopicGroupDB((DefaultTableModel)jTable1.getModel());
         this.rDB = new ReminderDB();
         this.nDB = new NoteDB();
@@ -41,7 +41,7 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
         
         addInternalFrameListener(new InternalFrameAdapter(){
             public void internalFrameClosing(InternalFrameEvent e) {
-                mf.resetReferenceToTopicGroupOverviewGUI();
+                mfGUI.resetReferenceToTopicGroupOverviewGUI();
             }
         });
         
@@ -52,11 +52,11 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      * welche die Themengruppen aus der DB lädt und anzeigt.
      */
     public void loadTopicGroupsFromDB() {
-        setStaturs("Laden...");
+        setState("Laden...");
         if(tgDB.loadFromDB()) {
-            setStaturs(tgDB.getSize() + " Themengruppen geladen");
+            setState(tgDB.getSize() + " Themengruppen geladen");
         } else {
-            setStaturs("Fehler");
+            setState("Fehler");
         }
     }
     
@@ -82,21 +82,21 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void deleteSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
-            setStaturs("Löschen...");
+            setState("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             if(!rDB.deleteTGReminders(selectedRowId)){
                 new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                setState("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!nDB.deleteTGNotes(selectedRowId)){
                 new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                setState("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!tgDB.deleteTG(selectedRowId)) {
                 new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
-                setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
+                setState("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             loadTopicGroupsFromDB();
@@ -113,7 +113,7 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void editSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
-            setStaturs("Warten auf Eingabe...");
+            setState("Warten auf Eingabe...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             String titel = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
             String pfad = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
@@ -127,17 +127,17 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      * MEthode veranlasst das Erstellen einer Themengruppe
      */
     public void createTopicGroup() {
-        setStaturs("Warten auf Eingabe...");
+        setState("Warten auf Eingabe...");
         new CreateTopicGroupGUI(tgDB, this);
     }
     
     /**
      * Setzt den ihr übergebenen Status auf dem Textfeld des Frames.
      * 
-     * @param status 
+     * @param state 
      */
-    public void setStaturs(String status) {
-        textField1.setText(status);
+    public void setState(String state) {
+        textField1.setText(state);
     }
 
     /**

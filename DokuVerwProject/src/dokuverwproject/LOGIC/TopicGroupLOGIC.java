@@ -32,22 +32,22 @@ public class TopicGroupLOGIC {
     private Timestamp creationTimeStamp = null;
     
     private javax.swing.JTable table = null; // Zugriff auf Tabelle in TopicGroupGUI
-    private TopicGroupGUI tgf = null; // Zugriff auf GUI dieser Logik
+    private TopicGroupGUI tgGUI = null; // Zugriff auf GUI dieser Logik
     
-    private NoteDB note = new NoteDB(); //Zugriff auf DB-Schicht der Notizen
-    private ReminderDB reminder = new ReminderDB(); //Zugriff auf DB-Schicht der Erinnerungen
+    private NoteDB nDB = new NoteDB(); //Zugriff auf DB-Schicht der Notizen
+    private ReminderDB rDB = new ReminderDB(); //Zugriff auf DB-Schicht der Erinnerungen
     
     // FÜR DIE NAVIGATION
     private javax.swing.JTextField displayPath = null; //Pfadanzeige auf Frame für TopicGroupLOGIC
-    private String pfadNav = ""; // aktueller Pfad der Navigation
-    private ArrayList<String> pfadsNav = new ArrayList<String>(); // Liste aller aufgerufenen Unterpfade innerhalb einer TopicGroupLOGIC
-    private int pfadsNavIndex = 0; // Speichert die Tiefe, also wie oft ein Unterordner aufgerufen wurde
+    private String pathNav = ""; // aktueller Pfad der Navigation
+    private ArrayList<String> pathsNav = new ArrayList<String>(); // Liste aller aufgerufenen Unterpfade innerhalb einer TopicGroupLOGIC
+    private int pathsNavIndex = 0; // Speichert die Tiefe, also wie oft ein Unterordner aufgerufen wurde
     
-    public TopicGroupLOGIC(long id, javax.swing.JTable table, javax.swing.JTextField displayPath, TopicGroupGUI tgf) {
+    public TopicGroupLOGIC(long id, javax.swing.JTable table, javax.swing.JTextField displayPath, TopicGroupGUI tgGUI) {
         this.id = id;
         this.table = table;
         this.displayPath = displayPath;
-        this.tgf = tgf;
+        this.tgGUI = tgGUI;
     }
 
     /**
@@ -63,8 +63,8 @@ public class TopicGroupLOGIC {
             
             this.title = tgDTO.getTitle();
             this.path = tgDTO.getPath();
-            if(pfadsNavIndex == 0) {
-                this.pfadNav = new String(this.path); // Pfad für Navigation
+            if(pathsNavIndex == 0) {
+                this.pathNav = new String(this.path); // Pfad für Navigation
                 //Der Pfad wird nur dann auf das Hauptverzeichnis der TopicGroupLOGIC gesetzt,
                 //wenn keine Unterordner geöffnet sind.
                 //Sind unterordner geöffnet, wird deren aktueller Pfad
@@ -86,8 +86,8 @@ public class TopicGroupLOGIC {
      * @return - true = erstellt; false = nicht erstellt
      */
     public int indexFiles(String reminderPath) {
-            displayPath.setText(pfadNav);
-            File f = new File(pfadNav);
+            displayPath.setText(pathNav);
+            File f = new File(pathNav);
             if(!f.exists()) return -2;
             return renderFilesOnTable(f.listFiles(), reminderPath);
     }
@@ -101,7 +101,7 @@ public class TopicGroupLOGIC {
      */
     public void indexSearchedFiles(String searchString) {
         //alle dateien des aktuell angezeigten Orts werden nach gesuchten Suchwort durchsucht
-        File[] allFilesInCurrentNavPath = new File(pfadNav).listFiles();
+        File[] allFilesInCurrentNavPath = new File(pathNav).listFiles();
         if(allFilesInCurrentNavPath!=null) {
             ArrayList<File> foundFiles = new ArrayList<>();
             for (File file : allFilesInCurrentNavPath) {
@@ -167,10 +167,10 @@ public class TopicGroupLOGIC {
      * werden indexiert.
      */
     public void goBackNAV() {
-        if(this.pfadsNavIndex >= 1) {
-            this.pfadsNavIndex--;
-            this.pfadNav = pfadsNav.get(this.pfadsNavIndex);
-            pfadsNav.remove(this.pfadsNavIndex);
+        if(this.pathsNavIndex >= 1) {
+            this.pathsNavIndex--;
+            this.pathNav = pathsNav.get(this.pathsNavIndex);
+            pathsNav.remove(this.pathsNavIndex);
             indexFiles("");
         } else {
             try {
@@ -200,10 +200,10 @@ public class TopicGroupLOGIC {
                 }
                 
                 if(file.isDirectory()) {
-                    this.pfadsNav.add(pfadNav);
-                    pfadsNavIndex++;
+                    this.pathsNav.add(pathNav);
+                    pathsNavIndex++;
                     
-                    this.pfadNav = file.getPath();
+                    this.pathNav = file.getPath();
                     this.indexFiles("");
                     return;
                 } else if(file.isFile()) {
@@ -249,7 +249,7 @@ public class TopicGroupLOGIC {
      */
     public boolean addFile(File file) {
         //
-        if(file.renameTo(new File(pfadNav + File.separator + file.getName()))) {
+        if(file.renameTo(new File(pathNav + File.separator + file.getName()))) {
             return true;
         }
         return false;
@@ -319,10 +319,10 @@ public class TopicGroupLOGIC {
         
         if(f.renameTo(f2)) {
             // Referent Notizen und Erinnerungen in DB neu setzen
-            if(!note.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Notizen
+            if(!nDB.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Notizen
                 new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
             }
-            if(!reminder.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Erinnerungen
+            if(!rDB.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Erinnerungen
                 new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
             }
             return true;

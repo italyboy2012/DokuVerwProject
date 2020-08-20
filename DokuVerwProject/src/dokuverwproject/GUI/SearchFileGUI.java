@@ -17,7 +17,7 @@ import static dokuverwproject.commons.Common.initExternalFrame;
  */
 public class SearchFileGUI extends javax.swing.JFrame {
     private TopicGroupGUI tgGUI = null;
-    private TopicGroupLOGIC tpLOGIC = null;
+    private TopicGroupLOGIC tgLOGIC = null;
     private File file = null;
     
     /**
@@ -25,7 +25,7 @@ public class SearchFileGUI extends javax.swing.JFrame {
      */
     public SearchFileGUI(TopicGroupGUI tgGUI, TopicGroupLOGIC tgLOGIC) {
         this.tgGUI = tgGUI;
-        this.tpLOGIC = tgLOGIC;
+        this.tgLOGIC = tgLOGIC;
         
         initComponents();
         initExternalFrame(this, "search.png");
@@ -36,7 +36,7 @@ public class SearchFileGUI extends javax.swing.JFrame {
             }
         });
         
-        this.setTopicTitle(this.tpLOGIC.toString());
+        this.setTopicTitle(this.tgLOGIC.toString());
         this.setVisible(true);
     }
 
@@ -44,7 +44,7 @@ public class SearchFileGUI extends javax.swing.JFrame {
      * Methode liest das Textfeld aus und gibt dies an die Funktion zum erstellen der Ergebnistabelle weiter.
      */
     public void search() {
-        tpLOGIC.indexSearchedFiles(jTextField1.getText());
+        tgLOGIC.indexSearchedFiles(jTextField1.getText());
     }
 
     /**

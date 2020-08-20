@@ -24,7 +24,6 @@ public class TopicGroupDB {
     }
     
     /**
-     * 
      * @param model - Tabellenmodell der Tabelle eines Frames, um die Daten in ihr rendern zu können
      */
     public TopicGroupDB(DefaultTableModel model) {

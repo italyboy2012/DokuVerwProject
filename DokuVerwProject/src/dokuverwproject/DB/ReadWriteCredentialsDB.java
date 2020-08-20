@@ -19,18 +19,18 @@ public class ReadWriteCredentialsDB implements Serializable {
     // Datenverbindung
     private String host = "";
     private String port = "";
-    private String nameDatenbank = "";
-    private String benutzername = "";
-    private String passwort = "";
+    private String nameDB = "";
+    private String username = "";
+    private String password = "";
     
     //Speicherort
-    private String pfadSpeicher = "";
-    String filename = "Dategt_DB_Cred.bin";
+    private String saveLocation = "";
+    private String filename = "Dategt_DB_Cred.bin";
 
     /**
      * Konstruktor, um lokale Daten auszulesen
      */
-    public ReadWriteCredentialsDB() { //Daten auslesen
+    public ReadWriteCredentialsDB() {
     }
     
     /**
@@ -45,9 +45,9 @@ public class ReadWriteCredentialsDB implements Serializable {
     public ReadWriteCredentialsDB(String host, String port, String nameDB, String username, String password) {
         this.host = host;
         this.port = port;
-        this.nameDatenbank = nameDB;
-        this.benutzername = username;
-        this.passwort = password;
+        this.nameDB = nameDB;
+        this.username = username;
+        this.password = password;
     }
     
     /**
@@ -79,10 +79,10 @@ public class ReadWriteCredentialsDB implements Serializable {
             is.close();
             this.setHost(ld.getHost());
             this.setPort(ld.getPort());
-            this.setNameDatenbank(ld.getNameDatenbank());
-            this.setBenutzername(ld.getBenutzername());
-            this.setPasswort(ld.getPasswort());
-            this.setPfadSpeicher(ld.getPfadSpeicher());
+            this.setNameDB(ld.getNameDB());
+            this.setUsername(ld.getUsername());
+            this.setPassword(ld.getPassword());
+            this.setSaveLocation(ld.getSaveLocation());
             return true;
         } catch(Exception e) {
             System.out.println(e.toString());
@@ -108,36 +108,36 @@ public class ReadWriteCredentialsDB implements Serializable {
         this.port = port;
     }
 
-    public String getNameDatenbank() {
-        return nameDatenbank;
+    public String getNameDB() {
+        return nameDB;
     }
 
-    public void setNameDatenbank(String nameDatenbank) {
-        this.nameDatenbank = nameDatenbank;
+    public void setNameDB(String nameDB) {
+        this.nameDB = nameDB;
     }
 
-    public String getBenutzername() {
-        return benutzername;
+    public String getUsername() {
+        return username;
     }
 
-    public void setBenutzername(String benutzername) {
-        this.benutzername = benutzername;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPasswort() {
-        return passwort;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswort(String passwort) {
-        this.passwort = passwort;
+    public void setPassword(String password) {
+        this.password = password;
     }
     
-    public String getPfadSpeicher() {
-        return pfadSpeicher;
+    public String getSaveLocation() {
+        return saveLocation;
     }
 
-    public void setPfadSpeicher(String pfadSpeicher) {
-        this.pfadSpeicher = pfadSpeicher;
+    public void setSaveLocation(String saveLocation) {
+        this.saveLocation = saveLocation;
     }
 
 }

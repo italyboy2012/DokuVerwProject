@@ -25,12 +25,10 @@ public class TopicGroupGUI extends javax.swing.JFrame {
     private long selectedRowId = 0; //Ausgewählte Spalten-ID aus ThemengruppenübersichtFrame
     private TopicGroupLOGIC tgLOGIC = null; //Logik von TopicGroupGUI
     private NoteDB nDB = null; //Logik von NoteDB
-    
-    private final int NOTE_MAX_LENGTH = 60000;
-    
     private SearchFileGUI sfGUI = null; //Fenster zum Suchen; damit max. 1 Fenster pro TopicGroupLOGIC genutzt werden kann,
                                         //wird hier eine Referenz zwischengespeichert.
-
+    private final int NOTE_MAX_LENGTH = 60000;
+    
     /**
      * Der Konstruktor bekommt die ID der ausgewählten TopicGroupLOGIC und eine Referenz zur
      * Tabelle des Frames übergeben. Die ID wird der Logikklasse TopicGroupLOGIC übergeben.
@@ -133,7 +131,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
     public void createReminder() {
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, selectedRowId, selectedRowPath); //ID der TopicGroupLOGIC und Pfad der Datei
+            CreateAndEditReminderGUI eef = new CreateAndEditReminderGUI(this, selectedRowId, selectedRowPath); //ID der TopicGroupLOGIC und Pfad der Datei
         } else {
             errorChooseFileFirst();
         }
@@ -144,7 +142,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
      */
     public void editReminder() {
         if(jTable2.getSelectedRow() != -1) {
-            new CreadeAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
+            new CreateAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
         } else {
             new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }

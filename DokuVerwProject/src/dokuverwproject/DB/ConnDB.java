@@ -14,9 +14,9 @@ import java.sql.*;
 public class ConnDB {
     private String host = "";
     private String port = "";
-    private String nameDatenbank = "";
-    private String benutzername = "";
-    private String passwort = "";
+    private String nameDB = "";
+    private String username = "";
+    private String password = "";
     
     /**
      * Konsturktor lädt beim Aufruf die Verbindungsvariablen zur DB
@@ -27,9 +27,9 @@ public class ConnDB {
         if(rwc.loadData()) {
             this.host = rwc.getHost();
             this.port = rwc.getPort();
-            this.nameDatenbank = rwc.getNameDatenbank();
-            this.benutzername = rwc.getBenutzername();
-            this.passwort = rwc.getPasswort();
+            this.nameDB = rwc.getNameDB();
+            this.username = rwc.getUsername();
+            this.password = rwc.getPassword();
         }
     }
     
@@ -39,16 +39,16 @@ public class ConnDB {
      * 
      * @param host - hostname
      * @param port - port
-     * @param nameDatenbank - Name der DB
-     * @param benutzername - Nutzername DB
-     * @param passwort - Passwort DB
+     * @param nameDB - Name der DB
+     * @param username - Nutzername DB
+     * @param password - Passwort DB
      */
-    public ConnDB(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
+    public ConnDB(String host, String port, String nameDB, String username, String password) { //bekommt Verbindungsvariablen übergeben
         this.host = host;
         this.port = port;
-        this.nameDatenbank = nameDatenbank;
-        this.benutzername = benutzername;
-        this.passwort = passwort;
+        this.nameDB = nameDB;
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -59,8 +59,8 @@ public class ConnDB {
     public Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden
-            String DBurl = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.nameDatenbank + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            Connection con = DriverManager.getConnection(DBurl, benutzername, passwort);
+            String DBurl = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.nameDB + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            Connection con = DriverManager.getConnection(DBurl, username, password);
             return con;
         } catch(Exception e) {
             System.out.println(e.toString());
@@ -79,9 +79,9 @@ public class ConnDB {
         try {
             Class.forName("com.mysql.jdbc.Driver"); //Treiber für DB aus Libraries laden
             String url = "jdbc:mysql://" + this.host + ":" + this.port + "/?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            Connection con = DriverManager.getConnection(url, benutzername, passwort);
+            Connection con = DriverManager.getConnection(url, username, password);
             Statement s = con.createStatement();
-            int Result = s.executeUpdate("CREATE DATABASE IF NOT EXISTS "+ nameDatenbank + " CHARACTER SET utf8mb4");
+            int Result = s.executeUpdate("CREATE DATABASE IF NOT EXISTS "+ nameDB + " CHARACTER SET utf8mb4");
             return true;
         } catch (Exception e) {
             e.printStackTrace();

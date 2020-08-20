@@ -72,19 +72,19 @@ public class Common {
      * 
      * @param frame - internes Frame, welches umposizioniert werden muss
      * @param dp - DesktopPane, auf welches das interne Frame gerendert wird
-     * @param achtel - Anteil an einem Achten (x/8) - wenn z.B. 2 übergeben wird, dann wird die Breite auf 2/8 des dp gesetzt
-     * @param rechts - boolean; true = Frame oben rechts positionieren; false = Frame oben links positionieren
+     * @param eighth - Anteil an einem Achten (x/8) - wenn z.B. 2 übergeben wird, dann wird die Breite auf 2/8 des dp gesetzt
+     * @param right - boolean; true = Frame oben rechts positionieren; false = Frame oben links positionieren
      */
-    public static void resizeAndRepositionInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, int achtel, boolean rechts) {
+    public static void resizeAndRepositionInternalFrame(javax.swing.JInternalFrame frame, javax.swing.JDesktopPane dp, int eighth, boolean right) {
         //Frames Größe setzen
-        int width = (dp.getWidth()) / 8 * achtel;
+        int width = (dp.getWidth()) / 8 * eighth;
         int heigth = dp.getHeight();
         frame.setSize(width, heigth);
         
         //Frames Position setzen
         int x = 0; //horizontal
         int y = 0; //vertikal
-        if(rechts) {
+        if(right) {
             x = (int) dp.getWidth() - width;
         }
         frame.setLocation(x, y);
