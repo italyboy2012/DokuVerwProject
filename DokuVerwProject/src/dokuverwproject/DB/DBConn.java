@@ -37,11 +37,11 @@ public class DBConn {
      * Konstruktor setzt die übergebenen Verbindungsvariablen als
      * Variablen für den Verbindungsaufbau zur DB
      * 
-     * @param host
-     * @param port
-     * @param nameDatenbank
-     * @param benutzername
-     * @param passwort 
+     * @param host - hostname
+     * @param port - port
+     * @param nameDatenbank - Name der DB
+     * @param benutzername - Nutzername DB
+     * @param passwort - Passwort DB
      */
     public DBConn(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
         this.host = host;
@@ -54,7 +54,7 @@ public class DBConn {
     /**
      * Methode erstellt eine Connection zur DB und gibt diese zurück
      * 
-     * @return Connection zur DB
+     * @return - Connection zur DB
      */
     public Connection getConnection() {
         try {
