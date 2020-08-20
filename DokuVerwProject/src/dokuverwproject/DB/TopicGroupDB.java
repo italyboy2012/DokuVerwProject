@@ -78,12 +78,12 @@ public class TopicGroupDB {
                 stmt.close();
                 return true;
             } catch(Exception e){
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Laden der Themengruppenliste.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Laden der Themengruppenliste.");
                 System.out.println(e.toString());
                 e.printStackTrace();
             }
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return false;
     }
@@ -109,17 +109,17 @@ public class TopicGroupDB {
                             return new TopicGroupDTO(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4));
                         }
                     } else {
-                        NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die gefundene Themengruppen-ID stimmt nicht mit der intern übergebenen ID überein.");
+                        new NotifyFrameGUI("Fehler", "Die gefundene Themengruppen-ID stimmt nicht mit der intern übergebenen ID überein.");
                     }
                 } else {
                     throw new Exception();
                 }
             } catch (Exception e) {
                 System.out.println(e.toString());
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
             }
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
+            new NotifyFrameGUI("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
         }
         return null;
     }
@@ -149,7 +149,7 @@ public class TopicGroupDB {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return false;
     }
@@ -181,7 +181,7 @@ public class TopicGroupDB {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return false;
     }
@@ -209,7 +209,7 @@ public class TopicGroupDB {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return false;
     }

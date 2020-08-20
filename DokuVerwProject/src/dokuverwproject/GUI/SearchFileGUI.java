@@ -64,7 +64,6 @@ public class SearchFileGUI extends javax.swing.JFrame {
      */
     public void setTopicTitle(String tgT) {
         jLabel2.setText(tgT);
-
     }
 
     /**

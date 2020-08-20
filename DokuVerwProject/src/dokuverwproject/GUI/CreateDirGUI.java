@@ -48,13 +48,13 @@ public class CreateDirGUI extends javax.swing.JFrame {
         
         if(!name.equals("") && !name.equals(null)) {
             if(!tgLOGIC.createDir(name, cuttentNavPath)) {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Verzeichnis. Evtl. kann ein Aktualisieren der Übersicht helfen.");
             } else {
                 tgGUI.refreshView();
             }
             this.dispose();
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+            new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
         }
     }
     

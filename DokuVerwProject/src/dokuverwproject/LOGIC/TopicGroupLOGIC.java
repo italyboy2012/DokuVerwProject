@@ -73,7 +73,7 @@ public class TopicGroupLOGIC {
             this.creationTimeStamp = tgDTO.getCreationTimeStamp();
             return true;
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
+            new NotifyFrameGUI("Fehler", "Ein interner Übertragrungsfehler der Themengruppen-ID ist aufgetreten.");
         }
         return false;
     }
@@ -195,7 +195,7 @@ public class TopicGroupLOGIC {
                 File file = new File(filePath);
                 
                 if(!file.exists()) {
-                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
+                    new NotifyFrameGUI("Fehler", "Die Datei ist evtl. nicht mehr vorhanden. Bitte Ansicht aktualisieren.");
                     return;
                 }
                 
@@ -213,7 +213,7 @@ public class TopicGroupLOGIC {
                 System.out.println(e.toString());
             }
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -320,10 +320,10 @@ public class TopicGroupLOGIC {
         if(f.renameTo(f2)) {
             // Referent Notizen und Erinnerungen in DB neu setzen
             if(!note.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Notizen
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
+                new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zur Notiz in der DB.");
             }
             if(!reminder.resetReferenceToFile(currentPath, f2.getAbsolutePath())) { //Erinnerungen
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
+                new NotifyFrameGUI("Fehler", "Fehler beim setzen der neuen Referenz zu den Erinnerungen in der DB.");
             }
             return true;
         }

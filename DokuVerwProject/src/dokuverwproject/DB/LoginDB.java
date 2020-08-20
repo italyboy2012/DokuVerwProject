@@ -41,14 +41,14 @@ public class LoginDB {
                         return new UserDTO(rs.getLong(1), rs.getString(4), rs.getString(5));
                     }
                 } else {
-                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");
+                    new NotifyFrameGUI("Fehler", "Bitte geben Sie eine gültige Nutzerkennung ein!");
                 }
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Zugriff auf die Datenbank.");
         }
         return null;
     }

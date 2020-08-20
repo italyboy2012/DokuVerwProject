@@ -133,7 +133,7 @@ public class Common {
             }
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim schließen der internen Fenster. Bitte manuell schließen.");
+            new NotifyFrameGUI("Fehler", "Fehler beim schließen der internen Fenster. Bitte manuell schließen.");
         }
     }
     

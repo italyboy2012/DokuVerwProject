@@ -59,7 +59,7 @@ public class MainFrameGUI extends javax.swing.JFrame {
             LoginFrameGUI lf = new LoginFrameGUI();
         } catch (Exception ex) {
             System.out.println(ex.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim ausloggen. Programm bitte manuell schließen.");
+            new NotifyFrameGUI("Fehler", "Fehler beim ausloggen. Programm bitte manuell schließen.");
         }
     }
     

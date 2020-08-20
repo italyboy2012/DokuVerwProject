@@ -241,7 +241,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
             refreshView();
             return;
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "wählen Sie bitte etwas zum Löschen aus.");
+            new NotifyFrameGUI("Fehler", "wählen Sie bitte etwas zum Löschen aus.");
         }
     }
 
@@ -877,7 +877,6 @@ public class TopicGroupGUI extends javax.swing.JFrame {
     private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
     }//GEN-LAST:event_jTextArea1KeyPressed
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
-        // TODO add your handling code here:
         int length = jTextArea1.getText().length();
         setCharCountNote(length);
         

@@ -59,10 +59,10 @@ public class DeleteFileGUI extends javax.swing.JFrame {
                     this.dispose();
                 }
             } else {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Erinnerungen der zu löschenden Datei.");
             }
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Löschen der Notizen der zu löschenden Datei.");
         }
 
     }

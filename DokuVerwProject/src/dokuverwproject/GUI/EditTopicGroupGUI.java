@@ -52,14 +52,14 @@ public class EditTopicGroupGUI extends javax.swing.JFrame {
         if(!title.equals("") && !title.equals(null) && !path.equals("") && !path.equals(null)) {
             tgoGUI.setStaturs("Bearbeite Datensatz der Themengruppe...");
             if(!tgDB.editTG(selectedRowId, title, path)) {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Bearbeiten des Datensatzes in der Datenbank.");
+                new NotifyFrameGUI("Fehler", "Fehler beim Bearbeiten des Datensatzes in der Datenbank.");
                 tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
             }
             tgoGUI.setStaturs("Datensatz bearbeitet.");
             tgoGUI.loadTopicGroupsFromDB();
             this.dispose();
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+            new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
             tgoGUI.setStaturs("Fehler. Bitte Ansicht aktualisieren.");
         }
     }

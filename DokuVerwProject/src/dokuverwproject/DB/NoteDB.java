@@ -63,7 +63,7 @@ public class NoteDB {
                 return returnValue;
             } catch(Exception e){
                 System.out.println(e.toString());
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim lesen der Notizen.");
+                new NotifyFrameGUI("Fehler", "Fehler beim lesen der Notizen.");
             }
         }
         return returnValue;
@@ -92,7 +92,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -116,7 +116,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -140,7 +140,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }
@@ -167,7 +167,7 @@ public class NoteDB {
             return true;
         } catch (Exception e) {
             System.out.println(e.toString());
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
+            new NotifyFrameGUI("Fehler", "Fehler bei der Verbindung zur Datenbank.");
         }
         return false;
     }

@@ -55,12 +55,12 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
     public void deleteReminder(){
         if(jTable1.getSelectedRow() != -1) {
             if(!reminderDB.deleteReminder(getIDOfSelectedRow())) {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
+                new NotifyFrameGUI("Fehler", "Der Datensatz konnte nicht gelöscht werden.");
             }
             loadRemindersFromDB();
             return;
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
         return;
     }
@@ -70,9 +70,9 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void editReminder() {
         if(jTable1.getSelectedRow() != -1) {
-            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
+            new CreadeAndEditReminderGUI(this, getIDOfSelectedRow()); //ID der Erinnerung
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
 
@@ -86,11 +86,11 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
                 this.setStatus("Erinnerung bearbeitet.");
                 return;
             } else {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+                new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
                 return;
             }
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -104,10 +104,8 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
             String pfad = reminderDB.loadText(getIDOfSelectedRow(), "pfad");
             long erID = getIDOfSelectedRow();
             TopicGroupGUI tgf = new TopicGroupGUI(themengruppenID, pfad,erID);
-            //---------------- Änderung: Datei und Erinnerung im Frame highlighten
-            //ThemengruppeFrame tgf = new TopicGroupGUI(themengruppenID, erinnerungsID);
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
         return;
     }

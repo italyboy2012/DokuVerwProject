@@ -110,13 +110,13 @@ public class CreadeAndEditReminderGUI extends javax.swing.JFrame {
         if (this.tgID != 0 && this.id == 0) {
             if(!titel.equals("") && !titel.equals(null) && !inhalt.equals("") && !inhalt.equals(null) && !faelligkeitsDatum.equals("") && !faelligkeitsDatum.equals(null)) {
                 if(!rDB.createReminder(titel, inhalt, faelligkeitsDatum, tgID, datei)) {
-                    NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
+                    new NotifyFrameGUI("Fehler", "Fehler beim Erstellen des Datensatzes in der Datenbank.");
                 } else {
                     tgGUI.refreshView();
                     this.dispose();
                 }
             } else {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
+                new NotifyFrameGUI("Fehler", "Bitte alle notwendigen Felder ausfüllen.");
             }
         } else if(this.tgID == 0 && this.id != 0) {
             rDB.editReminder(this.id, titel, inhalt, faelligkeitsDatum);

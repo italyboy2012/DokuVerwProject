@@ -192,7 +192,7 @@ public class SetupAssistantGUI extends javax.swing.JFrame {
         ReadWriteCredentials rwc = new ReadWriteCredentials(db_host, db_port, db_name, db_username, db_password);
         
         if(!rwc.saveData()) {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");
+            new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");
             return;
         }
         

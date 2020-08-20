@@ -69,9 +69,9 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
     public void openSelectedRow() {
         if(jTable1.getSelectedRow() != -1) {
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-            TopicGroupGUI tgf = new TopicGroupGUI(selectedRowId,"",-1);
+            new TopicGroupGUI(selectedRowId,"",-1);
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -85,23 +85,23 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
             setStaturs("Löschen...");
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             if(!rDB.deleteTGReminders(selectedRowId)){
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
+                new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Erinnerungen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!nDB.deleteTGNotes(selectedRowId)){
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
+                new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Notizen aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             if(!tgDB.deleteTG(selectedRowId)) {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
+                new NotifyFrameGUI("Fehler", "Es ist ein Fehler beim Löschen der Themengruppe aufgetreten.");
                 setStaturs("Fehler beim Löschen... Bitte aktualisieren.");
                 return;
             }
             loadTopicGroupsFromDB();
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -117,9 +117,9 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
             long selectedRowId = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             String titel = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
             String pfad = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
-            EditTopicGroupGUI tgb = new EditTopicGroupGUI(selectedRowId, titel, pfad, tgDB, this);
+            new EditTopicGroupGUI(selectedRowId, titel, pfad, tgDB, this);
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
         }
     }
     
@@ -128,7 +128,7 @@ public class TopicGroupOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void createTopicGroup() {
         setStaturs("Warten auf Eingabe...");
-        CreateTopicGroupGUI tgef = new CreateTopicGroupGUI(tgDB, this);
+        new CreateTopicGroupGUI(tgDB, this);
     }
     
     /**
