@@ -5,7 +5,7 @@
  */
 package dokuverwproject.GUI;
 
-import dokuverwproject.DB.ReadWriteCredentials;
+import dokuverwproject.DB.ReadWriteCredentialsDB;
 import dokuverwproject.DB.SetupAssistantDB;
 import java.awt.Color;
 import static dokuverwproject.commons.Common.initExternalFrame;
@@ -189,7 +189,7 @@ public class SetupAssistantGUI extends javax.swing.JFrame {
      * und öffnet anschlißend das Login-Frame
      */
     public void saveAndClose() {
-        ReadWriteCredentials rwc = new ReadWriteCredentials(db_host, db_port, db_name, db_username, db_password);
+        ReadWriteCredentialsDB rwc = new ReadWriteCredentialsDB(db_host, db_port, db_name, db_username, db_password);
         
         if(!rwc.saveData()) {
             new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Credentials-Datei auf dem OS.");

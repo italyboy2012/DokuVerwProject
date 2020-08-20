@@ -5,7 +5,7 @@
  */
 package dokuverwproject;
 
-import dokuverwproject.DB.ReadWriteCredentials;
+import dokuverwproject.DB.ReadWriteCredentialsDB;
 import dokuverwproject.GUI.SetupAssistantGUI;
 import dokuverwproject.GUI.LoginFrameGUI;
 
@@ -39,7 +39,7 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                ReadWriteCredentials rwc = new ReadWriteCredentials();
+                ReadWriteCredentialsDB rwc = new ReadWriteCredentialsDB();
         
                 if(!rwc.loadData()) {
                     new SetupAssistantGUI();

@@ -79,7 +79,7 @@ public class ReminderDB {
      * @return
      */
     public Boolean createReminder(String title, String content, String date, long tgID, String filePath) {
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         if ( con != null){
             try {
@@ -121,7 +121,7 @@ public class ReminderDB {
      *         ab 0 = zeile der gesuchten Erinnerung in der Tabelle, sofern eine Erinnerung gesucht wurde
      */
     public int loadReminders(long tgID, int height, long erID) {
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         int returnValue = -1;
 
@@ -207,7 +207,7 @@ public class ReminderDB {
     public String loadText(long id, String type) {
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         String returnValue = "";
         
@@ -245,7 +245,7 @@ public class ReminderDB {
         String query = "SELECT * FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
         Date returnValue = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         
         if (con != null){
@@ -280,7 +280,7 @@ public class ReminderDB {
     public boolean deleteTGReminders(long tgID){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`themengruppenID` = ?";
         PreparedStatement ps = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         if(con!=null) {
             try {
@@ -306,7 +306,7 @@ public class ReminderDB {
     public boolean deleteReminder(long id){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`id` = ?";
         PreparedStatement ps = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         if(con!=null) {
             try {
@@ -332,7 +332,7 @@ public class ReminderDB {
     public boolean deleteFileReminders(String pfad){
         String query = "DELETE FROM `erinnerungen` WHERE `erinnerungen`.`dateiPfad` = ?";
         PreparedStatement ps = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         if(con!=null) {
             try {
@@ -358,7 +358,7 @@ public class ReminderDB {
     public long getTGID(long id){
         String query = "SELECT `themengruppenID` FROM `erinnerungen` WHERE `id` = ?";
         PreparedStatement ps = null;
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         long ausgabe = 0;
         if (con != null){
@@ -388,7 +388,7 @@ public class ReminderDB {
      */
     public boolean editReminder(long id,String title, String content, String date) {
         String query = "UPDATE `erinnerungen` SET `titel`= ?, `inhalt`= ?, `faellig` = ? WHERE id = ?";
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         PreparedStatement ps = null;
         if (con != null) {
@@ -416,7 +416,7 @@ public class ReminderDB {
      * @return gibt zurück, ob die Methode erfolgreich durchlaufen wurde
      */
     public boolean toggleDoneState(long id) {
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
 
         if(con != null) {
@@ -450,7 +450,7 @@ public class ReminderDB {
         String query = "UPDATE `erinnerungen` SET `dateiPfad`= ? WHERE `dateiPfad` = ?";
         PreparedStatement ps = null;
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, newPath);

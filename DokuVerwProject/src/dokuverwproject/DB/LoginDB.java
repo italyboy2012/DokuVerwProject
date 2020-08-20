@@ -27,7 +27,7 @@ public class LoginDB {
      */
     public UserDTO login(String username, String password) {
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;

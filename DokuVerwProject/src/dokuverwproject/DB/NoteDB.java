@@ -32,7 +32,7 @@ public class NoteDB {
         String returnValue = ""; // initialisierung und definition des Ausgabeparameters
 
         // Erstellen der SQL-Verbindung
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
 
         // Testen ob Verbindung besteht
@@ -81,7 +81,7 @@ public class NoteDB {
         String query = "UPDATE `notizen` SET `inhalt`= ? WHERE themengruppenID = ? AND dateipfad = ?";
         PreparedStatement ps = null;
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, text);
@@ -107,7 +107,7 @@ public class NoteDB {
         String query = "DELETE FROM `notizen` WHERE `notizen`.`themengruppenID` = ?;";
         PreparedStatement ps = null;
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setLong(1, tgID);
@@ -131,7 +131,7 @@ public class NoteDB {
         String query = "DELETE FROM `notizen` WHERE `notizen`.`dateiPfad` = ?;";
         PreparedStatement ps = null;
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, path);
@@ -157,7 +157,7 @@ public class NoteDB {
         String query = "UPDATE `notizen` SET `dateipfad`= ? WHERE `dateipfad` = ?";
         PreparedStatement ps = null;
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             ps = con.prepareStatement(query);
             ps.setString(1, newPath);

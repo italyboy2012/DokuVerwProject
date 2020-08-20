@@ -37,7 +37,7 @@ public class TopicGroupDB {
      * @return - gibt zurück, ob die Methode erfolgreich druchlaufen wurde
      */
     public boolean loadFromDB() {
-        DBConn dbc = new DBConn();
+        ConnDB dbc = new ConnDB();
         Connection con = dbc.getConnection();
         
         if(con != null) {
@@ -96,7 +96,7 @@ public class TopicGroupDB {
     public TopicGroupDTO loadFromDB(long id) {
         if(id != 0) {
             try {
-                DBConn dbc = new DBConn();
+                ConnDB dbc = new ConnDB();
                 Connection con = dbc.getConnection();
                 if(con != null) {
                     PreparedStatement ps = null;
@@ -133,7 +133,7 @@ public class TopicGroupDB {
      */
     public boolean createTG(String title, String path) {
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;
@@ -164,7 +164,7 @@ public class TopicGroupDB {
      */
     public boolean editTG(long id, String title, String path) {
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;
@@ -194,7 +194,7 @@ public class TopicGroupDB {
      */
     public boolean deleteTG(long id) {
         try {
-            DBConn dbc = new DBConn();
+            ConnDB dbc = new ConnDB();
             Connection con = dbc.getConnection();
             if(con != null) {
                 PreparedStatement ps = null;

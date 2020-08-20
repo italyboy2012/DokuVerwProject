@@ -11,7 +11,7 @@ import java.sql.*;
  *
  * @author Giuseppe
  */
-public class DBConn {
+public class ConnDB {
     private String host = "";
     private String port = "";
     private String nameDatenbank = "";
@@ -22,8 +22,8 @@ public class DBConn {
      * Konsturktor lädt beim Aufruf die Verbindungsvariablen zur DB
      * aus der .bin-Datei
      */
-    public DBConn() {
-        ReadWriteCredentials rwc = new ReadWriteCredentials();
+    public ConnDB() {
+        ReadWriteCredentialsDB rwc = new ReadWriteCredentialsDB();
         if(rwc.loadData()) {
             this.host = rwc.getHost();
             this.port = rwc.getPort();
@@ -43,7 +43,7 @@ public class DBConn {
      * @param benutzername - Nutzername DB
      * @param passwort - Passwort DB
      */
-    public DBConn(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
+    public ConnDB(String host, String port, String nameDatenbank, String benutzername, String passwort) { //bekommt Verbindungsvariablen übergeben
         this.host = host;
         this.port = port;
         this.nameDatenbank = nameDatenbank;

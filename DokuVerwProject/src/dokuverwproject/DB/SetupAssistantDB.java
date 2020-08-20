@@ -22,7 +22,7 @@ public class SetupAssistantDB {
     private String db_name = "";
     private String db_username = "";
     private String db_password = "";
-    DBConn db = null;
+    ConnDB db = null;
     // DB-Tables
     private String[][] tables = { //2d Array mit Tabellennamen und SQL-Code, um sie einzurichten
         {"erinnerungen", "CREATE TABLE `erinnerungen` (`id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,`titel` text NOT NULL,`inhalt` text NOT NULL,`faellig` date NOT NULL,`erledigt` tinyint(1) NOT NULL,`themengruppenID` int(11) NOT NULL,`dateiPfad` text NOT NULL,`created_TMSTMP` timestamp NOT NULL DEFAULT current_timestamp()) AUTO_INCREMENT = 30001 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"},
@@ -46,7 +46,7 @@ public class SetupAssistantDB {
         this.db_name = db_name;
         this.db_username = db_username;
         this.db_password = db_password;
-        db = new DBConn(db_host, db_port, db_name, db_username, db_password);
+        db = new ConnDB(db_host, db_port, db_name, db_username, db_password);
     }
     
     /**

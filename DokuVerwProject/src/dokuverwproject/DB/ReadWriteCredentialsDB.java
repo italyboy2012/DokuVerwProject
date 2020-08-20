@@ -15,7 +15,7 @@ import java.io.Serializable;
  *
  * @author Giuseppe
  */
-public class ReadWriteCredentials implements Serializable {
+public class ReadWriteCredentialsDB implements Serializable {
     // Datenverbindung
     private String host = "";
     private String port = "";
@@ -30,7 +30,7 @@ public class ReadWriteCredentials implements Serializable {
     /**
      * Konstruktor, um lokale Daten auszulesen
      */
-    public ReadWriteCredentials() { //Daten auslesen
+    public ReadWriteCredentialsDB() { //Daten auslesen
     }
     
     /**
@@ -42,7 +42,7 @@ public class ReadWriteCredentials implements Serializable {
      * @param username
      * @param password 
      */
-    public ReadWriteCredentials(String host, String port, String nameDB, String username, String password) {
+    public ReadWriteCredentialsDB(String host, String port, String nameDB, String username, String password) {
         this.host = host;
         this.port = port;
         this.nameDatenbank = nameDB;
@@ -75,7 +75,7 @@ public class ReadWriteCredentials implements Serializable {
     public boolean loadData() {
         try{
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(filename));
-            ReadWriteCredentials ld = (ReadWriteCredentials) is.readObject();
+            ReadWriteCredentialsDB ld = (ReadWriteCredentialsDB) is.readObject();
             is.close();
             this.setHost(ld.getHost());
             this.setPort(ld.getPort());
