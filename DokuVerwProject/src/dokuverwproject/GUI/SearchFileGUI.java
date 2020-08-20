@@ -51,7 +51,7 @@ public class SearchFileGUI extends javax.swing.JFrame {
      * setzt die Suche zurück, setzt die Ansicht zurück und schließt das Fenster
      */
     public void closewindow() {
-        tgGUI.resetDateiSuchenFrame();
+        tgGUI.resetReferenceToSearchFileGUI();
         tgGUI.refreshView();
         this.dispose();
     }

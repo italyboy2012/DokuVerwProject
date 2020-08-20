@@ -415,7 +415,7 @@ public class ReminderDB {
      * @param id - ID der anzupassenden Erinnerung
      * @return gibt zurück, ob die Methode erfolgreich durchlaufen wurde
      */
-    public boolean changeDoneState(long id) {
+    public boolean toggleDoneState(long id) {
         DBConn dbc = new DBConn();
         Connection con = dbc.getConnection();
 

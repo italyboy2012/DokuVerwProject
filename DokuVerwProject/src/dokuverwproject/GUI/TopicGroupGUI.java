@@ -35,8 +35,10 @@ public class TopicGroupGUI extends javax.swing.JFrame {
      * Der Konstruktor bekommt die ID der ausgewählten TopicGroupLOGIC und eine Referenz zur
      * Tabelle des Frames übergeben. Die ID wird der Logikklasse TopicGroupLOGIC übergeben.
      * Diese lädt alle Daten der TopicGroupLOGIC aus der DB und zeigt alle indexierten Dateien an.
-     *
+     * 
      * @param selectedRowId
+     * @param path
+     * @param rID 
      */
     public TopicGroupGUI(long selectedRowId, String path, long rID) {
         this.selectedRowId = selectedRowId;
@@ -136,7 +138,59 @@ public class TopicGroupGUI extends javax.swing.JFrame {
             errorChooseFileFirst();
         }
     }
+    
+    /**
+     * Methode veranlasst das Bearbeiten einer ausgewählten Erinnerung
+     */
+    public void editReminder() {
+        if(jTable2.getSelectedRow() != -1) {
+            new CreadeAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
+        } else {
+            new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
+        }
+    }
+    
+    /**
+     * Methode toggled den Erledigt-Status einer Erinnerung
+     */
+    public void toggleDoneState(){
+        if(jTable2.getSelectedRow() != -1) {
+            if(rDB.toggleDoneState((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
+                refreshView();
+                return;
+            } else {
+                new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
+            }
+        } else {
+            new NotifyFrameGUI("Fehler", "Bitte wählen Sie einen Datensatz aus der rechten Tabelle aus.");
+        }
+    }
 
+    /**
+     * Methode lädt die Notiz der ausgewählten Datei und zeigt diese an
+     */
+    public void loadNote(){
+        String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+        long themengruppenID = tgLOGIC.getId();
+        String ausgabe = nDB.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
+        jTextArea1.setText(ausgabe);
+        setCharCountNote(jTextArea1.getText().length());
+        enableTextField(); //auch wenn keine NoteDB enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
+    }
+
+    /**
+     * Methode speichert den Inhalt des TextFelds, Also den Inhalt der Motiz, in der DB
+     */
+    public void saveNote(){
+        toggleEditableTable(false);
+        String notizText = jTextArea1.getText();
+        String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
+        if(!nDB.saveNote(notizText, this.selectedRowId ,pfad)){
+            new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Notiz.");
+        }
+        toggleEditableTable(true);
+    }
+    
     /**
      * Methode leert und sperrt das Notiz-Textfeldt
      */
@@ -150,43 +204,32 @@ public class TopicGroupGUI extends javax.swing.JFrame {
     /**
      * Methode entsperrt das Notiz-Textfeldt
      */
-    public void entsperreTextField1() {
+    public void enableTextField() {
         // Text aus DB laden
         jTextArea1.setEditable(true);
         jTextArea1.setBackground(new Color(255,255,255));
     }
-
-    public void schreibeNotiz(){
-        toggleEditableTable(false);
-        String notizText = jTextArea1.getText();
-        String pfad = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        if(!nDB.saveNote(notizText, this.selectedRowId ,pfad)){
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Fehler beim Speichern der Notiz.");
-        }
-        toggleEditableTable(true);
-    }
     
+    /**
+     * Methode sperrt und entsperrt das Anklicken der Tabelle entsprechned des 
+     * übergebenen Wahrheitswertes
+     * 
+     * @param b - wahrheitswert
+     */
     public void toggleEditableTable(Boolean b) {
         jTable1.setRowSelectionAllowed(b);
     }
 
-    public void loadNote(){
-        String test = (String) jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 2);
-        long themengruppenID = tgLOGIC.getId();
-        String ausgabe = nDB.loadNote(test, themengruppenID); //Notiz wird immer erstellt, auch wenn die Datei nur ausgewählt wird
-        jTextArea1.setText(ausgabe);
-        setCharCountNote(jTextArea1.getText().length());
-        entsperreTextField1(); //auch wenn keine NoteDB enthalten ist, muss das Textfeld entsperrt werden, um eine neue zu erstellen
-    }
-
-    public void dateiLoeschen(String selectedRowPath){
-        new DeleteFileGUI(this, this.tgLOGIC, this.nDB, this.rDB, selectedRowPath);
-    }
-    
-    public void dateiOderErinnerungLoeschen() {
+    /**
+     * Methode wird aufgerufen, wenn "Löschen"-Butten angeklickt wird.
+     * Sie schaut, ob eine Datei oder eine Erinnerung ausgewählt ist.
+     * Entsprechend der Auswahl veranlasst sie das weitere Vorgehen zum Löschen
+     * der Datei oder der Erinnerung
+     */
+    public void deleteFileOrReminder() {
         if(jTable1.getSelectedRow() != -1) { //Datei löschen
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            dateiLoeschen(selectedRowPath);
+            deleteFile(selectedRowPath);
             emptyAndDisableTextField();
             refreshView();
             return;
@@ -202,27 +245,20 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         }
     }
 
-    public void erinnerungBearbeiten() {
-        if(jTable2.getSelectedRow() != -1) {
-            CreadeAndEditReminderGUI eef = new CreadeAndEditReminderGUI(this, (long) jTable2.getValueAt(jTable2.getSelectedRow(),0));
-        } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Es wurde kein Datensatz aus der Tabelle ausgewählt.");
-        }
+    /**
+     * Methode veranlasst das Löschen der ausgewählten Datei
+     * 
+     * @param selectedRowPath - Dateipfad des ausgewählten Files
+     */
+    public void deleteFile(String selectedRowPath){
+        new DeleteFileGUI(this, this.tgLOGIC, this.nDB, this.rDB, selectedRowPath);
     }
     
-    public void aendereErledigtStatus(){
-        if(jTable2.getSelectedRow() != -1) {
-            if(rDB.changeDoneState((long) jTable2.getValueAt(jTable2.getSelectedRow(),0))) {
-                refreshView();
-                return;
-            } else {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Der Erledigt-Status konnte nicht bearbeitet werden. Bitte Ansicht aktualisieren.");
-            }
-        } else {
-            new NotifyFrameGUI("Fehler", "Bitte wählen Sie einen Datensatz aus der rechten Tabelle aus.");
-        }
-    }
-    
+    /**
+     * Methode öffnet einen Filechooser, welcher dem User die Möglichkeit bietet,
+     * eine Datei oder ein Verzeichnis auszuwählen.
+     * Dieses wird dann in das aktuell angezeigte Verzeichnis der Themengruppe verschoben
+     */
     public void addFileFromOs() {
         JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new java.io.File(System.getProperty("user.home")));
@@ -233,7 +269,7 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         if(response == JFileChooser.APPROVE_OPTION) {
             // Datei/Verzeichnis verschieben
             if(!tgLOGIC.addFile(fc.getSelectedFile())) {
-                NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
+                new NotifyFrameGUI("Fehler", "Die Datei konnte nicht in die Themengruppe verschoben werden. Eventluell existiert der Dateiname bereits.");
                 return;
             }
             refreshView();
@@ -243,24 +279,30 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         }
     }
 
-    public void resetDateiSuchenFrame() {
+    /**
+     * Methode löscht die Referenz zum SearchFileGUI-Frame
+     */
+    public void resetReferenceToSearchFileGUI() {
         this.sfGUI = null;
     }
-
-    private int getRowOfPath(String pfad){
-        int i = 0;
-        while (i <= jTable1.getRowCount()){
-            if (pfad.equals(jTable1.getValueAt(i,2))) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    private void markiereZeileInTabelle1(int row){
+    
+    /**
+     * Methode markiert die ihr übergebene Zeile in der Dokumenten-Tabelle
+     * 
+     * @param row - Zeilennummer, die zu markieren ist
+     */
+    private void highlightRowInTable1(int row){
         jTable1.setRowSelectionInterval(row,row);
     }
+    
+    /**
+     * Fehlermeldung: Bitte Datei asuwählen
+     */
+    public void errorChooseFileFirst(){
+        new NotifyFrameGUI("Fehler", "Bitte wählen Sie eine Datei aus der linken Tabelle aus.");
+    }
+    
+    // Getter und Setter
     
     /**
      * Methode zeigt einen Counter oberhalt des Textfelds der Notizen an,
@@ -272,8 +314,21 @@ public class TopicGroupGUI extends javax.swing.JFrame {
         jLabel4.setText(i + " / " + NOTE_MAX_LENGTH);
     }
     
-    public void errorChooseFileFirst(){
-        new NotifyFrameGUI("Fehler", "Bitte wählen Sie eine Datei aus der linken Tabelle aus.");
+    /**
+     * Methode gibt die Zeilennummer des an ihr übergebenen Pfads zurück
+     * 
+     * @param pfad
+     * @return 
+     */
+    private int getRowOfPath(String pfad){
+        int i = 0;
+        while (i <= jTable1.getRowCount()){
+            if (pfad.equals(jTable1.getValueAt(i,2))) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
     
     @SuppressWarnings("unchecked")
@@ -741,12 +796,10 @@ public class TopicGroupGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         tgLOGIC.goBackNAV();
     }//GEN-LAST:event_jButton8ActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         emptyAndDisableTextField();
         if (evt.getClickCount() == 2) {
@@ -756,51 +809,33 @@ public class TopicGroupGUI extends javax.swing.JFrame {
             loadNote(); // Methode entsperrt nach Laden TextFeld wieder
         }
     }//GEN-LAST:event_jTable1MouseClicked
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        dateiOderErinnerungLoeschen();
+        deleteFileOrReminder();
     }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
         refreshView();
     }//GEN-LAST:event_jButton9ActionPerformed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             tgLOGIC.openSelectedFile();
         } else {
             errorChooseFileFirst();
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        CreateFileGUI dhf = new CreateFileGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
+        new CreateFileGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
         createReminder();
     }//GEN-LAST:event_jButton6ActionPerformed
-
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        // TODO add your handling code here
     }//GEN-LAST:event_jTable2MouseClicked
-
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
         if(jTable1.getSelectedRow() != -1) {
             String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
             RenameFileGUI duf = new RenameFileGUI(selectedRowPath, this, tgLOGIC);
@@ -808,78 +843,53 @@ public class TopicGroupGUI extends javax.swing.JFrame {
             errorChooseFileFirst();
         }
     }//GEN-LAST:event_jButton7ActionPerformed
-
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-        CreateDirGUI dhf = new CreateDirGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
+        new CreateDirGUI(jTextField2.getText(), this, tgLOGIC); //TextField2 = aktuelles Verzeichnis
     }//GEN-LAST:event_jButton10ActionPerformed
-
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
         if(sfGUI == null) sfGUI = new SearchFileGUI(this, tgLOGIC);
     }//GEN-LAST:event_jButton12ActionPerformed
-
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
-        // Erinnerung bearbeiten
-        erinnerungBearbeiten();
+        editReminder();
     }//GEN-LAST:event_jButton13ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        // Erinnerung auf erledigt
-        aendereErledigtStatus();
+        toggleDoneState();
     }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
-        // TODO add your handling code here:
         jTable2.clearSelection();
     }//GEN-LAST:event_jTable1MouseReleased
-
     private void jTable2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseReleased
-        // TODO add your handling code here:
         jTable1.clearSelection();
         long erID = 0;
         erID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
         String pfad = rDB.loadText(erID,"pfad");
         int markierendeZeile = getRowOfPath(pfad);
-        if (markierendeZeile != -1){ markiereZeileInTabelle1(markierendeZeile);loadNote();}
+        if (markierendeZeile != -1){ highlightRowInTable1(markierendeZeile);loadNote();}
     }//GEN-LAST:event_jTable2MouseReleased
-
     private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTable1MouseEntered
-
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        // TODO add your handling code here:
         addFileFromOs();
     }//GEN-LAST:event_jButton14ActionPerformed
-
     private void jTextArea1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseClicked
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextArea1MouseClicked
-
     private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextArea1KeyPressed
-
     private void jTextArea1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyReleased
         // TODO add your handling code here:
         int length = jTextArea1.getText().length();
         setCharCountNote(length);
         
         if(length <= NOTE_MAX_LENGTH) {
-            schreibeNotiz();
+            saveNote();
         } else {
-            NotifyFrameGUI nf = new NotifyFrameGUI("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
+            new NotifyFrameGUI("Fehler", "Die Notiz ist zu lang. Bitte beachten Sie die Anzeige der maximal erlaubten Zeichen."
                     + "\nIhre Änderungen wurdne nicht gespeichert!");
         }
     }//GEN-LAST:event_jTextArea1KeyReleased
-
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextArea1KeyTyped
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton12;

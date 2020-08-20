@@ -81,7 +81,7 @@ public class ReminderOverviewGUI extends javax.swing.JInternalFrame {
      */
     public void toggleDoneState(){
         if(jTable1.getSelectedRow() != -1) {
-            if(reminderDB.changeDoneState(getIDOfSelectedRow())) {
+            if(reminderDB.toggleDoneState(getIDOfSelectedRow())) {
                 loadRemindersFromDB();
                 this.setStatus("Erinnerung bearbeitet.");
                 return;
