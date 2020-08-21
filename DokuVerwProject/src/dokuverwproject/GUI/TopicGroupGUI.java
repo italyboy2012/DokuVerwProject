@@ -225,17 +225,17 @@ public class TopicGroupGUI extends javax.swing.JFrame {
      * der Datei oder der Erinnerung
      */
     public void deleteFileOrReminder() {
-        if(jTable1.getSelectedRow() != -1) { //Datei löschen
-            String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
-            deleteFile(selectedRowPath);
-            emptyAndDisableTextField();
-            refreshView();
-            return;
-        } else if (jTable2.getSelectedRow() != -1){ //Erinnerungen löschen
+        if(jTable1.getSelectedRow() != -1 && jTable2.getSelectedRow() != -1) { //Erinnerung löschen, wenn beides ausgewählt ist
             int hoehe = jTable2.getRowHeight() - jTable2.getRowHeight()/10;
             long erinnerungenID = (long) jTable2.getValueAt(jTable2.getSelectedRow(),0);
             rDB.deleteReminder(erinnerungenID);
             rDB.loadReminders(selectedRowId, hoehe,-1);
+            refreshView();
+            return;
+        } else if (jTable1.getSelectedRow() != -1) { //Datei löschen
+            String selectedRowPath = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2); //Pfad der ausgewählten Datei
+            deleteFile(selectedRowPath);
+            emptyAndDisableTextField();
             refreshView();
             return;
         } else {

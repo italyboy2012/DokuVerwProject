@@ -35,7 +35,7 @@ public class DeleteFileGUI extends javax.swing.JFrame {
         initComponents();
         initExternalFrame(this, "trash.png");
         
-        jLabel2.setText(file.getPath());
+        jLabel2.setText(file.getName());
         this.setVisible(true);
     }
 
