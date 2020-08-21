@@ -33,9 +33,7 @@ public class LoginFrameGUI extends javax.swing.JFrame {
 
         jPasswordField1.setText("");
 
-        LoginLOGIC l = new LoginLOGIC (username, password);
-
-        if(l.login()) {
+        if(new LoginLOGIC(username, password).login()) {
             this.dispose();
             return;
         }

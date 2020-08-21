@@ -32,7 +32,7 @@ public class LoginLOGIC {
             UserDTO b = new LoginDB().login(username, password);
             
             if(b != null) {
-                MainFrameGUI mm = new MainFrameGUI(b);
+                new MainFrameGUI(b);
                 return true;
             }
         }

@@ -43,7 +43,7 @@ public class Main {
                     new SetupAssistantGUI();
                     return;
                 }
-                    
+
                 new LoginFrameGUI();
                 
             }
