@@ -39,9 +39,7 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                ReadWriteCredentialsDB rwc = new ReadWriteCredentialsDB();
-        
-                if(!rwc.loadData()) {
+                if(!new ReadWriteCredentialsDB().loadData()) {
                     new SetupAssistantGUI();
                     return;
                 }
